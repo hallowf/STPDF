@@ -1,0 +1,4 @@
+[submodule "src/stpdf"]
+	path = src/stpdf
+	url = https://github.com/hallowf/STPDF-Core.git
+	branch = master
