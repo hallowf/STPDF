@@ -1,5 +1,5 @@
 # main modules
-import sys, pickle, logging, os, gettext
+import sys, pickle, logging, os, gettext, configparser
 # PyQt5
 from PyQt5.QtWidgets import (QMainWindow, QWidget, QAction, qApp, QPushButton,
     QHBoxLayout, QVBoxLayout, QGridLayout,QCheckBox, QSlider, QLabel, QTextEdit,
@@ -8,7 +8,7 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
 
 # Custom components
-from components import TipSlider
+from components import TipSlider, SettingsWindow
 
 # Backend
 from stpdf.custom_exceptions import DirMissing, OutDirNotEmpty
@@ -21,7 +21,7 @@ class MainWindow(QMainWindow):
         # App required parameters
         self.title = 'STPDF'
         self.icon = QIcon('Icon.ico')
-        self.user_themes = None
+        self.user_themes = {"default": "default"}
         self.settings = None
         self.user_values = None
         self.retries = 0
@@ -29,7 +29,13 @@ class MainWindow(QMainWindow):
         self.files_destination = ""
         self.app_theme = "default"
         self.app_lang = "en"
-        self.app_langs = {}
+        self.log_levels = ["info","warning","debug","error"]
+        self.is_running = False
+        self.settings_window = None
+        self.available_langs = [
+            "pt",
+            "en"
+        ]
         # Console logger
         # logger is initialized in load_settings
         self.logger = None
@@ -39,26 +45,30 @@ class MainWindow(QMainWindow):
         # Save
         menu_save = QAction(_("Save"), self)
         menu_save.setShortcut("Ctrl+S")
-        menu_save.setStatusTip(_("Save your input to a file"))
+        menu_save.setStatusTip(_("Save your settings to a file"))
         menu_save.triggered.connect(self.on_save)
 
         # Exit
         menu_exit = QAction(_("Exit"), self)
         menu_exit.setShortcut("Ctrl+Q")
-        menu_exit.setStatusTip("Leave The App")
+        menu_exit.setStatusTip(_("Leave The App"))
         menu_exit.triggered.connect(qApp.quit)
 
-        # Keep values
-        self.menu_keep = QAction(_("Keep values"), self, checkable=True)
-        self.menu_keep.setStatusTip(_("Save your input to a file"))
-        # menu_keep.triggered.connect(lambda arg="keep": self.on_menu_action(arg))
+        # # Keep values
+        # self.menu_keep = QAction(_("Keep values"), self, checkable=True)
+        # self.menu_keep.setStatusTip(_("Save your input to a file"))
+        # SettingsWindow
+        self.menu_settings = QAction(_("Settings"), self)
+        self.menu_settings.setStatusTip(_("Open settings window"))
+        self.menu_settings.triggered.connect(lambda: self.on_menu_action("settings"))
 
         # Add menus
         file_menu = main_menu.addMenu(_("App"))
         file_menu.addAction(menu_save)
         file_menu.addAction(menu_exit)
         options_menu = main_menu.addMenu(_("Options"))
-        options_menu.addAction(self.menu_keep)
+        # options_menu.addAction(self.menu_keep)
+        options_menu.addAction(self.menu_settings)
 
         self.load_settings()
         self.init_ui()
@@ -71,10 +81,10 @@ class MainWindow(QMainWindow):
         self.status_bar = self.statusBar()
         self.setWindowTitle(self.title)
         self.setWindowIcon(self.icon)
-        # Buttons --------------
+        # Buttons / sliders / checkboxes --------------
         self.source_button = QPushButton(_("Search"))
         self.source_button.clicked.connect(lambda: self.open_directory_dialog("source"))
-        self.source_button.setStatusTip("Location of the files")
+        self.source_button.setStatusTip(_("Location of the files"))
         self.dest_button = QPushButton(_("Search"))
         self.dest_button.clicked.connect(lambda: self.open_directory_dialog("dest"))
         self.dest_button.setStatusTip(_("Destination of files created"))
@@ -87,6 +97,7 @@ class MainWindow(QMainWindow):
         self.split_slider.setTickPosition(QSlider.TicksBothSides)
         self.run_button = QPushButton(_("Run"))
         self.run_button.setStatusTip(_("Run the program"))
+        self.run_button.clicked.connect(self.do_run)
         self.show_vals = QPushButton(_("Show values"))
         self.show_vals.clicked.connect(self.show_values)
         self.show_vals.setStatusTip(_("Show your current input values"))
@@ -175,14 +186,18 @@ class MainWindow(QMainWindow):
 
     # Iterates trough the themes folder and maps all themes
     def load_custom_themes(self):
-        self.user_themes = {}
         if os.path.isdir("themes"):
             for root, dirs, files in os.walk("themes"):
                 for file in files:
                     if file.endswith(".ini"):
                         source_path = os.path.join(root, file)
                         theme = file.replace(".ini", "")
-                        self.user_themes[theme] = source_path
+                        if theme == "default":
+                            self.logger.error(
+                                _("Found a default theme in themes folder, but the default theme is already defined")
+                            )
+                        else:
+                            self.user_themes[theme] = source_path
             return True
         else:
             return False
@@ -254,45 +269,56 @@ class MainWindow(QMainWindow):
         yield True
 
     def on_menu_action(self, action):
-        if action == "keep":
-            self.settings["keep_vals"] = not self.settings["keep_vals"]
-        elif action == "deskew":
-            self.user_values["deskew"] = not self.user_values["deskew"]
+        if action == "settings":
+            if self.settings_window == None:
+                try:
+                    self.settings_window = SettingsWindow(self)
+                except Exception as e:
+                    raise
+            else:
+                msg = _("Settings are already open")
+                self.logger.error(msg)
+                self.gui_logger.append(msg)
         else:
-            return "%s %s" % (_("Invalid action"),action)
-        return True
+            self.logger.error(_("Invalid action"),action)
 
     # Sets up the console logger
     def set_up_logger(self):
         # TODO: Log level is not being used by logger
-        l_levels = ["info","warning","debug","error"]
+        l_levels = self.log_levels
         l_level = self.settings["log_level"]
+        n_level = None
         if l_level not in l_levels:
             sys.stdout.write("%s: %s\n" % (_("Invalid log level"),l_level))
             l_level = "info"
-            numeric_level = getattr(logging, logLevel.upper(), 10)
+            n_level = getattr(logging, l_level.upper(), 10)
         # Console logger
         log_format = "%(name)s - %(levelname)s: %(message)s"
-        logging.basicConfig(format=log_format,level=logging.DEBUG)
+        logging.basicConfig(format=log_format,level=n_level)
         self.logger = logging.getLogger("STPDF")
+        msg = "%s: %s" % (_("Console logger is set with log level"), l_level)
+        self.logger.info(msg)
 
     # Loads user settings from settings.pckl
     def load_settings(self):
         if not os.path.isfile("settings.pckl"):
-            self.settings = {"keep_vals": False, "log_level": "info", "app_theme": "default"}
+            self.settings = {
+                "keep_vals": False,
+                "log_level": "info",
+                "app_theme": "default",
+                "lang": "en"
+            }
             pickle.dump(self.settings,open("settings.pckl", "wb"))
             self.load_values()
-            self.set_up_logger()
         else:
             self.settings = pickle.load(open("settings.pckl", "rb"))
             try:
-                self.set_up_logger()
                 keep = self.settings["keep_vals"]
                 # `if keep or not keep:` sounds a good idea,
                 # but the values must be boolean and not "something" or  1
                 if keep == True or keep == False:
-                    self.logger.debug(_("Settings loaded successfully"))
                     self.load_values()
+                self.logger.debug(_("Settings loaded successfully"))
             except KeyError:
                 self.logger.warning(_("Invalid settings found, removing file"))
                 os.remove("settings.pckl")
@@ -304,6 +330,7 @@ class MainWindow(QMainWindow):
 
     # Loads user values from values.pckl
     def load_values(self):
+        self.set_up_logger()
         try:
             if self.settings["keep_vals"] or not os.path.isfile("values.pckl"):
                 self.logger.debug(_("Loading user values"))
@@ -330,54 +357,74 @@ class MainWindow(QMainWindow):
         self.gui_logger.setText("")
 
     def show_values(self):
-        s = "  %s: %s\n" % (_("Files location"),(self.files_location or ""))
-        d = "  %s: %s\n" % (_("Files destination"),(self.files_destination or ""))
-        di = "  %s: %s\n" % (_("Deskew"),(self.deskew_check.isChecked()))
-        ds = "  %s: %s\n" % (_("Split"),(self.do_split.isChecked()))
-        sa = "  %s: %s\n" % (_("Split at"),(self.split_slider.value()))
+        s = " \t%s: %s\n" % (_("Files location"),(self.files_location or ""))
+        d = " \t%s: %s\n" % (_("Files destination"),(self.files_destination or ""))
+        di = "\t%s: %s\n" % (_("Deskew"),(self.deskew_check.isChecked()))
+        ds = "\t%s: %s\n" % (_("Split"),(self.do_split.isChecked()))
+        sa = "\t%s: %s\n" % (_("Split at"),(self.split_slider.value()))
         values = "%s:\n%s%s%s%s%s" % (_("Values are"),s,d,di,ds,sa)
         self.gui_logger.append(values)
-        kv = "  Keep values: %s\n" % self.menu_keep.isChecked()
-        t = "  App theme: %s\n" % self.app_theme
+        self.logger.debug(values)
+        # kv = "  Keep values: %s\n" % self.menu_keep.isChecked()
+        kv = "\t%s: %s\n" % (_("Keep values"), self.settings["keep_vals"])
+        t = "\t%s: %s\n" % (_("App theme"),self.app_theme)
         settings = "%s:\n%s%s" % (_("Settings are"), kv,t)
+        self.logger.debug(settings)
 
     def verify_required(self):
         fl = self.files_location
         fd = self.files_destination
+        ds = self.do_split.isChecked()
+        sa = self.split_slider.value()
         if not fl or not fd:
-            return _("Location or destination undefined") + "\nSource: %s\nDest: %s" % (fl,fd)
+            fl = fl or "None"
+            fd = fd or "None"
+            return _("Location or destination undefined") + "\n\t%s %s\n\t%s %s" % (_("Source:"),fl,_("Dest:"),fd)
         elif not os.path.isdir(self.files_location):
             return _("Missing files location")
         elif len(os.listdir(self.files_location)) <= 1:
-            _("Location is empty, no files to copy")
-        return True
-
+            return _("Location is empty, no files to copy")
+        elif ds and sa < 3:
+            return _("Minimun split is 3")
+        else:
+            return True
 
     # Save settings and values if keep_vals is checked
     def on_save(self):
         theme = self.app_theme
-        keep_vals = self.menu_keep.isChecked()
+        # keep_vals = self.menu_keep.isChecked()
         deskew = self.deskew_check.isChecked()
         print("Saving")
 
-    def on_run(self):
-        has_req = self.verify_required
-        if has_req == True:
-            fl = self.files_location
-            fd = self.files_destination
-            di = self.deskew_check.isChecked()
-            ds = self.do_split.isChecked()
-            sa = self.split_slider.value()
-            cvt = Converter(fl,fd,split=(ds,sa),deskew=di)
+    def do_run(self):
+        if not self.is_running:
+            has_req = self.verify_required()
+            self.is_running = True
+            if has_req == True:
+                fl = self.files_location
+                fd = self.files_destination
+                di = self.deskew_check.isChecked()
+                ds = self.do_split.isChecked()
+                sa = self.split_slider.value()
+                cvt = Converter(fl,fd,split=(ds,sa),deskew=di)
+                for line in cvt.verify_copy_size():
+                    self.gui_logger.append(line)
+                    self.logger.info(line)
+                for line in cvt.make_pdf():
+                    self.gui_logger.append(line)
+                    self.logger.info(line)
+            else:
+                self.logger.error(has_req)
+                self.gui_logger.append(has_req)
         else:
-            self.logger.error(has_req)
-            self.gui_logger.append(has_req)
-
+            msg = _("Program is already running")
+            self.logger.error(msg)
+            self.gui_logger.append(msg)
 
 
 if __name__ == '__main__':
-    pt = gettext.translation("pt_gui", localedir="locale")
-    pt.install()
+    lng = gettext.translation("pt_gui", localedir="locale")
+    lng.install()
     app = QApplication([])
     GUI = MainWindow().init_ui()
     sys.exit(app.exec_())

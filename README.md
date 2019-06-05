@@ -9,6 +9,12 @@ The documentation does not say what color the background will be filled with.
 https://stackoverflow.com/a/17822099
 
 ##### Themes
+
+  * TODO:
+
+    1. almost everything the base functions for loading are verifying themes are done
+    2. this wasn't finished neither tested
+
 https://stackoverflow.com/questions/48256772/dark-theme-for-in-qt-widgets
 https://gist.github.com/gph03n1x/7281135
 
@@ -30,3 +36,6 @@ This requires the user to have tesseract installed
     4. this probably fails on images that contain little, few or no text at all, the exception should be handle properly
 
 ##### Translation
+
+`pygettext.py -d base -o locales/base.pot file.py`
+this will generate a "base" pot in the locales folder, which can then be edited and generate the appropiate compiled translations
