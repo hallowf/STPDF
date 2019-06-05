@@ -4,7 +4,7 @@ import sys, pickle, logging, os, gettext, configparser
 from PyQt5.QtWidgets import (QMainWindow, QWidget, QAction, qApp, QPushButton,
     QHBoxLayout, QVBoxLayout, QGridLayout,QCheckBox, QSlider, QLabel, QTextEdit,
     QFileDialog, QApplication)
-from PyQt5.QtGui import QIcon
+from PyQt5 import QtGui
 from PyQt5.QtCore import Qt
 
 # Custom components
@@ -20,16 +20,15 @@ class MainWindow(QMainWindow):
         super().__init__()
         # App required parameters
         self.title = 'STPDF'
-        self.icon = QIcon('Icon.ico')
+        self.icon = QtGui.QIcon('Icon.ico')
         self.user_themes = {"default": "default"}
         self.settings = None
         self.user_values = None
         self.retries = 0
         self.files_location = ""
         self.files_destination = ""
-        self.app_theme = "default"
         self.app_lang = "en"
-        self.log_levels = ["info","warning","debug","error"]
+        self.log_levels = ["debug","info","warning","error", "critical"]
         self.is_running = False
         self.settings_window = None
         self.available_langs = [
@@ -46,7 +45,7 @@ class MainWindow(QMainWindow):
         menu_save = QAction(_("Save"), self)
         menu_save.setShortcut("Ctrl+S")
         menu_save.setStatusTip(_("Save your settings to a file"))
-        menu_save.triggered.connect(self.on_save)
+        menu_save.triggered.connect(self.do_save)
 
         # Exit
         menu_exit = QAction(_("Exit"), self)
@@ -70,7 +69,6 @@ class MainWindow(QMainWindow):
         # options_menu.addAction(self.menu_keep)
         options_menu.addAction(self.menu_settings)
 
-        self.load_settings()
         self.init_ui()
 
     # Initializes the user interface after loading settings and values
@@ -147,7 +145,8 @@ class MainWindow(QMainWindow):
         # TODO: Style cannot be set on widget must be set on app
         # set style and load themes
         # window.setStyle("Fusion")
-        self.load_theme()
+        self.load_settings()
+        self.load_theme(self.settings["app_theme"])
         self.show()
 
     # directory: "source" or "dest"
@@ -166,21 +165,21 @@ class MainWindow(QMainWindow):
         has_themes = self.load_custom_themes()
         if theme == "default":
             self.logger.debug(_("Theme is default"))
-        elif theme == "dark":
+        elif theme == "STPDF-dark":
             if has_themes:
                 self.logger.debug(_("Changing to dark theme"))
                 theme = os.path.abspath("themes/STPDF-dark.ini")
                 self.theme_config = configparser.ConfigParser()
                 self.theme_config.read(theme)
-                self.app_theme = theme
+                self.set_theme()
             else:
                 self.logger.error(_("Missing themes folder"))
         else:
-            if len(self.user_themes) >= 1 and theme in list(self.user_themes.keys()):
+            if len(self.user_themes) >= 3 and theme in list(self.user_themes.keys()):
                 theme = self.user_themes[theme]
                 self.theme_config = configparser.ConfigParser()
                 self.theme_config.read(theme)
-                self.app_theme = theme
+                self.set_theme()
             else:
                 self.logger.warning("%s: %s" % (_("Invalid theme"),theme))
 
@@ -204,37 +203,65 @@ class MainWindow(QMainWindow):
 
     # Switches colors based on the values provided by the theme
     def set_theme(self):
+        self.logger.debug(_("Trying to set theme"))
+        allowed = ["lighter", "darker"]
+        extras = {}
         if False not in self.verify_theme():
+            self.logger.debug(_("Successfully verified theme"))
             tv = self.theme_values
             tve = self.theme_values_extras
             qplt = QtGui.QPalette()
             qplt.setColor(QtGui.QPalette.Window,
                 QtGui.QColor(*tv["window"]))
+            if tve["window"] in allowed:
+                extras["window"] = QtGui.QColor(*tv["window_text"])
             qplt.setColor(QtGui.QPalette.WindowText,
                 QtGui.QColor(*tv["window_text"]))
+            if tve["window_text"] in allowed:
+                extras["window_text"] = QtGui.QColor(*tv["base"])
             qplt.setColor(QtGui.QPalette.Base,
                 QtGui.QColor(*tv["base"]))
+            if tve["base"] in allowed:
+                extras["base"] = QtGui.QColor(*tv["alternate_base"])
             qplt.setColor(QtGui.QPalette.AlternateBase,
                 QtGui.QColor(*tv["alternate_base"]))
+            if tve["alternate_base"] in allowed:
+                extras["alternate_base"] = QtGui.QColor(*tv["alternate_base"])
             qplt.setColor(QtGui.QPalette.ToolTipBase,
                 QtGui.QColor(*tv["tooltip_base"]))
+            if tve["tooltip_base"] in allowed:
+                extras["tooltip_base"] = QtGui.QColor(*tv["tooltip_base"])
             qplt.setColor(QtGui.QPalette.ToolTipText,
                 QtGui.QColor(*tv["tooltip_text"]))
+            if tve["tooltip_text"] in allowed:
+                extras["tooltip_text"] = QtGui.QColor(*tv["tooltip_text"])
             qplt.setColor(QtGui.QPalette.Text,
                 QtGui.QColor(*tv["text"]))
+            if tve["text"] in allowed:
+                extras["text"] = QtGui.QColor(*tv["text"])
             qplt.setColor(QtGui.QPalette.Button,
                 QtGui.QColor(*tv["button"]))
+            if tve["button"] in allowed:
+                extras["button"] = c
             qplt.setColor(QtGui.QPalette.ButtonText,
                 QtGui.QColor(*tv["button_text"]))
+            if tve["button_text"] in allowed:
+                extras["button_text"] = c
             qplt.setColor(QtGui.QPalette.BrightText,
                 QtGui.QColor(*tv["bright_text"]))
-            # TODO: Investigate how to call lighter/darker trough a variable
-            # something like ()[var]() but that won't work if var is None or something wrong
-            # probably use getattr
+            if tve["bright_text"] in allowed:
+                extras["bright_text"] = c
             qplt.setColor(QtGui.QPalette.Highlight,
-                QtGui.QColor(*tv["highlight"]).lighter())
+                QtGui.QColor(*tv["highlight"]))
+            if tve["highlight"] in allowed:
+                extras["highlight"] = c
             qplt.setColor(QtGui.QPalette.HighlightedText,
                 QtGui.QColor(*tv["highlighted_text"]))
+            if tve["highlighted_text"] in allowed:
+                extras["highlighted_text"] = c
+            self.setPalette(qplt)
+        else:
+            self.logger.error(_("Failed to verify theme"))
 
     # Verifies the theme values - called by set_theme
     def verify_theme(self):
@@ -257,15 +284,14 @@ class MainWindow(QMainWindow):
         ce = self.theme_config["COLOR_EXTRAS"]
         for value in tc:
             rgb = tc[value].split(",")
+            rgb = [int(i) for i in rgb]
             if len(rgb) != 3:
                 self.logger.error("%s: %s = %s" % (_("Invalid theme value"),value,tc[value]))
                 yield False
             if value in known_values:
-                required_values[value] = True
                 self.theme_values[value] = rgb
                 extra = ce[value]
-                if extra == "lighter" or extra == "darker":
-                    self.theme_values_extras[value] = extra
+                self.theme_values_extras[value] = extra
         yield True
 
     def on_menu_action(self, action):
@@ -292,6 +318,8 @@ class MainWindow(QMainWindow):
             sys.stdout.write("%s: %s\n" % (_("Invalid log level"),l_level))
             l_level = "info"
             n_level = getattr(logging, l_level.upper(), 10)
+        else:
+            n_level = getattr(logging, l_level.upper(), 10)
         # Console logger
         log_format = "%(name)s - %(levelname)s: %(message)s"
         logging.basicConfig(format=log_format,level=n_level)
@@ -308,11 +336,18 @@ class MainWindow(QMainWindow):
                 "app_theme": "default",
                 "lang": "en"
             }
+            self.set_up_logger()
             pickle.dump(self.settings,open("settings.pckl", "wb"))
             self.load_values()
         else:
             self.settings = pickle.load(open("settings.pckl", "rb"))
+            self.set_up_logger()
             try:
+                lang = self.settings["lang"]
+                if lang in self.available_langs and lang != "en":
+                    modl = "%s_gui" % lang
+                    lang = gettext.translation(modl, localedir="locale")
+                    lang.install()
                 keep = self.settings["keep_vals"]
                 # `if keep or not keep:` sounds a good idea,
                 # but the values must be boolean and not "something" or  1
@@ -330,20 +365,27 @@ class MainWindow(QMainWindow):
 
     # Loads user values from values.pckl
     def load_values(self):
-        self.set_up_logger()
         try:
             if self.settings["keep_vals"] or not os.path.isfile("values.pckl"):
                 self.logger.debug(_("Loading user values"))
                  # TODO: Check keep values menu action
                 if not os.path.isfile("values.pckl"):
                     self.logger.debug(_("Values file does not exist, creating one now"))
-                    self.user_values = {"source": "", "dest": "", "deskew": False}
+                    self.user_values = {
+                        "source": "",
+                        "dest": "",
+                        "deskew": False,
+                        "split": False,
+                        "split_at": 0
+                    }
                     pickle.dump(self.user_values,open("values.pckl", "wb"))
                 else:
                     self.user_values = pickle.load(open("values.pckl", "rb"))
                     self.files_location = self.user_values["source"]
                     self.files_destination = self.user_values["dest"]
-                    # TODO: Check deskew menu if true
+                    self.deskew_check.setChecked(self.user_values["deskew"])
+                    self.do_split.setChecked(self.user_values["split"])
+                    self.split_slider.setValue(self.user_values["split_at"])
         except KeyError:
             self.logger.warning(_("Invalid values found, removing file"))
             os.remove("values.pckl")
@@ -357,18 +399,21 @@ class MainWindow(QMainWindow):
         self.gui_logger.setText("")
 
     def show_values(self):
-        s = " \t%s: %s\n" % (_("Files location"),(self.files_location or ""))
-        d = " \t%s: %s\n" % (_("Files destination"),(self.files_destination or ""))
-        di = "\t%s: %s\n" % (_("Deskew"),(self.deskew_check.isChecked()))
-        ds = "\t%s: %s\n" % (_("Split"),(self.do_split.isChecked()))
-        sa = "\t%s: %s\n" % (_("Split at"),(self.split_slider.value()))
+        s = "  %s: %s\n" % (_("Files location"),(self.files_location or ""))
+        d = "  %s: %s\n" % (_("Files destination"),(self.files_destination or ""))
+        di = "  %s: %s\n" % (_("Deskew"),(self.deskew_check.isChecked()))
+        ds = "  %s: %s\n" % (_("Split"),(self.do_split.isChecked()))
+        sa = "  %s: %s\n" % (_("Split at"),(self.split_slider.value()))
         values = "%s:\n%s%s%s%s%s" % (_("Values are"),s,d,di,ds,sa)
         self.gui_logger.append(values)
         self.logger.debug(values)
         # kv = "  Keep values: %s\n" % self.menu_keep.isChecked()
-        kv = "\t%s: %s\n" % (_("Keep values"), self.settings["keep_vals"])
-        t = "\t%s: %s\n" % (_("App theme"),self.app_theme)
-        settings = "%s:\n%s%s" % (_("Settings are"), kv,t)
+        kv = "  %s: %s\n" % (_("Keep values"), self.settings["keep_vals"])
+        t = "  %s: %s\n" % (_("App theme"),self.settings["app_theme"])
+        l = "  %s: %s\n" % (_("App language"), self.settings["lang"])
+        ll = "  %s: %s\n" % (_("Console log Level"), self.settings["log_level"])
+        settings = "%s:\n%s%s%s%s" % (_("Settings are"), kv,t,l,ll)
+        self.gui_logger.append(settings)
         self.logger.debug(settings)
 
     def verify_required(self):
@@ -379,7 +424,7 @@ class MainWindow(QMainWindow):
         if not fl or not fd:
             fl = fl or "None"
             fd = fd or "None"
-            return _("Location or destination undefined") + "\n\t%s %s\n\t%s %s" % (_("Source:"),fl,_("Dest:"),fd)
+            return _("Location or destination undefined") + "\n\t%s %s\n\t%s %s" % (_("Source:"),fl,_("Destination:"),fd)
         elif not os.path.isdir(self.files_location):
             return _("Missing files location")
         elif len(os.listdir(self.files_location)) <= 1:
@@ -390,17 +435,19 @@ class MainWindow(QMainWindow):
             return True
 
     # Save settings and values if keep_vals is checked
-    def on_save(self):
-        theme = self.app_theme
-        # keep_vals = self.menu_keep.isChecked()
-        deskew = self.deskew_check.isChecked()
+    def do_save(self):
         print("Saving")
+        if self.settings["keep_vals"]:
+            self.logger.debug("User values: %s" % self.user_values)
+            pickle.dump(self.user_values, open("values.pckl", "wb"))
+        self.logger.debug("Settings: %s" % self.settings)
+        pickle.dump(self.settings, open("settings.pckl", "wb"))
 
     def do_run(self):
         if not self.is_running:
             has_req = self.verify_required()
-            self.is_running = True
             if has_req == True:
+                self.is_running = True
                 fl = self.files_location
                 fd = self.files_destination
                 di = self.deskew_check.isChecked()
@@ -413,6 +460,7 @@ class MainWindow(QMainWindow):
                 for line in cvt.make_pdf():
                     self.gui_logger.append(line)
                     self.logger.info(line)
+                self.is_running = False
             else:
                 self.logger.error(has_req)
                 self.gui_logger.append(has_req)
@@ -423,8 +471,7 @@ class MainWindow(QMainWindow):
 
 
 if __name__ == '__main__':
-    lng = gettext.translation("pt_gui", localedir="locale")
-    lng.install()
+    gettext.install("stpdf")
     app = QApplication([])
     GUI = MainWindow().init_ui()
     sys.exit(app.exec_())
