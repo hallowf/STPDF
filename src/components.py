@@ -34,7 +34,7 @@ class SettingsWindow(QMainWindow):
     def __init__(self, parent):
         super(SettingsWindow, self).__init__(parent)
         self.parent = parent
-        self.title = "Settings"
+        self.title = _("Settings")
         self.icon = QIcon('Icon.ico')
         # main_menu = self.menuBar()
         self.init_ui()
@@ -111,7 +111,7 @@ class SettingsWindow(QMainWindow):
             self.log_level_combo.addItem(ll)
 
         self.keep_vals_check = QCheckBox()
-        msg = _("Keeps your source, destination, etc.. also stored in a file and loads it on startup")
+        msg = _("Keeps your source, destination, etc.. stored in a file and loads it on startup")
         self.keep_vals_check.setStatusTip(msg)
 
         self.save_button_label = QLabel(_("Apply settings"))
@@ -143,7 +143,8 @@ class SettingsWindow(QMainWindow):
         # Set the Main window and widget geometry
         # # x: screen x pos, y: screen y pos, width, height
         window.setGeometry(0, 0, 300, 300)
-        self.setGeometry(600, 600, 400, 350)
-        self.setFixedSize(500,350)
+        self.setGeometry(600, 600, 260, 350)
+        self.setFixedSize(450,300)
         self.load_settings()
+        window.setPalette(self.parent.app_pallete)
         self.show()

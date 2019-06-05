@@ -16,9 +16,10 @@ from stpdf.converter import Converter
 
 class MainWindow(QMainWindow):
 
-    def __init__(self):
+    def __init__(self, parent):
         super().__init__()
         # App required parameters
+        self.parent = parent
         self.title = 'STPDF'
         self.icon = QtGui.QIcon('Icon.ico')
         self.user_themes = {"default": "default"}
@@ -31,6 +32,7 @@ class MainWindow(QMainWindow):
         self.log_levels = ["debug","info","warning","error", "critical"]
         self.is_running = False
         self.settings_window = None
+        self.app_pallete = None
         self.available_langs = [
             "pt",
             "en"
@@ -58,6 +60,7 @@ class MainWindow(QMainWindow):
         # self.menu_keep.setStatusTip(_("Save your input to a file"))
         # SettingsWindow
         self.menu_settings = QAction(_("Settings"), self)
+        self.menu_settings.setShortcut("Ctrl+O")
         self.menu_settings.setStatusTip(_("Open settings window"))
         self.menu_settings.triggered.connect(lambda: self.on_menu_action("settings"))
 
@@ -201,6 +204,13 @@ class MainWindow(QMainWindow):
         else:
             return False
 
+    def set_brightness(self,palette,feature,value):
+        if feature == "window":
+            color = QtGui.QColor(*tv["window"])
+            qplt.setColor(QtGui.QPalette.Window,
+                color)
+
+
     # Switches colors based on the values provided by the theme
     def set_theme(self):
         self.logger.debug(_("Trying to set theme"))
@@ -211,55 +221,68 @@ class MainWindow(QMainWindow):
             tv = self.theme_values
             tve = self.theme_values_extras
             qplt = QtGui.QPalette()
-            qplt.setColor(QtGui.QPalette.Window,
-                QtGui.QColor(*tv["window"]))
+            color = QtGui.QColor(*tv["window"])
             if tve["window"] in allowed:
-                extras["window"] = QtGui.QColor(*tv["window_text"])
-            qplt.setColor(QtGui.QPalette.WindowText,
-                QtGui.QColor(*tv["window_text"]))
+                color = getattr(color, tve["window"])()
+            qplt.setColor(QtGui.QPalette.Window,
+                color)
+            color = QtGui.QColor(*tv["window_text"])
             if tve["window_text"] in allowed:
-                extras["window_text"] = QtGui.QColor(*tv["base"])
-            qplt.setColor(QtGui.QPalette.Base,
-                QtGui.QColor(*tv["base"]))
+                color = getattr(color, tve["window_text"])()
+            qplt.setColor(QtGui.QPalette.WindowText,
+                color)
+            color = QtGui.QColor(*tv["base"])
             if tve["base"] in allowed:
-                extras["base"] = QtGui.QColor(*tv["alternate_base"])
-            qplt.setColor(QtGui.QPalette.AlternateBase,
-                QtGui.QColor(*tv["alternate_base"]))
+                color = getattr(color, tve["base"])()
+            qplt.setColor(QtGui.QPalette.Base,
+                color)
+            color = QtGui.QColor(*tv["alternate_base"])
             if tve["alternate_base"] in allowed:
-                extras["alternate_base"] = QtGui.QColor(*tv["alternate_base"])
-            qplt.setColor(QtGui.QPalette.ToolTipBase,
-                QtGui.QColor(*tv["tooltip_base"]))
+                color = getattr(color, tve["alternate_base"])()
+            qplt.setColor(QtGui.QPalette.AlternateBase,
+                color)
+            color = QtGui.QColor(*tv["tooltip_base"])
             if tve["tooltip_base"] in allowed:
-                extras["tooltip_base"] = QtGui.QColor(*tv["tooltip_base"])
-            qplt.setColor(QtGui.QPalette.ToolTipText,
-                QtGui.QColor(*tv["tooltip_text"]))
+                color = getattr(color, tve["tooltip_base"])()
+            qplt.setColor(QtGui.QPalette.ToolTipBase,
+                color)
+            color = QtGui.QColor(*tv["tooltip_text"])
             if tve["tooltip_text"] in allowed:
-                extras["tooltip_text"] = QtGui.QColor(*tv["tooltip_text"])
-            qplt.setColor(QtGui.QPalette.Text,
-                QtGui.QColor(*tv["text"]))
+                color = getattr(color, tve["tooltip_text"])()
+            qplt.setColor(QtGui.QPalette.ToolTipText,
+                color)
+            color = QtGui.QColor(*tv["text"])
             if tve["text"] in allowed:
-                extras["text"] = QtGui.QColor(*tv["text"])
-            qplt.setColor(QtGui.QPalette.Button,
-                QtGui.QColor(*tv["button"]))
+                color = getattr(color, tve["text"])()
+            qplt.setColor(QtGui.QPalette.Text,
+                color)
+            color = QtGui.QColor(*tv["button"])
             if tve["button"] in allowed:
-                extras["button"] = c
-            qplt.setColor(QtGui.QPalette.ButtonText,
-                QtGui.QColor(*tv["button_text"]))
+                color = getattr(color, tve["button"])()
+            qplt.setColor(QtGui.QPalette.Button,
+                color)
+            color = QtGui.QColor(*tv["button_text"])
             if tve["button_text"] in allowed:
-                extras["button_text"] = c
-            qplt.setColor(QtGui.QPalette.BrightText,
-                QtGui.QColor(*tv["bright_text"]))
+                color = getattr(color, tve["button_text"])()
+            qplt.setColor(QtGui.QPalette.ButtonText,
+                color)
+            color = QtGui.QColor(*tv["bright_text"])
             if tve["bright_text"] in allowed:
-                extras["bright_text"] = c
-            qplt.setColor(QtGui.QPalette.Highlight,
-                QtGui.QColor(*tv["highlight"]))
+                color = getattr(color, tve["bright_text"])()
+            qplt.setColor(QtGui.QPalette.BrightText,
+                color)
+            color = QtGui.QColor(*tv["highlight"])
             if tve["highlight"] in allowed:
-                extras["highlight"] = c
-            qplt.setColor(QtGui.QPalette.HighlightedText,
-                QtGui.QColor(*tv["highlighted_text"]))
+                color = getattr(color, tve["highlight"])()
+            qplt.setColor(QtGui.QPalette.Highlight,
+                color)
+            color = QtGui.QColor(*tv["highlighted_text"])
             if tve["highlighted_text"] in allowed:
-                extras["highlighted_text"] = c
-            self.setPalette(qplt)
+                color = getattr(color, tve["highlighted_text"])()
+            qplt.setColor(QtGui.QPalette.HighlightedText,
+                color)
+            self.app_pallete = qplt
+            self.parent.setPalette(qplt)
         else:
             self.logger.error(_("Failed to verify theme"))
 
@@ -473,5 +496,5 @@ class MainWindow(QMainWindow):
 if __name__ == '__main__':
     gettext.install("stpdf")
     app = QApplication([])
-    GUI = MainWindow().init_ui()
+    GUI = MainWindow(app).init_ui()
     sys.exit(app.exec_())
