@@ -5,14 +5,18 @@ from PyQt5.QtWidgets import (QMainWindow, QWidget, QAction, qApp, QPushButton,
     QHBoxLayout, QVBoxLayout, QGridLayout,QCheckBox, QSlider, QLabel, QTextEdit,
     QFileDialog, QApplication)
 from PyQt5 import QtGui
-from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QDesktopServices
+from PyQt5.QtCore import Qt, QUrl
 
 # Custom components
 from components import TipSlider, SettingsWindow
 
-# Backend
+# Backend and other requirements
 from stpdf.custom_exceptions import DirMissing, OutDirNotEmpty
 from stpdf.converter import Converter
+from pytesseract.pytesseract import TesseractNotFoundError
+from pytesseract import image_to_string
+from PIL import Image, ImageDraw
 
 class MainWindow(QMainWindow):
 
@@ -33,6 +37,8 @@ class MainWindow(QMainWindow):
         self.is_running = False
         self.settings_window = None
         self.app_pallete = None
+        self.has_tesseract = self.check_tesseract()
+        print("has_tesseract",self.has_tesseract)
         self.available_langs = [
             "pt",
             "en"
@@ -55,9 +61,14 @@ class MainWindow(QMainWindow):
         menu_exit.setStatusTip(_("Leave The App"))
         menu_exit.triggered.connect(qApp.quit)
 
-        # # Keep values
-        # self.menu_keep = QAction(_("Keep values"), self, checkable=True)
-        # self.menu_keep.setStatusTip(_("Save your input to a file"))
+        # Help link
+        self.menu_help = QAction(_("Help/About"), self)
+        self.menu_help.setStatusTip(_("Open the documentation in a browser"))
+        self.menu_help.triggered.connect(lambda: QDesktopServices.openUrl(QUrl("https://github.com/hallowf/STPDF")))
+
+        # About link
+        self.menu_about = QAction(_("About STPDF"),self)
+        self.menu_about.setStatusTip(_("Open info page in a browser"))
         # SettingsWindow
         self.menu_settings = QAction(_("Settings"), self)
         self.menu_settings.setShortcut("Ctrl+O")
@@ -69,8 +80,8 @@ class MainWindow(QMainWindow):
         file_menu.addAction(menu_save)
         file_menu.addAction(menu_exit)
         options_menu = main_menu.addMenu(_("Options"))
-        # options_menu.addAction(self.menu_keep)
         options_menu.addAction(self.menu_settings)
+        options_menu.addAction(self.menu_help)
 
         self.init_ui()
 
@@ -92,8 +103,12 @@ class MainWindow(QMainWindow):
         self.do_split = QCheckBox()
         self.do_split.setStatusTip(_("Split into multiple PDF files"))
         self.deskew_check = QCheckBox()
-        self.deskew_check.setStatusTip(_("Removes rotation"))
-        self.split_slider = TipSlider(Qt.Horizontal)
+        if not self.has_tesseract:
+            self.deskew_check.setEnabled(False)
+            self.deskew_check.setStatusTip(_("The app failed to find tesseract on your system"))
+        else:
+            self.deskew_check.setStatusTip(_("Removes rotation"))
+        self.split_slider = TipSlider(Qt.Horizontal, parent=self)
         self.split_slider.setFocusPolicy(Qt.StrongFocus)
         self.split_slider.setTickPosition(QSlider.TicksBothSides)
         self.run_button = QPushButton(_("Run"))
@@ -145,9 +160,6 @@ class MainWindow(QMainWindow):
         # x: screen x pos, y: screen y pos, width, height
         self.setGeometry(600, 600, 700, 300)
         self.setFixedSize(600,300)
-        # TODO: Style cannot be set on widget must be set on app
-        # set style and load themes
-        # window.setStyle("Fusion")
         self.load_settings()
         self.load_theme(self.settings["app_theme"])
         self.show()
@@ -178,7 +190,7 @@ class MainWindow(QMainWindow):
             else:
                 self.logger.error(_("Missing themes folder"))
         else:
-            if len(self.user_themes) >= 3 and theme in list(self.user_themes.keys()):
+            if len(self.user_themes) >= 4 and theme in list(self.user_themes.keys()):
                 theme = self.user_themes[theme]
                 self.theme_config = configparser.ConfigParser()
                 self.theme_config.read(theme)
@@ -204,18 +216,10 @@ class MainWindow(QMainWindow):
         else:
             return False
 
-    def set_brightness(self,palette,feature,value):
-        if feature == "window":
-            color = QtGui.QColor(*tv["window"])
-            qplt.setColor(QtGui.QPalette.Window,
-                color)
-
-
     # Switches colors based on the values provided by the theme
     def set_theme(self):
         self.logger.debug(_("Trying to set theme"))
         allowed = ["lighter", "darker"]
-        extras = {}
         if False not in self.verify_theme():
             self.logger.debug(_("Successfully verified theme"))
             tv = self.theme_values
@@ -235,6 +239,16 @@ class MainWindow(QMainWindow):
             if tve["base"] in allowed:
                 color = getattr(color, tve["base"])()
             qplt.setColor(QtGui.QPalette.Base,
+                color)
+            color = QtGui.QColor(*tv["background"])
+            if tve["background"] in allowed:
+                color = getattr(color, tve["background"])()
+            qplt.setColor(QtGui.QPalette.Background,
+                color)
+            color = QtGui.QColor(*tv["foreground"])
+            if tve["foreground"] in allowed:
+                color = getattr(color, tve["foreground"])()
+            qplt.setColor(QtGui.QPalette.Foreground,
                 color)
             color = QtGui.QColor(*tv["alternate_base"])
             if tve["alternate_base"] in allowed:
@@ -283,6 +297,7 @@ class MainWindow(QMainWindow):
                 color)
             self.app_pallete = qplt
             self.parent.setPalette(qplt)
+            self.logger.debug(_("Successfully set theme"))
         else:
             self.logger.error(_("Failed to verify theme"))
 
@@ -294,6 +309,8 @@ class MainWindow(QMainWindow):
             "window",
             "window_text",
             "base",
+            "background",
+            "foreground",
             "alternate_base",
             "tooltip_base",
             "tooltip_text",
@@ -305,16 +322,30 @@ class MainWindow(QMainWindow):
             "highlighted_text"]
         tc = self.theme_config["THEME"]
         ce = self.theme_config["COLOR_EXTRAS"]
-        for value in tc:
-            rgb = tc[value].split(",")
-            rgb = [int(i) for i in rgb]
-            if len(rgb) != 3:
-                self.logger.error("%s: %s = %s" % (_("Invalid theme value"),value,tc[value]))
+        try:
+            for value in tc:
+                rgb = tc[value].split(",")
+                try:
+                    rgb = [int(i) for i in rgb]
+                except ValueError:
+                    self.logger.error(_("Invalid RGB values in app theme"))
+                    yield False
+                if len(rgb) != 3:
+                    self.logger.error("%s: %s = %s" % (_("Invalid theme RGB value"),value,tc[value]))
+                    yield False
+                if value in known_values:
+                    self.theme_values[value] = rgb
+                    extra = ce[value]
+                    self.theme_values_extras[value] = extra
+        except Exception as e:
+            en = e.__class__.__name__
+            if en == "KeyError":
+                msg = _("Your selected theme probably has invalid or missing values")
+                self.logger.error(msg)
+            else:
+                self.logger.critical(e)
                 yield False
-            if value in known_values:
-                self.theme_values[value] = rgb
-                extra = ce[value]
-                self.theme_values_extras[value] = extra
+                pass
         yield True
 
     def on_menu_action(self, action):
@@ -466,6 +497,14 @@ class MainWindow(QMainWindow):
         self.logger.debug("Settings: %s" % self.settings)
         pickle.dump(self.settings, open("settings.pckl", "wb"))
 
+    def check_tesseract(self):
+        img = Image.new('RGB', (60, 30), color = 'red')
+        try:
+            text = image_to_string(img)
+            return True
+        except TesseractNotFoundError:
+            return False
+
     def do_run(self):
         if not self.is_running:
             has_req = self.verify_required()
@@ -477,12 +516,23 @@ class MainWindow(QMainWindow):
                 ds = self.do_split.isChecked()
                 sa = self.split_slider.value()
                 cvt = Converter(fl,fd,split=(ds,sa),deskew=di)
-                for line in cvt.verify_copy_size():
-                    self.gui_logger.append(line)
-                    self.logger.info(line)
-                for line in cvt.make_pdf():
-                    self.gui_logger.append(line)
-                    self.logger.info(line)
+                try:
+                    for line in cvt.verify_copy_size():
+                        self.gui_logger.append(line)
+                        self.logger.info(line)
+                    for line in cvt.make_pdf():
+                        self.gui_logger.append(line)
+                        self.logger.info(line)
+                except Exception as e:
+                    en = e.__class__.__name__
+                    if en == "TesseractNotFoundError":
+                        msg = _("Failed to find tesseract on your system, verify it is installed and on PATH environment variable")
+                        self.logger.error(msg)
+                        self.gui_logger.append(msg)
+                    else:
+                        self.gui_logger.append(e)
+                        self.logger.critical(e)
+                        pass
                 self.is_running = False
             else:
                 self.logger.error(has_req)
@@ -494,7 +544,9 @@ class MainWindow(QMainWindow):
 
 
 if __name__ == '__main__':
+    # Default to the original text in case nothing is specified
     gettext.install("stpdf")
     app = QApplication([])
+    app.setStyle("Fusion")
     GUI = MainWindow(app).init_ui()
     sys.exit(app.exec_())
