@@ -1,7 +1,7 @@
 # STPDF Convert scans to PDF's
 
 
-## Please visit our [docs](https://hallowf.github.io/STPDF/) for more info
+## Please visit the [documentation](https://hallowf.github.io/STPDF-docs/) for more info
 
 
 
