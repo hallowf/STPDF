@@ -19,21 +19,19 @@ description: >- # this means to ignore newlines until "baseurl:"
   Write an awesome description for your new site here. You can edit this
   line in _config.yml. It will appear in your document head meta (for
   Google search results) and in your feed.xml site description.
-baseurl: "/" # the subpath of your site, e.g. /blog
-source: "docs/"
+baseurl: "/STPDF/" # the subpath of your site, e.g. /blog
 url: "https://hallowf.github.io" # the base hostname & protocol for your site, e.g. http://example.com
-twitter_username: jekyllrb
+twitter_username:
 github_username:  hallowf
+permalink: pretty
 # theme settings
 aux_links:
   "STPDF on GitHub":
     - "https://github.com/hallowf/STPDF"
 search_enabled: true
 # Build settings
-markdown: kramdown
 theme: just-the-docs
-plugins:
-  - jekyll-feed
+color_scheme: nil
 
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list
