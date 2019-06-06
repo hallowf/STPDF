@@ -7,10 +7,35 @@ title: Home
 permalink: /
 nav_order: 1
 ---
-# Focus on writing good documentation
-{: .fs-9 }
+# STPDF - ScanToPDF
 
-Just the Docs gives your documentation a jumpstart with a responsive Jekyll theme that is easily customizable and hosted on GitHub Pages.
-{: .fs-6 .fw-300 }
+ScanToPDF is an open-source free app that will allow you to easily make PDF's of image scans,
+it supports a wide variety of feature like deskew image *(removes rotation), spliting into multiple
+PDF's, custom themes and more ....
 
-[Get started now](#getting-started){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [View it on GitHub](https://github.com/pmarsceill/just-the-docs){: .btn .fs-5 .mb-4 .mb-md-0 }
+## Deskewing images
+
+Altough ScanToPDF has the ability to deskew images it can't do it withouth [Tesseract](https://github.com/tesseract-ocr/tesseract),
+and tesseract is not shipped with the app, if you are on linux you can just install it with your package manager
+on windows you can find installers [here](https://github.com/UB-Mannheim/tesseract/wiki)
+
+Tesseract will also need to be in the environment PATH variable, to check it is available just open up a command line and type tesseract,
+if it displays info and it's arguments then it's working
+
+
+<button class="btn js-toggle-dark-mode">Preview dark color scheme</button>
+
+<script>
+  const toggleDarkMode = document.querySelector('.js-toggle-dark-mode')
+  const cssFile = document.querySelector('[rel="stylesheet"]')
+  const originalCssRef = cssFile.getAttribute('href')
+  const darkModeCssRef = originalCssRef.replace('just-the-docs.css', 'dark-mode-preview.css')
+
+  addEvent(toggleDarkMode, 'click', function(){
+    if (cssFile.getAttribute('href') === originalCssRef) {
+      cssFile.setAttribute('href', darkModeCssRef)
+    } else {
+      cssFile.setAttribute('href', originalCssRef)
+    }
+  })
+</script>

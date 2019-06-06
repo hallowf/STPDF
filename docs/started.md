@@ -1,20 +1,17 @@
 ---
 layout: page
 title: Usage
+permalink: /usage/
 nav_order: 2
 ---
 
 # Usage
 
-PhotoSorter is based of [sort-PhotorecRecoveredFiles](https://github.com/tfrdidi/sort-PhotorecRecoveredFiles)
+STPDF
 
-You will need to provide it with the directory of all the pictures to sort and a directory to copy the files over and sort them,
-PhotoSorter does not remove your old files so make sure you have the required disk space.
+You will need to provide it with the directory of all the scans to sort and a directory to copy the files over and sort them,
+PhotoSorter does not touch your original files so make sure you have the required disk space.
 
-Then the sorter starts searching trough those directories and subsequent folders,
-copies them over to the destination and if a date is found that does not equal "today" as of the day you are running PhotoSorter
-a new folder with the year is created and the file is copied to that folder if a date isn't found
-the file is moved to a folder called unknown.
-
-Finally if you choose to sort the remaining "unknown" files, you can select either size or resolution,
-those files will be copied to new folders with the respective size in MB or resolution
+Then the app starts searching trough that directory and subsequent folders,
+when it finds an image, if deskew is checked, the image is rotated and saved directly to the destination
+if not it makes a list of all images to copy and copies them over
