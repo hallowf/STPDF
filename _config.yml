@@ -24,6 +24,10 @@ source: "docs/"
 url: "https://hallowf.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: jekyllrb
 github_username:  hallowf
+# theme settings
+aux_links:
+  "STPDF on GitHub":
+    - "https://github.com/hallowf/STPDF"
 search_enabled: true
 # Build settings
 markdown: kramdown

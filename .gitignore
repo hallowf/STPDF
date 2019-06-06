@@ -7,3 +7,5 @@ TEST_IMAGES
 _site
 .sass-cache
 .jekyll-metadata
+docs/_*.*
+*.vscode

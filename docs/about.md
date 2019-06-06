@@ -5,15 +5,19 @@ permalink: /about/
 nav_order: 3
 ---
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](https://jekyllrb.com/)
-
-You can find the source code for Minima at GitHub:
-[jekyll][jekyll-organization] /
-[minima](https://github.com/jekyll/minima)
-
-You can find the source code for Jekyll at GitHub:
-[jekyll][jekyll-organization] /
-[jekyll](https://github.com/jekyll/jekyll)
+### Disclaimer: All trademarks and registered trademarks are the property of their respective owners.
 
 
-[jekyll-organization]: https://github.com/jekyll
+### STPDF is free and open-source, it is built with [Python]() and [PyQt5]()
+It is available in 2 different versions STPDF and STPDF-core
+
+
+## Tesseract
+
+Tesseract is required to be installed on your system for the app to be able to deskew images.
+
+Tesseract is an OCR (Optical character recognition) engine developed by google, it is not shipped by default with this app due to the possible issues with software licensing, however it is also open-source, and you can easily install it in linux or windows
+
+
+#### Developed by:
+ * **[Alexandre Cortegaça](https://github.com/hallowf)**
