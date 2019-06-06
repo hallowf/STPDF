@@ -4,5 +4,6 @@ TEST_OUTPUT
 TEST_IMAGES
 *.pdf
 *.pckl
-*.po
-*.mo
+_site
+.sass-cache
+.jekyll-metadata
