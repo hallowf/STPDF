@@ -6,16 +6,22 @@ from PyQt5 import QtCore
 
 # https://stackoverflow.com/a/31658984
 class TipSlider(QSlider):
-    def __init__(self, *args, tip_offset=QtCore.QPoint(0, -45)):
+    def __init__(self, *args, tip_offset=QtCore.QPoint(0, -45), **kwargs):
         super(QSlider, self).__init__(*args)
         self.tip_offset = tip_offset
+
+        parent = kwargs.get("parent", None)
 
         self.style = QApplication.style()
         self.opt = QStyleOptionSlider()
 
         self.valueChanged.connect(self.show_tip)
-        # self.enterEvent = self.show_tip
-        # self.mouseReleaseEvent = self.show_tip
+
+        # this seems to do nothing ??
+        if parent != None:
+            pallete = getattr(self.parent, "app_pallete", None)
+            if pallete != None:
+                self.setPalette(pallete)
 
     def show_tip(self, _):
         self.initStyleOption(self.opt)
@@ -146,5 +152,7 @@ class SettingsWindow(QMainWindow):
         self.setGeometry(600, 600, 260, 350)
         self.setFixedSize(450,300)
         self.load_settings()
-        window.setPalette(self.parent.app_pallete)
+        pallete = getattr(self.parent, "app_pallete", None)
+        if pallete != None:
+            window.setPalette(pallete)
         self.show()
