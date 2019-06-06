@@ -449,9 +449,11 @@ class MainWindow(QMainWindow):
             else:
                 self.load_values()
 
+    # clears gui TextEdit that serves as visual logeer
     def clean_gui_logger(self):
         self.gui_logger.setText("")
 
+    # Shows all settings and values in gui_logger
     def show_values(self):
         s = "  %s: %s\n" % (_("Files location"),(self.files_location or ""))
         d = "  %s: %s\n" % (_("Files destination"),(self.files_destination or ""))
@@ -470,6 +472,7 @@ class MainWindow(QMainWindow):
         self.gui_logger.append(settings)
         self.logger.debug(settings)
 
+    # Checks if it has required input to run
     def verify_required(self):
         fl = self.files_location
         fd = self.files_destination
@@ -497,6 +500,7 @@ class MainWindow(QMainWindow):
         self.logger.debug("Settings: %s" % self.settings)
         pickle.dump(self.settings, open("settings.pckl", "wb"))
 
+    # Checks for tesseract in the system
     def check_tesseract(self):
         img = Image.new('RGB', (60, 30), color = 'red')
         try:
@@ -505,6 +509,7 @@ class MainWindow(QMainWindow):
         except TesseractNotFoundError:
             return False
 
+    # Runs stpdf-core
     def do_run(self):
         if not self.is_running:
             has_req = self.verify_required()
@@ -544,9 +549,11 @@ class MainWindow(QMainWindow):
 
 
 if __name__ == '__main__':
-    # Default to the original text in case nothing is specified
+    # Defaults to the original text
     gettext.install("stpdf")
     app = QApplication([])
+    # If fusion style is not set less color values can be edited,
+    # however if this is done to the app inside MainWindow, it breaks TipSlider
     app.setStyle("Fusion")
     GUI = MainWindow(app).init_ui()
     sys.exit(app.exec_())
