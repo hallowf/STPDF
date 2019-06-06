@@ -4,5 +4,6 @@
 
 layout: default
 title: STPDF
+permalink: /STPDF/
 nav_order: 1
 ---
