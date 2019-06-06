@@ -1,3 +1,8 @@
+# STPDF Convert scans to PDF's
+
+
+## Please visit our [docs](https://hallowf.github.io/STPDF/) for more info
+
 
 
 #### Notes
@@ -10,32 +15,44 @@ https://stackoverflow.com/a/17822099
 
 ##### Themes
 
+
+**It seems that most of these values hadn't changes because the theme fusion wasn't set in the whole app**
   * TODO:
 
-    1. almost everything \*(the base functions for loading are verifying themes are done)
-    2. this wasn't finished neither tested
-    3. find a fix for this:
-
-```
-# TODO: Investigate how to call lighter/darker trough a variable
- # something like ()[var]() but that won't work if var is None or something wrong
- qplt = QtGui.QPalette()
- qplt.setColor(QtGui.QPalette.Highlight,
-     QtGui.QColor(*tv["highlight"]).lighter())
-
-class Potato:
-
-   func1(self):
-       do_something()
-
-   func2(self):
-       do_other_thing()
-
-potato = Potato()
-
-method_to_run = 'func1'
-getattr(potato, method_to_run)()
-```
+    1. Most is tested there are still some stuff not being used below is a list of all possible objects that can have it's color changed
+      * Active
+      * All <- I'm not even going to try this
+      * AlternateBase <- no idea
+      * Background <- changes background of window
+      * Base <- changes background of QTextEdit and QComboBox but not window
+      * BrightText
+      * Button <- changes color of button background
+      * ButtonText <- change the color of the button text but just QPushButton
+      * ColorGroup
+      * ColorRole
+      * Current
+      * Dark
+      * Disabled
+      * Foreground <- changes QLabel color
+      * Highlight <- changes the highlight for QComboBox items and menu items
+      * HighlightedText
+      * Inactive
+      * Light
+      * Link
+      * LinkVisited
+      * Mid
+      * Midlight
+      * NColorGroups
+      * NColorRoles
+      * NoRole
+      * Normal
+      * PlaceholderText
+      * Shadow
+      * Text <- This seems to change most of the text, changes text from QComboBox, menu QAction, and QTextEdit
+      * ToolTipBase <- seems to make no changes to TipSlider however it could be that i'm setting this the wrong way
+      * ToolTipText <- same as above
+      * Window <- seems to have no effect?
+      * WindowText <- same as above
 
 https://stackoverflow.com/questions/48256772/dark-theme-for-in-qt-widgets
 https://gist.github.com/gph03n1x/7281135
