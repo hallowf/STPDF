@@ -30,6 +30,8 @@ class STPDFCLI(object):
                 print(line)
             for line in cvt.make_pdf():
                 print(line)
+        except Exception as e:
+            raise e
 
 
     def check_tesseract(self):
@@ -96,6 +98,7 @@ if __name__ == "__main__":
         deskew = getattr(args, "d")
         res = getattr(args, "r", 90.0)
         cli = STPDFCLI(args.source,args.destination,split=split_tup,deskew=deskew, resolution=res)
+        cli.run_converter()
     else:
         print(has_required)
 
