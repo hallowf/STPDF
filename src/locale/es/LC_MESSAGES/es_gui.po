@@ -1,0 +1,294 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2019-06-07 01:23+0100\n"
+"PO-Revision-Date: 2019-06-07 01:58+0100\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+"X-Generator: Poedit 2.2.3\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: es_ES\n"
+
+#: gui.py:52
+msgid "Save"
+msgstr "Grabar"
+
+#: gui.py:54
+msgid "Save your settings to a file"
+msgstr "Grabar sus ajustes en un archivo"
+
+#: gui.py:58
+msgid "Exit"
+msgstr "Salir"
+
+#: gui.py:60
+msgid "Leave The App"
+msgstr "Salir de la aplicación"
+
+#: gui.py:64
+msgid "Help/About"
+msgstr "Ayuda/Sobre"
+
+#: gui.py:65
+msgid "Open the documentation in a browser"
+msgstr "Exhibir documentacion en un navegador web"
+
+#: gui.py:69
+msgid "About STPDF"
+msgstr "Sobre STPDF"
+
+#: gui.py:70
+msgid "Open info page in a browser"
+msgstr "Exhibir página de información en un navegador web"
+
+#: gui.py:72
+msgid "Settings"
+msgstr "Ajustes"
+
+#: gui.py:74
+msgid "Open settings window"
+msgstr "Abrir ventana de ajustes"
+
+#: gui.py:78
+msgid "App"
+msgstr "Aplicación"
+
+#: gui.py:81
+msgid "Options"
+msgstr "Opciones"
+
+#: gui.py:96 gui.py:99
+msgid "Search"
+msgstr "Buscar"
+
+#: gui.py:98
+msgid "Location of the files"
+msgstr "Ubicación de los archivos"
+
+#: gui.py:101
+msgid "Destination of files created"
+msgstr "Destino de los archivos"
+
+#: gui.py:103
+msgid "Split into multiple PDF files"
+msgstr "Dividir en multiples archivos PDF"
+
+#: gui.py:107
+msgid "The app failed to find tesseract on your system"
+msgstr ""
+
+#: gui.py:109
+msgid "Removes rotation"
+msgstr "Elimina rotacion"
+
+#: gui.py:113
+msgid "Run"
+msgstr "Ejecutar"
+
+#: gui.py:114
+msgid "Run the program"
+msgstr "Ejecuta el programa"
+
+#: gui.py:116
+msgid "Show values"
+msgstr "exhibir valores"
+
+#: gui.py:118
+msgid "Show your current input values"
+msgstr ""
+
+#: gui.py:119
+msgid "Clean log"
+msgstr "limpiar el registro"
+
+#: gui.py:121
+msgid "Cleans the current log"
+msgstr "limpiar el registro corriente"
+
+#: gui.py:137 gui.py:487
+msgid "Source:"
+msgstr "Origen:"
+
+#: gui.py:139 gui.py:487
+msgid "Destination:"
+msgstr "Destino:"
+
+#: gui.py:141
+msgid "Deskew:"
+msgstr "Deskew:"
+
+#: gui.py:143
+msgid "Split scans:"
+msgstr ""
+
+#: gui.py:146
+msgid "Split at:"
+msgstr ""
+
+#: gui.py:175
+msgid "Invalid directory parameter"
+msgstr ""
+
+#: gui.py:181
+msgid "Theme is default"
+msgstr ""
+
+#: gui.py:184
+msgid "Changing theme to"
+msgstr ""
+
+#: gui.py:191
+msgid "Missing themes folder"
+msgstr ""
+
+#: gui.py:199
+msgid "Invalid theme"
+msgstr "Tema inválido"
+
+#: gui.py:211
+msgid ""
+"Found a default theme in themes folder, but the default theme is already "
+"defined"
+msgstr ""
+
+#: gui.py:221
+msgid "Trying to set theme"
+msgstr ""
+
+#: gui.py:224
+msgid "Successfully verified theme"
+msgstr ""
+
+#: gui.py:300
+msgid "Successfully set theme"
+msgstr ""
+
+#: gui.py:302
+msgid "Failed to verify theme"
+msgstr ""
+
+#: gui.py:331
+msgid "Invalid RGB values in app theme"
+msgstr ""
+
+#: gui.py:334
+msgid "Invalid theme RGB value"
+msgstr ""
+
+#: gui.py:343
+msgid "Your selected theme probably has invalid or missing values"
+msgstr ""
+
+#: gui.py:359
+msgid "Settings are already open"
+msgstr ""
+
+#: gui.py:363
+msgid "Invalid action"
+msgstr ""
+
+#: gui.py:372
+msgid "Invalid log level"
+msgstr ""
+
+#: gui.py:381
+msgid "Console logger is set with log level"
+msgstr ""
+
+#: gui.py:413
+msgid "Settings loaded successfully"
+msgstr ""
+
+#: gui.py:415
+msgid "Invalid settings found, removing file"
+msgstr ""
+
+#: gui.py:427
+msgid "Loading user values"
+msgstr ""
+
+#: gui.py:430
+msgid "Values file does not exist, creating one now"
+msgstr ""
+
+#: gui.py:447
+msgid "Invalid values found, removing file"
+msgstr ""
+
+#: gui.py:461
+msgid "Files location"
+msgstr ""
+
+#: gui.py:462
+msgid "Files destination"
+msgstr ""
+
+#: gui.py:463
+msgid "Deskew"
+msgstr ""
+
+#: gui.py:464
+msgid "Split"
+msgstr ""
+
+#: gui.py:465
+msgid "Split at"
+msgstr "Dividir en"
+
+#: gui.py:466
+msgid "Values are"
+msgstr ""
+
+#: gui.py:470
+msgid "Keep values"
+msgstr "Mantener los valores"
+
+#: gui.py:471
+msgid "App theme"
+msgstr "Tema de la aplicación"
+
+#: gui.py:472
+msgid "App language"
+msgstr ""
+
+#: gui.py:473
+msgid "Console log Level"
+msgstr ""
+
+#: gui.py:474
+msgid "Settings are"
+msgstr ""
+
+#: gui.py:487
+msgid "Location or destination undefined"
+msgstr ""
+
+#: gui.py:489
+msgid "Missing files location"
+msgstr ""
+
+#: gui.py:491
+msgid "Location is empty, no files to copy"
+msgstr ""
+
+#: gui.py:493
+msgid "Minimun split is 3"
+msgstr ""
+
+#: gui.py:537
+msgid ""
+"Failed to find tesseract on your system, verify it is installed and on PATH "
+"environment variable"
+msgstr ""
+
+#: gui.py:549
+msgid "Program is already running"
+msgstr ""

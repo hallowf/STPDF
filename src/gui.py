@@ -1,5 +1,5 @@
 # main modules
-import sys, pickle, logging, os, gettext, configparser
+import sys, pickle, logging, os, gettext, configparser, locale
 # PyQt5
 from PyQt5.QtWidgets import (QMainWindow, QWidget, QAction, qApp, QPushButton,
     QHBoxLayout, QVBoxLayout, QGridLayout,QCheckBox, QSlider, QLabel, QTextEdit,
@@ -38,10 +38,10 @@ class MainWindow(QMainWindow):
         self.settings_window = None
         self.app_pallete = None
         self.has_tesseract = self.check_tesseract()
-        print("has_tesseract",self.has_tesseract)
         self.available_langs = [
             "pt",
-            "en"
+            "en",
+            "es"
         ]
         # Console logger
         # logger is initialized in load_settings
@@ -180,10 +180,11 @@ class MainWindow(QMainWindow):
         has_themes = self.load_custom_themes()
         if theme == "default":
             self.logger.debug(_("Theme is default"))
-        elif theme == "STPDF-dark":
+        elif theme == "STPDF-dark" or theme == "STPDF-cmder":
             if has_themes:
-                self.logger.debug(_("Changing to dark theme"))
-                theme = os.path.abspath("themes/STPDF-dark.ini")
+                dmsg = "%s: %s" % (_("Changing theme to"), theme)
+                self.logger.debug(dmsg)
+                theme = os.path.abspath("themes/%s.ini" % theme)
                 self.theme_config = configparser.ConfigParser()
                 self.theme_config.read(theme)
                 self.set_theme()
@@ -400,7 +401,10 @@ class MainWindow(QMainWindow):
                 lang = self.settings["lang"]
                 if lang in self.available_langs and lang != "en":
                     modl = "%s_gui" % lang
-                    lang = gettext.translation(modl, localedir="locale")
+                    # for some reason this seems necessary when running the app as an executable
+                    # after building
+                    current_locale, encoding = locale.getdefaultlocale()
+                    lang = gettext.translation("pt_gui", "locale/", [current_locale])
                     lang.install()
                 keep = self.settings["keep_vals"]
                 # `if keep or not keep:` sounds a good idea,
