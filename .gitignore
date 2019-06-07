@@ -4,8 +4,6 @@ TEST_OUTPUT
 TEST_IMAGES
 *.pdf
 *.pckl
-_site
-.sass-cache
-.jekyll-metadata
-docs/_*.*
 *.vscode
+build
+dist

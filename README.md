@@ -72,15 +72,13 @@ Tessseract is not easily available for windows [however](https://github.com/UB-M
 >The Mannheim University Library (UB Mannheim) uses Tesseract to perform OCR of historical German newspapers (Allgemeine Preußische Staatszeitung, Deutscher Reichsanzeiger). The latest results with OCR from more than 360,000 scans are available online.
 >Normally we run Tesseract on Debian GNU Linux, but there was also the need for a Windows version. That's why we have built a Tesseract installer for Windows.
 
- * TODO:
-
-    1. check if user has tesseract
-    2. block the option remove rotation if the above is false
-    3. investigate other ways to remove rotation altough tesseract seems to be the fastest
-    4. this probably fails on images that contain little, few or no text at all, the exception should be handle properly
-    5. Install tesseract for the user?
 
 ##### Translation
 
-`pygettext.py -d base -o locales/base.pot file.py`
+`python C:\Python36\Tools\i18n\pygettext.py -d base -o locales/base.pot file.py`
 this will generate a "base" pot in the locales folder, which can then be edited and generate the appropiate compiled translations
+
+**for some reason [this](https://stackoverflow.com/a/3838090/9646483) seems necessary when running the app as an executable after building**
+
+    current_locale, encoding = locale.getdefaultlocale()
+    lang = gettext.translation("pt_gui", "locale/", [current_locale])
