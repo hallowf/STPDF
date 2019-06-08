@@ -1,0 +1,53 @@
+jobs:
+  include:
+  - stage: Linux build
+    os: linux
+    language: python
+    sudo: required
+    dist: xenial
+    python: 3.6
+    addons:
+      apt:
+        packages:
+        - tesseract-ocr
+        - p7zip-full
+    env:
+    - PY=python3
+  - stage: Windows build
+    os: windows
+    language: shell
+    python: 3.6
+    env:
+    - PY=py
+
+before_install:
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+    ./scripts/osx_before_install.sh;
+  elif  [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+    ./scripts/lin_before_install.sh;
+  elif [[ "$TRAVIS_OS_NAME" == "windows" ]]; then
+    ./scripts/win_before_install.bat;
+  fi
+
+install:
+- "$PY -m pip install -r requirements.txt"
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+    ./scripts/osx_install.sh;
+  elif [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+    ./scripts/lin_install.sh;
+  elif [[ "$TRAVIS_OS_NAME" == "windows" ]]; then
+    ./scripts/win_install.bat;
+  fi
+
+script:
+- echo done
+
+
+deploy:
+  provider: releases
+  api_key:
+    secure: fF5AD7sz38bCcWvm6ef4mWvaqe3uHL5v/QSd0pAks7osnRers0eFqvkJ3Knd535xekN62L/dQWfUiOBjTw9i3zEt+Dx1GPjhQcQe8c1hjDCucAy9sHdqCV2e90Ekudw8adLaKsop/y5rH+QTD0Ov7E8LZvAHHpumGFzrtmvg+p8uFCIc93isPMnzD0cMIBqcLWzxBElTp6aGdhv3DiUjOZfyO0SURl87RLFGV+KQ/qnsJX6C6wPC+fGr6mh95+lQE/0zkR1+uBBFT545E2kPhuZZakHLJNydFHp+QUupSKtWHqpLPom+A2FvQpiHom4CmZk4UV1YAJBpi/qk04cAXmDrqFb1G3TzFTZAqtzbXHsBJR9Y0JGobj8fnFrkEDzy6X56Bjw8CgORoSYQA5DZMfvtAhKm3jPHgurICQ7u+7WmNxJIfYdvBIAGx2sWwzHAmjsFPVAV1fe2e/P/49V2/mGOUUx49yiVp8JyIoBV50Ju0K5PajpXnREsz06BeoTniBCmN2VES6BmAYJSllegfXj/ZoI9qFV5vQHKiH/4a8rbvy1EiLfki9Q0z2HaHarYZd9V8WkGP2kaHT52/9lA/HPkWalk0R2EDD+9ovzm9Wt9mVld2k9JjtE62Hfjo0dQJ7peqCHE5zfCo2qh4UQ5w21+lvBtXeE5nkc/ztsLyYc=
+  file_glob: true
+  file: dist/*
+  on:
+    repo: hallowf/STPDF

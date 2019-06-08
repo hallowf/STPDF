@@ -2,3 +2,4 @@ PyQt5
 Pillow
 pytesseract
 PyInstaller
+virtualenv==16.1
