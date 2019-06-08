@@ -80,5 +80,12 @@ this will generate a "base" pot in the locales folder, which can then be edited 
 
 **for some reason [this](https://stackoverflow.com/a/3838090/9646483) seems necessary when running the app as an executable after building**
 
-    current_locale, encoding = locale.getdefaultlocale()
-    lang = gettext.translation("pt_gui", "locale/", [current_locale])
+    # however to  work with all langs on all systems requires some modifications
+    current_locale, _ = locale.getdefaultlocale()
+    cl = current_locale.split("_")
+    if lang != cl[0]:
+        # however this stupid hack seems to work
+        current_locale = "%s_%s" % (lang, lang.upper())
+    lang = gettext.translation(modl,
+                                "locale/", [current_locale])
+    lang.install()
