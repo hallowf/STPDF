@@ -2,4 +2,5 @@ PyQt5
 Pillow
 pytesseract
 PyInstaller
-virtualenv==16.1
+# Required for windows travis ci build
+#virtualenv==16.1

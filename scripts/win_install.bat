@@ -1,4 +1,5 @@
 REM "Creating virtualenv so that os detects pyinstaller"
+%PY% -m pip install virtualenv==16.1
 %PY% -m virtualenv venv
 venv\Scripts\activate.bat
 REM "Reinstalling requirements on virtualenv"
