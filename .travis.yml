@@ -49,6 +49,6 @@ deploy:
   api_key:
     secure: "sIp5V9SauHzRWj7ipc6MyfxARWV9yG4mgN+hvEmlnen3igjQ9VQvjRPqVUjvitgm0Q0teVlQH4nDh4f4J35no2+uupH4ZA24nf8pvoS0gTQeg5mVdapzddL+TVdvp+VPo6gbszUUBoOFDrgO9sDmgNJnMJ2OCegY4CkbJwEIH/bNqq9YmArjseUSGzhLpsqSFC7fhbxoQ/N9AHAh1zkb01cS8du5atvcYSd/YHhj2DTQ5qz8e8dbhyrmAPmRPuK/MA9j+Dgjz+Pkd7iREXHJQYsrJmLn1fOreNVZn4XOdiMsqK7I72t5/CW0ZjMQCbvw6vIms6Sv8QMwb7RuOFEN9GVbksbWPjrjyUwK3taPJaBLA50/+xQf1GAFsNlESzOCjmBbiuZyEgRp1A9z6zptL1YbohPv8+l5pgfVfNnPPQBDjdWppTORQtpCdue/l1H+PZZXpKPpRDYhJ+B4wcxUwn2o2ZIy+Ii752U1rtXgAYONe7Q+3jzRYmpbn0ZE2KmSA4hzqaYSepLEOFUVLw4JtE+HZ0kaOV+1d8CSyinszYHZ3PoneUlpNpxUWCAXJz3zOKX16+b3Py0sztVojNuhuGUaeoCdcNR0sb+lUwusgIiaxmFNAyTg3ZZ4qZg6JGyEvcDVX0tAvQwsI90ttPQEexKS6SRonyq4tJ3s9NEWDGI="
   file_glob: true
-  file: dist/*
+  file: src/dist/*
   on:
     repo: hallowf/STPDF
