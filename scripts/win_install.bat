@@ -7,11 +7,11 @@ python -m pip install -r requirements.txt
 REM "Building GUI"
 cd src
 pyinstaller --upx-dir=%UPX_PATH% gui.spec
-7z a STPDF-gui.7z dist\
+7z a STPDF-gui.7z dist > NUL:
 RMDIR /Q/S dist
 RMDIR /Q/S build
 pyinstaller --upx-dir=%UPX_PATH% stpdf_cli.spec
-7z a STPDF-cli.7z dist
+7z a STPDF-cli.7z dist > NUL:
 RMDIR /Q/S dist
 MKDIR dist
 xcopy *.7z dist
