@@ -196,11 +196,13 @@ class MainWindow(QMainWindow):
                                                    "Source", ".",
                                                    QFileDialog.ShowDirsOnly)
             self.files_location = dir
+            self.user_values["source"] = self.files_location
         elif directory == "dest":
             dir = QFileDialog.getExistingDirectory(self,
                                                    "Destination", ".",
                                                    QFileDialog.ShowDirsOnly)
             self.files_destination = dir
+            self.user_values["dest"] = self.files_destination
         else:
             self.logger.error("%s %s" % (
                             _("Invalid directory parameter"), directory))
@@ -480,11 +482,15 @@ class MainWindow(QMainWindow):
                     pickle.dump(self.user_values, open("values.pckl", "wb"))
                 else:
                     self.user_values = pickle.load(open("values.pckl", "rb"))
-                    self.files_location = self.user_values["source"]
-                    self.files_destination = self.user_values["dest"]
-                    self.deskew_check.setChecked(self.user_values["deskew"])
-                    self.do_split.setChecked(self.user_values["split"])
-                    self.split_slider.setValue(self.user_values["split_at"])
+                    if self.user_values:
+                        self.files_location = self.user_values["source"]
+                        self.files_destination = self.user_values["dest"]
+                        self.deskew_check.setChecked(self.user_values["deskew"])
+                        self.do_split.setChecked(self.user_values["split"])
+                        self.split_slider.setValue(self.user_values["split_at"])
+                    else:
+                        self.logger.error("Failed to load user values: %s" % self.user_values)
+                        raise KeyError
         except KeyError:
             self.logger.warning(_("Invalid values found, removing file"))
             os.remove("values.pckl")
@@ -539,6 +545,8 @@ class MainWindow(QMainWindow):
     # Save settings and values if keep_vals is checked
     def do_save(self):
         print("Saving")
+        # TODO: add a new function here to update the user values
+        # in case the user has changed something in the UI
         if self.settings["keep_vals"]:
             self.logger.debug("User values: %s" % self.user_values)
             pickle.dump(self.user_values, open("values.pckl", "wb"))
@@ -580,9 +588,9 @@ class MainWindow(QMainWindow):
                         self.logger.error(msg)
                         self.gui_logger.append(msg)
                     else:
-                        self.gui_logger.append(e)
-                        self.logger.critical(e)
-                        pass
+                        self.gui_logger.append(str(e))
+                        self.logger.critical(str(e))
+                        raise e
                 self.is_running = False
             else:
                 self.logger.error(has_req)
