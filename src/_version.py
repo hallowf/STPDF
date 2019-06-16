@@ -34,6 +34,12 @@ else:
         tag = "%s-%s" % (c_os, version)
         print("Setting tag:", tag)
         os.environ["TRAVIS_TAG"] = tag
+        if c_os == "Windows":
+            subprocess.check_output(["set", "tag=%s" % tag])
+        elif c_os == "Linux":
+            subprocess.check_output(["export", "tag=%s" % tag])
+        else:
+            print("no support")
 
     def get_git_revision_short_hash():
         try:
