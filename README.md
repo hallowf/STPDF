@@ -89,3 +89,5 @@ this will generate a "base" pot in the locales folder, which can then be edited 
     lang = gettext.translation(modl,
                                 "locale/", [current_locale])
     lang.install()
+
+##### Gui logger 
