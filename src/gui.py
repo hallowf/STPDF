@@ -22,6 +22,8 @@ import os
 import gettext
 import configparser
 import locale
+from multiprocessing import Process
+from threading import Thread
 # PyQt5
 from PyQt5.QtWidgets import (QMainWindow, QWidget, QAction, qApp, QPushButton,
                              QHBoxLayout, QVBoxLayout, QGridLayout, QCheckBox,
@@ -37,6 +39,7 @@ from components import TipSlider, SettingsWindow
 # Backend and other requirements
 from stpdf.custom_exceptions import DirMissing, OutDirNotEmpty
 from stpdf.converter import Converter
+from stpdf.utils import terminate_thread
 from pytesseract.pytesseract import TesseractNotFoundError
 from pytesseract import image_to_string
 from PIL import Image
@@ -48,15 +51,17 @@ class MainWindow(QMainWindow):
         super().__init__()
         # App required parameters
         self.parent = parent
+        self.stop_thread = False
+        self.converter_thread = None
         self.title = 'STPDF'
-        self.icon = QtGui.QIcon('Icon.ico')
+        self.icon = QtGui.QIcon('stpdf.ico')
         self.user_themes = {"default": "default"}
         self.settings = None
         self.user_values = None
         self.retries = 0
         self.files_location = ""
         self.files_destination = ""
-        self.app_lang = "en"
+        self.app_lang = None
         self.log_levels = ["debug", "info", "warning", "error", "critical"]
         self.is_running = False
         self.settings_window = None
@@ -139,6 +144,9 @@ class MainWindow(QMainWindow):
         self.run_button = QPushButton(_("Run"))
         self.run_button.setStatusTip(_("Run the program"))
         self.run_button.clicked.connect(self.do_run)
+        self.stop_button = QPushButton(_("Stop"))
+        self.stop_button.setStatusTip(_("Stops the program"))
+        self.stop_button.clicked.connect(self.do_stop)
         self.show_vals = QPushButton(_("Show values"))
         self.show_vals.clicked.connect(self.show_values)
         self.show_vals.setStatusTip(_("Show your current input values"))
@@ -174,6 +182,7 @@ class MainWindow(QMainWindow):
         lh_grid.addWidget(self.show_vals, 6, 0)
         lh_grid.addWidget(self.clean_button, 6, 1)
         lh_grid.addWidget(self.run_button, 7, 0)
+        lh_grid.addWidget(self.stop_button, 7, 1)
         # Right Box
         rh_box = QHBoxLayout()
         rh_box.addWidget(self.gui_logger)
@@ -447,6 +456,7 @@ class MainWindow(QMainWindow):
                         current_locale = "%s_%s" % (lang, lang.upper())
                     lang = gettext.translation(modl,
                                                "locale/", [current_locale])
+                    self.app_lang = lang
                     lang.install()
                 keep = self.settings["keep_vals"]
                 # `if keep or not keep:` sounds a good idea,
@@ -562,36 +572,68 @@ class MainWindow(QMainWindow):
         except TesseractNotFoundError:
             return False
 
-    # Runs stpdf-core
+    def threaded_run(self):
+        fl = self.files_location
+        fd = self.files_destination
+        di = self.deskew_check.isChecked()
+        ds = self.do_split.isChecked()
+        sa = self.split_slider.value()
+        cvt = Converter(fl, fd, split=(ds, sa),
+                        deskew=di, lang=self.app_lang)
+        try:
+            for line in cvt.verify_copy_size():
+                if self.stop_thread:
+                    break
+                self.gui_logger.append(str(line))
+                self.logger.info(str(line))
+            for line in cvt.make_pdf():
+                if self.stop_thread:
+                    break
+                self.gui_logger.append(line)
+                self.logger.info(line)
+        except Exception as e:
+            en = e.__class__.__name__
+            if en == "TesseractNotFoundError":
+                msg = _("Failed to find tesseract on your system, verify it is installed and on PATH environment variable")
+                self.logger.error(msg)
+                self.gui_logger.append(msg)
+            else:
+                print("Thread exception", e)
+        self.is_running = False
+        self.stop_thread = False
+
+    # Tries to kill the thread if it is alive
+    def do_stop(self):
+        if self.is_running:
+            if self.converter_thread is not None:
+                print("Found alive thread trying to join it")
+                self.stop_thread = True
+                res = self.converter_thread.join(5)
+                if self.converter_thread._is_stopped:
+                    terminate_thread(self.converter_thread)
+                    self.is_running = False
+                    self.stop_thread = False
+                else:
+                    print("Thread hasn't stopped retrying")
+                    self.do_stop()
+            else:
+                self.is_running = False
+        else:
+            msg = _("Program is not running")
+            self.gui_logger.append(msg)
+            self.logger.info(msg)
+
+    # Runs stpdf-core by calling it in a new thread
     def do_run(self):
         if not self.is_running:
+            if self.converter_thread is not None:
+                self.do_stop()
             has_req = self.verify_required()
             if has_req is True:
                 self.is_running = True
-                fl = self.files_location
-                fd = self.files_destination
-                di = self.deskew_check.isChecked()
-                ds = self.do_split.isChecked()
-                sa = self.split_slider.value()
-                cvt = Converter(fl, fd, split=(ds, sa), deskew=di)
-                try:
-                    for line in cvt.verify_copy_size():
-                        self.gui_logger.append(line)
-                        self.logger.info(line)
-                    for line in cvt.make_pdf():
-                        self.gui_logger.append(line)
-                        self.logger.info(line)
-                except Exception as e:
-                    en = e.__class__.__name__
-                    if en == "TesseractNotFoundError":
-                        msg = _("Failed to find tesseract on your system, verify it is installed and on PATH environment variable")
-                        self.logger.error(msg)
-                        self.gui_logger.append(msg)
-                    else:
-                        self.gui_logger.append(str(e))
-                        self.logger.critical(str(e))
-                        raise e
-                self.is_running = False
+                self.converter_thread = Thread(target=self.threaded_run, args=())
+                print("Thread is:", self.converter_thread)
+                self.converter_thread.start()
             else:
                 self.logger.error(has_req)
                 self.gui_logger.append(has_req)
