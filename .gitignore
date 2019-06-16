@@ -7,3 +7,4 @@ TEST_IMAGES
 *.vscode
 build
 dist
+version.txt
