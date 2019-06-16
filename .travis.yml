@@ -43,6 +43,13 @@ script:
 - echo done
 
 
+before_deploy:
+  # Set up git user name and tag this commit
+  - git config --local user.name "hallowf"
+  - git config --local user.email "YOUR GIT USER EMAIL"
+  - $PY src/_version.py --tag
+  - git tag $TRAVIS_TAG
+
 deploy:
   provider: releases
   skip_cleanup: true
