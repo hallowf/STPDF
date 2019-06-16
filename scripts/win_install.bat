@@ -1,5 +1,7 @@
 REM "Setting path again because why not"
 SET PATH=%PATH%;C:\Python37\scripts
+REM "Setting upx path"
+mkdir cd UPX\ && SET UPX_PATH=%cd% && cd ..
 REM "Building GUI"
 cd src\
 pyinstaller --upx-dir=%UPX_PATH% gui.spec --log-level ERROR

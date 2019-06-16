@@ -53,8 +53,8 @@ else:
         return 'dev.%s' % ghash
 
     revision = get_git_revision_short_hash()
-    __version__ = "V0.1"
-    __version2__ = 'V0.1+%s' % revision
+    __version__ = "V0.1a"
+    __version2__ = 'V0.1-Alpha+%s' % revision
     __releaseDate__ = '16/06/2019'
     __releaseDate2__ = '16 June, 2017'
     data = {
