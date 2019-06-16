@@ -32,6 +32,7 @@ else:
         c_os = "Windows" if c_os.startswith("win") else \
             ("Linux" if c_os.startswith("lin") else "Mac")
         tag = "%s-%s" % (c_os, version)
+        print("Setting tag:", tag)
         os.environ["TRAVIS_TAG"] = tag
 
     def get_git_revision_short_hash():
@@ -62,6 +63,6 @@ else:
         "r_date2": __releaseDate2__
     }
     # print(data)
+    pickle.dump(data, open(p_source, "wb"))
     if tag:
         set_version_tag(__version__)
-        pickle.dump(data, open(p_source, "wb"))

@@ -31,7 +31,7 @@ before_install:
 
 install:
 - "$PY -m pip install -r requirements.txt"
-- $PY src/_version.py --tag
+- $PY src/_version.py
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
     ./scripts/osx_install.sh;
   elif [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
@@ -47,14 +47,14 @@ script:
 before_deploy:
   # Set up git user name and tag this commit
   - git config --local user.name "hallowf"
-  - git config --local user.email $GITHUB_EMAIL
+  - git config --local user.email "$GITHUB_EMAIL"
+  - $PY src/_version.py --tag
   - git tag $TRAVIS_TAG
 
 deploy:
   provider: releases
   skip_cleanup: true
-  api_key:
-    secure: $DEPLOY_KEY
+  api_key: "$DEPLOY_KEY"
   file_glob: true
   file: src/dist/*
   on:
