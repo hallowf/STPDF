@@ -1,7 +1,9 @@
 import sys
 import os
+import pickle
 
 __version__ = None
+__version2__ = None
 __releaseDate__ = None
 __releaseDate2__ = None
 
@@ -20,8 +22,10 @@ if getattr(sys, "frozen", False):
 else:
     import subprocess
     args = sys.argv
-    print(args)
     tag = True if "--tag" in sys.argv else False
+    c_path = os.getcwd()
+    p_source = "version.pckl" if c_path.endswith("src") \
+        else "src/version.pckl"
 
     def set_version_tag(version):
         c_os = sys.platform
@@ -60,4 +64,4 @@ else:
     # print(data)
     if tag:
         set_version_tag(__version__)
-        pickle.dump(data, open("version.pckl", "wb"))
+        pickle.dump(data, open(p_source, "wb"))

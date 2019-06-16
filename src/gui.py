@@ -43,12 +43,15 @@ from stpdf.utils import terminate_thread
 from pytesseract.pytesseract import TesseractNotFoundError
 from pytesseract import image_to_string
 from PIL import Image
+from _version import (__version__, __version2__,
+                      __releaseDate__, __releaseDate2__)
 
 
 class MainWindow(QMainWindow):
 
     def __init__(self, parent):
         super().__init__()
+        print("VERSION:", __version__)
         # App required parameters
         self.parent = parent
         self.stop_thread = False
