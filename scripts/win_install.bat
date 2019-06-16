@@ -1,9 +1,5 @@
-REM "Creating virtualenv so that os detects pyinstaller"
-%PY% -m pip install virtualenv==16.1
-%PY% -m virtualenv venv
-venv\Scripts\activate.bat
-REM "Reinstalling requirements on virtualenv"
-python -m pip install -r requirements.txt
+REM "Setting path again because why not"
+SET PATH=%PATH%;C:\Python37\scripts
 REM "Building GUI"
 cd src\
 pyinstaller --upx-dir=%UPX_PATH% gui.spec
