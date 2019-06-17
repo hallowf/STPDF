@@ -19,7 +19,9 @@ from PyQt5.QtWidgets import (QMainWindow, QWidget, QAction, QPushButton,
                              QCheckBox, QSlider, QLabel, QApplication,
                              QStyleOptionSlider, QComboBox, QToolTip)
 from PyQt5.QtGui import QIcon
-from PyQt5 import QtCore
+from PyQt5 import QtCore, QtGui
+from _version import (__version__, __version2__,
+                      __releaseDate__, __releaseDate2__)
 
 
 # https://stackoverflow.com/a/31658984
@@ -59,7 +61,6 @@ class AboutWindow(QMainWindow):
         super(AboutWindow, self).__init__(parent)
         self.parent = parent
         self.title = _("About")
-        # main_menu = self.menuBar()
         self.init_ui()
 
     # overrides close event, removes settings_window's reference from parent
@@ -78,9 +79,29 @@ class AboutWindow(QMainWindow):
         # Layout ---------------------
         # horizontal grid
         h_grid = QGridLayout()
-        h_grid.setSpacing(5)
+        h_grid.setSpacing(10)
         # addWidget(widget,fromRow,fromCol,rowSpan,colSpan)
-        h_grid.addWidget(QLabel(_("Language:")), 0, 0)
+        about_s = QLabel(_("About STPDF"))
+        about_s.setFont(QtGui.QFont("Times", 12, QtGui.QFont.Bold))
+        h_grid.addWidget(about_s, 0, 1)
+        build = QLabel(_("Build with:"))
+        build.setFont(QtGui.QFont("Times", 8, QtGui.QFont.Bold))
+        h_grid.addWidget(build, 1, 0)
+        bw = QPushButton("Python, PyQt5")
+        bw.setEnabled(False)
+        h_grid.addWidget(bw, 1, 1)
+        version = QLabel(_("Version:"))
+        version.setFont(QtGui.QFont("Times", 8, QtGui.QFont.Bold))
+        h_grid.addWidget(version, 2, 0)
+        ver = QPushButton(str(__version__))
+        ver.setEnabled(False)
+        h_grid.addWidget(ver, 2, 1)
+        developed = QLabel(_("Developed by:"))
+        developed.setFont(QtGui.QFont("Times", 8, QtGui.QFont.Bold))
+        h_grid.addWidget(developed, 3, 0)
+        dev = QPushButton("Alexandre Cortegaça")
+        dev.setEnabled(False)
+        h_grid.addWidget(dev, 3, 1)
 
         # set layouts and Geometry
         window.setLayout(h_grid)
@@ -89,7 +110,7 @@ class AboutWindow(QMainWindow):
         # window.move(100, 100)
         # Set the Main window and widget geometry
         # # x: screen x pos, y: screen y pos, width, height
-        window.setGeometry(0, 0, 300, 300)
+        window.setGeometry(20, 0, 280, 200)
         self.setGeometry(600, 600, 260, 350)
         self.setFixedSize(450, 300)
         pallete = getattr(self.parent, "app_pallete", None)
