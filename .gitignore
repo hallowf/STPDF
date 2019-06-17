@@ -4,7 +4,8 @@ TEST_OUTPUT
 TEST_IMAGES
 *.pdf
 *.pckl
-*.vscode
+.vscode
+.mypy_cache
 build
 dist
 version.txt

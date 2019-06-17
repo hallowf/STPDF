@@ -34,7 +34,7 @@ from PyQt5.QtGui import QDesktopServices
 from PyQt5.QtCore import Qt, QUrl
 
 # Custom components
-from components import TipSlider, SettingsWindow
+from components import TipSlider, SettingsWindow, AboutWindow
 
 # Backend and other requirements
 from stpdf.custom_exceptions import DirMissing, OutDirNotEmpty
@@ -68,6 +68,7 @@ class MainWindow(QMainWindow):
         self.log_levels = ["debug", "info", "warning", "error", "critical"]
         self.is_running = False
         self.settings_window = None
+        self.about_window = None
         self.app_pallete = None
         self.has_tesseract = self.check_tesseract()
         self.available_langs = [
@@ -94,18 +95,23 @@ class MainWindow(QMainWindow):
         menu_exit.triggered.connect(qApp.quit)
 
         # Help link
-        self.menu_help = QAction(_("Help/About"), self)
+        self.menu_help = QAction(_("Help"), self)
         self.menu_help.setStatusTip(_("Open the documentation in a browser"))
-        self.menu_help.triggered.connect(lambda: QDesktopServices.openUrl(QUrl("https://github.com/hallowf/STPDF")))
+        self.menu_help.triggered.connect(
+            lambda: QDesktopServices.openUrl(
+                QUrl("https://github.com/hallowf/STPDF")))
 
         # About link
         self.menu_about = QAction(_("About STPDF"), self)
-        self.menu_about.setStatusTip(_("Open info page in a browser"))
+        self.menu_about.setStatusTip(_("Open info page"))
+        self.menu_about.triggered.connect(
+            lambda: self.on_menu_action("about"))
         # SettingsWindow
         self.menu_settings = QAction(_("Settings"), self)
         self.menu_settings.setShortcut("Ctrl+O")
         self.menu_settings.setStatusTip(_("Open settings window"))
-        self.menu_settings.triggered.connect(lambda: self.on_menu_action("settings"))
+        self.menu_settings.triggered.connect(
+            lambda: self.on_menu_action("settings"))
 
         # Add menus
         file_menu = main_menu.addMenu(_("App"))
@@ -114,6 +120,7 @@ class MainWindow(QMainWindow):
         options_menu = main_menu.addMenu(_("Options"))
         options_menu.addAction(self.menu_settings)
         options_menu.addAction(self.menu_help)
+        options_menu.addAction(self.menu_about)
 
         self.init_ui()
 
@@ -216,8 +223,8 @@ class MainWindow(QMainWindow):
             self.files_destination = dir
             self.user_values["dest"] = self.files_destination
         else:
-            self.logger.error("%s %s" % (
-                            _("Invalid directory parameter"), directory))
+            self.logger.error("%s %s" % (_("Invalid directory parameter"),
+                                         directory))
 
     # Main function that loads the theme provided in settings
     def load_theme(self, theme="default"):
@@ -254,8 +261,7 @@ class MainWindow(QMainWindow):
                         theme = file.replace(".ini", "")
                         if theme == "default":
                             self.logger.error(
-                                _("Found a default theme in themes folder, but the default theme is already defined")
-                            )
+                                _("Found a default theme in themes folder, but the default theme is already defined"))
                         else:
                             self.user_themes[theme] = source_path
             return True
@@ -406,6 +412,12 @@ class MainWindow(QMainWindow):
                 msg = _("Settings are already open")
                 self.logger.error(msg)
                 self.gui_logger.append(msg)
+        elif action == "about":
+            if self.about_window is None:
+                try:
+                    self.about_window = AboutWindow(self)
+                except Exception as e:
+                    raise
         else:
             self.logger.error(_("Invalid action"), action)
 
@@ -545,13 +557,17 @@ class MainWindow(QMainWindow):
         if not fl or not fd:
             fl = fl or "None"
             fd = fd or "None"
-            return _("Location or destination undefined") + "\n\t%s %s\n\t%s %s" % (_("Source:"),fl,_("Destination:"),fd)
+            return _("Location or destination undefined") + \
+                "\n\t%s %s\n\t%s %s" % (_("Source:"),
+                                        fl,
+                                        _("Destination:"),
+                                        fd)
         elif not os.path.isdir(self.files_location):
             return _("Missing files location")
         elif len(os.listdir(self.files_location)) <= 1:
             return _("Location is empty, no files to copy")
         elif ds and sa < 3:
-            return _("Minimun split is 3")
+            return _("Minimum split is 3")
         else:
             return True
 
