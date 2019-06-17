@@ -1,3 +1,11 @@
+### TODO:
+
+* Missing translations: spanish and portuguese for all components except gui
+* Optimize the way threads are used
+* Some images fail to get rotated, this must be invistigated further
+* add option to not copy files, or only make pdf
+* add option to not make pdf, or only copy files
+* Optimize the way the images are handled to reduce memory usage and improve performance in cases where there are a lot of images to process
 
 
 
@@ -16,7 +24,7 @@ https://stackoverflow.com/a/17822099
   * TODO:
 
     1. Most is tested there are still some stuff not being used below is a list of all possible objects that can have it's color changed
-      * Active
+      * Active <- Selected item???
       * All <- I'm not even going to try this
       * AlternateBase <- no idea
       * Background <- changes background of window
@@ -24,18 +32,18 @@ https://stackoverflow.com/a/17822099
       * BrightText
       * Button <- changes color of button background
       * ButtonText <- change the color of the button text but just QPushButton
-      * ColorGroup
-      * ColorRole
-      * Current
-      * Dark
-      * Disabled
+      * ColorGroup <- ???
+      * ColorRole <- ???
+      * Current <- ???
+      * Dark <- ???
+      * Disabled <- Probably for disabled items like actions checkboxes and buttons, not tested
       * Foreground <- changes QLabel color
       * Highlight <- changes the highlight for QComboBox items and menu items
       * HighlightedText
       * Inactive
       * Light
-      * Link
-      * LinkVisited
+      * Link <- I don't think there will be any links in the app...
+      * LinkVisited <- same as above
       * Mid
       * Midlight
       * NColorGroups
