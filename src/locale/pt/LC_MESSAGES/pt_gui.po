@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2019-06-07 01:23+0100\n"
-"PO-Revision-Date: 2019-06-07 01:33+0100\n"
+"POT-Creation-Date: 2019-06-17 00:19+0100\n"
+"PO-Revision-Date: 2019-06-17 00:23+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: pt\n"
@@ -17,275 +17,278 @@ msgstr ""
 "X-Generator: Poedit 2.2.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: gui.py:52
+#: gui.py:86
 msgid "Save"
 msgstr "Guardar"
 
-#: gui.py:54
+#: gui.py:88
 msgid "Save your settings to a file"
 msgstr "Salvar suas configurações em um arquivo"
 
-#: gui.py:58
+#: gui.py:92
 msgid "Exit"
 msgstr "Sair"
 
-#: gui.py:60
+#: gui.py:94
 msgid "Leave The App"
 msgstr "Deixar o aplicativo"
 
-#: gui.py:64
-msgid "Help/About"
-msgstr "Ajuda/sobre"
+#: gui.py:98
+msgid "Help"
+msgstr "Ajuda"
 
-#: gui.py:65
+#: gui.py:99
 msgid "Open the documentation in a browser"
 msgstr "Abrir a documentação em um navegador"
 
-#: gui.py:69
+#: gui.py:105
 msgid "About STPDF"
 msgstr "Sobre o STPDF"
 
-#: gui.py:70
-msgid "Open info page in a browser"
-msgstr "Abrir página de informações em um navegador"
+#: gui.py:106
+msgid "Open info page"
+msgstr "Abrir página de informações"
 
-#: gui.py:72
+#: gui.py:110
 msgid "Settings"
 msgstr "Configurações"
 
-#: gui.py:74
+#: gui.py:112
 msgid "Open settings window"
 msgstr "Abrir janela de configurações"
 
-#: gui.py:78
+#: gui.py:117
 msgid "App"
 msgstr "Aplicação"
 
-#: gui.py:81
+#: gui.py:120
 msgid "Options"
 msgstr "Opções"
 
-#: gui.py:96 gui.py:99
+#: gui.py:136 gui.py:139
 msgid "Search"
 msgstr "Pesquisar"
 
-#: gui.py:98
+#: gui.py:138
 msgid "Location of the files"
 msgstr "Localização dos ficheiros"
 
-#: gui.py:101
+#: gui.py:141
 msgid "Destination of files created"
 msgstr "Destino dos ficheiros criados"
 
-#: gui.py:103
+#: gui.py:143
 msgid "Split into multiple PDF files"
 msgstr "Dividido em vários ficheiros PDF"
 
-#: gui.py:107
+#: gui.py:147
 msgid "The app failed to find tesseract on your system"
 msgstr "A Aplicação falhou ao tentar encontrar tesseract no seu sistema"
 
-#: gui.py:109
+#: gui.py:150
 msgid "Removes rotation"
 msgstr "Remove a rotação"
 
-#: gui.py:113
+#: gui.py:154
 msgid "Run"
 msgstr "Iniciar"
 
-#: gui.py:114
+#: gui.py:155
 msgid "Run the program"
 msgstr "Iniciar o programa"
 
-#: gui.py:116
+#: gui.py:157
+msgid "Stop"
+msgstr "Parar"
+
+#: gui.py:158
+msgid "Stops the program"
+msgstr "Parar o programa"
+
+#: gui.py:160
 msgid "Show values"
 msgstr "Mostar valores"
 
-#: gui.py:118
+#: gui.py:162
 msgid "Show your current input values"
 msgstr "Mostrar os valores atualmente inseridos"
 
-#: gui.py:119
+#: gui.py:163
 msgid "Clean log"
 msgstr "Limpar o registo"
 
-#: gui.py:121
+#: gui.py:165
 msgid "Cleans the current log"
 msgstr "Limpa o registo atual"
 
-#: gui.py:137 gui.py:487
+#: gui.py:181 gui.py:561
 msgid "Source:"
 msgstr "Localização dos ficheiros:"
 
-#: gui.py:139 gui.py:487
+#: gui.py:183 gui.py:563
 msgid "Destination:"
 msgstr "Destino dos ficheiros:"
 
-#: gui.py:141
+#: gui.py:185
 msgid "Deskew:"
 msgstr "Remover rotação:"
 
-#: gui.py:143
+#: gui.py:187
 msgid "Split scans:"
 msgstr "Dividir scans:"
 
-#: gui.py:146
+#: gui.py:190
 msgid "Split at:"
 msgstr "Dividir por:"
 
-#: gui.py:175
+#: gui.py:227
 msgid "Invalid directory parameter"
 msgstr "Parâmetro de directoria inválido"
 
-#: gui.py:181
+#: gui.py:233
 msgid "Theme is default"
 msgstr "Tema predifinido"
 
-#: gui.py:184
+#: gui.py:236
 msgid "Changing theme to"
 msgstr "A mudar tema para"
 
-#: gui.py:191
+#: gui.py:243
 msgid "Missing themes folder"
 msgstr "Pasta de temas em falta"
 
-#: gui.py:199
+#: gui.py:252
 msgid "Invalid theme"
 msgstr "Tema inválido"
 
-#: gui.py:211
+#: gui.py:264
 msgid ""
 "Found a default theme in themes folder, but the default theme is already "
 "defined"
 msgstr ""
-"Tema predefinido encontrado na pasta de temas, mas este tema já está "
-"definido"
+"Tema predefinido encontrado na pasta de temas, mas este tema já está definido"
 
-#: gui.py:221
+#: gui.py:273
 msgid "Trying to set theme"
 msgstr "A tentar mudar o tema"
 
-#: gui.py:224
+#: gui.py:276
 msgid "Successfully verified theme"
 msgstr "Tema verificado com sucesso"
 
-#: gui.py:300
+#: gui.py:352
 msgid "Successfully set theme"
 msgstr "Tema mudado com sucesso"
 
-#: gui.py:302
+#: gui.py:354
 msgid "Failed to verify theme"
 msgstr "Falha ao verificar tema"
 
-#: gui.py:331
+#: gui.py:383
 msgid "Invalid RGB values in app theme"
 msgstr "Encontrados Valores RGB incorretos no tema da aplicação"
 
-#: gui.py:334
+#: gui.py:386
 msgid "Invalid theme RGB value"
 msgstr "Valor de tema RGB, incorreto"
 
-#: gui.py:343
+#: gui.py:396
 msgid "Your selected theme probably has invalid or missing values"
 msgstr "O tema selecionado provavelmente tem valores inválidos ou em falta"
 
-#: gui.py:359
+#: gui.py:412
 msgid "Settings are already open"
 msgstr "Configurações já estão abertas"
 
-#: gui.py:363
+#: gui.py:422
 msgid "Invalid action"
 msgstr "Ação inválida"
 
-#: gui.py:372
+#: gui.py:431
 msgid "Invalid log level"
 msgstr "Nivel de registo inválido"
 
-#: gui.py:381
+#: gui.py:440
 msgid "Console logger is set with log level"
 msgstr "Registo de consola definido com o nivel de logging"
 
-#: gui.py:413
-msgid "Settings loaded successfully"
-msgstr "Definições carregadas com sucesso"
-
-#: gui.py:415
+#: gui.py:483
 msgid "Invalid settings found, removing file"
 msgstr "Definições incorretas encontradas, a remover ficheiro"
 
-#: gui.py:427
+#: gui.py:495
 msgid "Loading user values"
 msgstr "A carregar os valores do utilizador"
 
-#: gui.py:430
+#: gui.py:498
 msgid "Values file does not exist, creating one now"
 msgstr "Ficheiro de valores não existe, a criar um agora"
 
-#: gui.py:447
+#: gui.py:520
 msgid "Invalid values found, removing file"
 msgstr "Valores incorretos encontrados, a remover ficheiro"
 
-#: gui.py:461
+#: gui.py:534
 msgid "Files location"
 msgstr "Localização dos ficheiros"
 
-#: gui.py:462
+#: gui.py:535
 msgid "Files destination"
 msgstr "Destino dos ficheiros criados"
 
-#: gui.py:463
+#: gui.py:536
 msgid "Deskew"
 msgstr "Remover rotação"
 
-#: gui.py:464
+#: gui.py:537
 msgid "Split"
 msgstr "Dividir scans"
 
-#: gui.py:465
+#: gui.py:538
 msgid "Split at"
 msgstr "Dividir por"
 
-#: gui.py:466
+#: gui.py:539
 msgid "Values are"
 msgstr "Valores atuais"
 
-#: gui.py:470
+#: gui.py:543
 msgid "Keep values"
 msgstr "Manter valores"
 
-#: gui.py:471
+#: gui.py:544
 msgid "App theme"
 msgstr "Tema da aplicação"
 
-#: gui.py:472
+#: gui.py:545
 msgid "App language"
 msgstr "Linguagem da aplicação"
 
-#: gui.py:473
+#: gui.py:546
 msgid "Console log Level"
 msgstr "Nivel de registo da consola"
 
-#: gui.py:474
+#: gui.py:547
 msgid "Settings are"
 msgstr "Definições atuais"
 
-#: gui.py:487
+#: gui.py:560
 msgid "Location or destination undefined"
 msgstr "Localização ou destino indefinido"
 
-#: gui.py:489
+#: gui.py:566
 msgid "Missing files location"
 msgstr "Localização dos ficheiros em falta"
 
-#: gui.py:491
+#: gui.py:568
 msgid "Location is empty, no files to copy"
 msgstr "Localização vazia, nenhum ficheiro para copiar"
 
-#: gui.py:493
-msgid "Minimun split is 3"
-msgstr "Valor minimo de divisão é 3"
+#: gui.py:570
+msgid "Minimum split is 3"
+msgstr "A divisão mínima é 3"
 
-#: gui.py:537
+#: gui.py:616
 msgid ""
 "Failed to find tesseract on your system, verify it is installed and on PATH "
 "environment variable"
@@ -293,6 +296,16 @@ msgstr ""
 "Falha ao encontrar tesseract no seu sistema, verifique que está instalado e "
 "na variável de ambiente PATH"
 
-#: gui.py:549
+#: gui.py:641
+msgid "Program is not running"
+msgstr "O programa não está em execução"
+
+#: gui.py:660
 msgid "Program is already running"
-msgstr "O programa já está a correr"
+msgstr "O programa já em execução"
+
+#~ msgid "Help/About"
+#~ msgstr "Ajuda/sobre"
+
+#~ msgid "Settings loaded successfully"
+#~ msgstr "Definições carregadas com sucesso"
