@@ -398,6 +398,7 @@ class MainWindow(QMainWindow):
                 pass
         yield True
 
+    # For opening new windows on menu actions
     def on_menu_action(self, action):
         if action == "settings":
             if self.settings_window is None:
@@ -505,6 +506,8 @@ class MainWindow(QMainWindow):
                 else:
                     self.user_values = pickle.load(open("values.pckl", "rb"))
                     if self.user_values:
+                        msg = "%s: %s" % (_("Loaded user values"), self.user_values)
+                        self.logger.debug(msg)
                         self.files_location = self.user_values["source"]
                         self.files_destination = self.user_values["dest"]
                         self.deskew_check.setChecked(self.user_values["deskew"])
@@ -570,12 +573,24 @@ class MainWindow(QMainWindow):
 
     # Save settings and values if keep_vals is checked
     def do_save(self):
-        print("Saving")
-        # TODO: add a new function here to update the user values
-        # in case the user has changed something in the UI
+        msg = _("Saving")
+        self.logger.info(msg)
+        self.gui_logger.append(msg)
+        vs = self.user_values
+        for val in vs:
+            if val == "source" and vs[val] != self.files_location:
+                vs[val] = self.files_location
+            elif val == "dest" and vs[val] != self.files_destination:
+                vs[val] = self.files_destination
+            elif val == "deskew" and vs[val] != self.deskew_check.isChecked():
+                vs[val] = self.deskew_check.isChecked()
+            elif val == "split" and vs[val] != self.do_split.isChecked():
+                vs[val] = self.do_split.isChecked()
+            elif val == "split_at" and vs[val] != self.split_slider.value():
+                vs[val] = self.split_slider.value()
         if self.settings["keep_vals"]:
-            self.logger.debug("User values: %s" % self.user_values)
-            pickle.dump(self.user_values, open("values.pckl", "wb"))
+            self.logger.debug("User values: %s" % vs)
+            pickle.dump(vs, open("values.pckl", "wb"))
         self.logger.debug("Settings: %s" % self.settings)
         pickle.dump(self.settings, open("settings.pckl", "wb"))
 
@@ -588,6 +603,8 @@ class MainWindow(QMainWindow):
         except TesseractNotFoundError:
             return False
 
+    # A function that runs converter in a new thread
+    # and appends the yielded string to the loggers
     def threaded_run(self):
         fl = self.files_location
         fd = self.files_destination
@@ -622,7 +639,7 @@ class MainWindow(QMainWindow):
     def do_stop(self):
         if self.is_running:
             if self.converter_thread is not None:
-                print("Found alive thread trying to join it")
+                self.logger.debug(_("Found alive thread trying to join it"))
                 self.stop_thread = True
                 res = self.converter_thread.join(5)
                 if self.converter_thread._is_stopped:
@@ -630,7 +647,7 @@ class MainWindow(QMainWindow):
                     self.is_running = False
                     self.stop_thread = False
                 else:
-                    print("Thread hasn't stopped retrying")
+                    self.logger.debug(_("Thread hasn't stopped retrying"))
                     self.do_stop()
             else:
                 self.is_running = False
@@ -648,7 +665,7 @@ class MainWindow(QMainWindow):
             if has_req is True:
                 self.is_running = True
                 self.converter_thread = Thread(target=self.threaded_run, args=())
-                print("Thread is:", self.converter_thread)
+                self.logger.debug("Thread is: {}".format(self.converter_thread))
                 self.converter_thread.start()
             else:
                 self.logger.error(has_req)
