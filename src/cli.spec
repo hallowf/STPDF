@@ -3,7 +3,7 @@
 block_cipher = None
 
 
-a = Analysis(['stpdf_cli.py'],
+a = Analysis(['cli.py'],
              pathex=['D:\\Git\\ScanToPDF\\src'],
              binaries=[],
              datas=[("version.pckl", ".")],
@@ -26,7 +26,7 @@ exe = EXE(pyz,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
-          console=True )
+          console=True)
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,
@@ -34,4 +34,4 @@ coll = COLLECT(exe,
                a.datas,
                strip=False,
                upx=True,
-               name='stpdf_cli')
+               name='STPDF-cli')

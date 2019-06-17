@@ -30,6 +30,7 @@ class STPDFCLI(object):
     def __init__(self, source, dest, split=(False, 0), *args, **kwargs):
         self.source = source
         self.dest = dest
+        self.settings = kwargs.get("settings", None)
         split, split_at = split
         self.split = split
         self.split_at = split_at
@@ -50,7 +51,9 @@ class STPDFCLI(object):
         msg = "%s:%s" % (_("Starting converter with values"), values)
         print(msg)
         cvt = Converter(self.source, self.dest,
-                        split=self.split, deskew=self.deskew)
+                        split=self.split,
+                        deskew=self.deskew,
+                        lang=self.app_lang)
         try:
             for line in cvt.verify_copy_size():
                 print(line)
@@ -63,8 +66,10 @@ class STPDFCLI(object):
         img = Image.new('RGB', (60, 30), color='red')
         try:
             text = image_to_string(img)
+            img.close()
             return True
         except TesseractNotFoundError:
+            img.close()
             return False
 
 
@@ -78,16 +83,20 @@ def verify_args(args):
         return msg
     s = getattr(args, "s", None)
     if s is not None:
-        if int(s) <= 2:
-            return "%s: %s" % (_("Split at value too low"), s)
+        try:
+            if int(s) <= 2:
+                return "%s: %s" % (_("Split at value too low"), s)
+        except ValueError as e:
+            return "%s: %s" % (_("Split at must be a number"), s)
     r = getattr(args, "r", None)
     if r is not None:
         if r > 100.0:
-            return _("Max resolution is 100")
+            return _("Max resolution is 100.0")
     return True
 
 
-def install_lang_and_settings():
+def install_lang_and_settings(args):
+    settings = None
     available_langs = [
         "en",
         "pt"
@@ -102,38 +111,62 @@ def install_lang_and_settings():
             if lang != cl[0]:
                 current_locale = "%s_%s" % (lang, lang.upper())
             lang = gettext.translation(modl,
-                                       "locale", [current_locale])
+                                       "locale",
+                                       [current_locale])
             lang.install()
     else:
         settings = {
+            "source": "",
+            "dest": "",
+            "keep_vals": False,
+            "split": False,
+            "split_at": 0,
+            "deskew": False,
+            "resolution": 90.0,
+            "log_level": "info",
             "lang": "en",
-            "keep_vals": False
         }
         pickle.dumps(settings, open("cli_values.pckl", "wb"))
+    return settings
 
 if __name__ == "__main__":
     gettext.install("stpdf_cli")
     parser = argparse.ArgumentParser(description=_('Capture training data, press ctrl+q to stop recording'))
-    parser.add_argument("source", type=str, help=_('Scan images location'))
-    parser.add_argument("destination", type=str,
+    parser.add_argument("source",
+                        nargs="?",
+                        type=str,
+                        default=os.getcwd(),
+                        help=_('Scan images location'))
+    parser.add_argument("destination",
+                        nargs="?",
+                        type=str,
+                        default="STPDF_Output",
                         help=_('Destination of modified files'))
-    parser.add_argument("--s", "--split-at", type=int,
+    parser.add_argument("--sa", "--split-at", type=int,
                         help=_("Number of images per pdf"))
-    parser.add_argument("--d", "--deskew",
-                        help=_('An identifier for training data file'),
+    parser.add_argument("--ds", "--deskew",
+                        help=_('Removes image rotation, requires tesseract'),
                         action="store_true")
     parser.add_argument("--r", "--resolution", type=float,
-                        help=_("Resolution of final rotated image, must be a value like 90.0"))
+                        help=_("Resolution of final rotated image, must be a value like 90.5"))
+    parser.add_argument("--ll", "--log-level", type=str,
+                        help=_("Sets the console log level"))
+    parser.add_argument("--l", "--language", type=str,
+                        help=_("Switch language, language must be 2 letter code EX: en or pt"))
+    parser.add_argument("--kv", "--keep-values",
+                        help=_("Save your current input in a file"),
+                        action="store_true")
     args = parser.parse_args()
+    settings = install_lang_and_settings(args)
     has_required = verify_args(args)
     if has_required is True:
-        split_at = getattr(args, "s") or 0
+        split_at = getattr(args, "sa") or 0
         do_split = True if split_at else False
         split_tup = (do_split, split_at)
-        deskew = getattr(args, "d")
+        deskew = getattr(args, "ds")
         res = getattr(args, "r", 90.0)
         cli = STPDFCLI(args.source, args.destination,
-                       split=split_tup, deskew=deskew, resolution=res)
+                       split=split_tup, deskew=deskew, resolution=res, settings=settings)
         cli.run_converter()
     else:
         print(has_required)
