@@ -58,7 +58,6 @@ deploy:
   api_key: "$DEPLOY_KEY"
   file_glob: true
   file: src/dist/*
-  draft: true
   on:
     tags: true
     repo: hallowf/STPDF

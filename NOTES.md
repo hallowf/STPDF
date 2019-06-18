@@ -6,6 +6,7 @@
 * add option to not copy files, or only make pdf
 * add option to not make pdf, or only copy files
 * Optimize the way the images are handled to reduce memory usage and improve performance in cases where there are a lot of images to process
+*
 
 
 
