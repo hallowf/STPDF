@@ -4,9 +4,9 @@ REM "Setting upx path"
 mkdir cd UPX\ && SET UPX_PATH=%cd% && cd ..
 REM "Building GUI"
 cd src\
-pyinstaller --upx-dir=%UPX_PATH% gui.spec --log-level ERROR
-REM 7z a STPDF-gui.7z dist > NUL:
-7z a STPDF-gui.7z dist
+REM pyinstaller --upx-dir=%UPX_PATH% gui.spec --log-level ERROR
+pyinstaller --upx-dir=%UPX_PATH% gui.spec
+7z a STPDF-gui.7z dist > NUL:
 REM "GUI BUILT"
 RMDIR /Q/S dist\
 RMDIR /Q/S build\
