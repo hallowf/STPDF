@@ -63,7 +63,8 @@ class MainWindow(QMainWindow):
         self.retries = 0
         self.files_location = ""
         self.files_destination = ""
-        self.app_lang = None
+        self.app_lang = "en"
+        self.has_loaded_once = False
         self.log_levels = ["debug", "info", "warning", "error", "critical"]
         self.is_running = False
         self.settings_window = None
@@ -75,6 +76,10 @@ class MainWindow(QMainWindow):
             "en",
             "es"
         ]
+
+        self.init_ui()
+
+    def build_menu(self):
         # Console logger
         # logger is initialized in load_settings
         self.logger = None
@@ -130,8 +135,6 @@ class MainWindow(QMainWindow):
         options_menu.addAction(self.menu_settings)
         options_menu.addAction(self.menu_help)
         options_menu.addAction(self.menu_about)
-
-        self.init_ui()
 
     # Initializes the user interface after loading settings and values
     def init_ui(self):
@@ -213,8 +216,11 @@ class MainWindow(QMainWindow):
         # x: screen x pos, y: screen y pos, width, height
         self.setGeometry(600, 600, 700, 300)
         self.setFixedSize(600, 300)
-        self.load_settings()
-        self.load_theme(self.settings["app_theme"])
+        if not self.has_loaded_once:
+            self.has_loaded_once = True
+            self.load_settings()
+            self.load_theme(self.settings["app_theme"])
+            self.build_menu()
         self.show()
 
     # directory: "source" or "dest"
@@ -479,9 +485,9 @@ class MainWindow(QMainWindow):
                     if lang != cl[0]:
                         # however this stupid hack seems to work
                         current_locale = "%s_%s" % (lang, lang.upper())
+                    self.app_lang = lang
                     lang = gettext.translation(modl,
                                                "locale/", [current_locale])
-                    self.app_lang = lang
                     lang.install()
                 keep = self.settings["keep_vals"]
                 # `if keep or not keep:` sounds a good idea,
