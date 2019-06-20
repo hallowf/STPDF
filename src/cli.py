@@ -19,6 +19,7 @@ import sys
 import argparse
 import gettext
 import pickle
+import locale
 
 from PIL import Image
 from stpdf.converter import Converter
@@ -55,7 +56,7 @@ class STPDFCLI(object):
                         deskew=self.deskew,
                         lang=self.app_lang)
         try:
-            for line in cvt.verify_copy_size():
+            for line in cvt.preprocess_all():
                 print(line)
             for line in cvt.make_pdf():
                 print(line)
@@ -74,13 +75,18 @@ class STPDFCLI(object):
 
 
 def verify_args(args):
-    if not os.path.isdir(args.source) or not os.path.isdir(args.destination):
-        msd = _("Missing source or destination")
-        s = _("Sources")
-        d = _("Destination")
-        msg = "%s\n\t%s: %s\n\t%s: %s" % (msd, s, d, args.source,
-                                          args.destination)
-        return msg
+    kv = getattr(args, "kv", None)
+    lv = getattr(args, "lv", None)
+    if kv is not None and lv is not None:
+        return _("Can't use --keep-values with --load-values")
+    if lv is None:
+        if not os.path.isdir(args.source) or not os.path.isdir(args.destination):
+            msd = _("Missing source or destination")
+            s = _("Source")
+            d = _("Destination")
+            msg = "%s\n\t%s: %s\n\t%s: %s" % (msd, s, d, args.source,
+                                            args.destination)
+            return msg
     s = getattr(args, "s", None)
     if s is not None:
         try:
@@ -95,39 +101,52 @@ def verify_args(args):
     return True
 
 
-def install_lang_and_settings(args):
-    settings = None
+def install_lang(lang):
     available_langs = [
         "en",
-        "pt"
+        "pt",
+        "es"
     ]
-    if os.path.isfile("cli_values.pckl"):
-        settings = pickle.loads(open("cli_values.pckl", "rb"))
-        lang = settings["lang"]
-        if lang in available_langs and lang != "en":
-            modl = "%s_cli" % lang
-            current_locale, encoding = locale.getdefaultlocale()
-            cl = current_locale.split("_")
-            if lang != cl[0]:
-                current_locale = "%s_%s" % (lang, lang.upper())
-            lang = gettext.translation(modl,
-                                       "locale",
-                                       [current_locale])
-            lang.install()
-    else:
-        settings = {
-            "source": "",
-            "dest": "",
-            "keep_vals": False,
-            "split": False,
-            "split_at": 0,
-            "deskew": False,
-            "resolution": 90.0,
-            "log_level": "info",
-            "lang": "en",
-        }
-        pickle.dumps(settings, open("cli_values.pckl", "wb"))
+    if lang in available_langs and lang != "en":
+        modl = "%s_cli" % lang
+        current_locale, encoding = locale.getdefaultlocale()
+        cl = current_locale.split("_")
+        if lang != cl[0]:
+            current_locale = "%s_%s" % (lang, lang.upper())
+        lang = gettext.translation(modl,
+                                    "locale",
+                                    [current_locale])
+        lang.install()
+
+
+def make_settings(args):
+    kv = getattr(args, "kv")
+    splt_a = getattr(args, "sa") or 0
+    splt = True if splt_a > 0 else False
+    settings = {
+        "source": getattr(args, "source"),
+        "dest": getattr(args, "destination"),
+        "split": splt,
+        "split_at": splt_a,
+        "deskew": getattr(args, "ds", False),
+        "res": getattr(args, "r", ),
+    }
+
+    if kv is not None:
+        if not kv.endswith(".pckl"):
+            kv = "%s.pckl" % kv
+        if not os.path.isfile(kv):
+            pickle.dump(settings, open(kv, "wb"))
+        else:
+            raise FileExistsError(kv)
+    elif lv is not None:
+        lv = "%s.pckl" % lv if not lv.endswith(".pckl") else lv
+        if not os.path.isfile(lv):
+            raise FileNotFoundError(lv)
+        else:
+            settings = pickle.load(open(lv, "rb"))
     return settings
+
 
 if __name__ == "__main__":
     gettext.install("stpdf_cli")
@@ -154,17 +173,25 @@ if __name__ == "__main__":
     parser.add_argument("--l", "--language", type=str,
                         help=_("Switch language, language must be 2 letter code EX: en or pt"))
     parser.add_argument("--kv", "--keep-values",
-                        help=_("Save your current input in a file"),
-                        action="store_true")
+                        type=str,
+                        help=_("Save your current input in a file, can't be used with --lv"),
+                        action="store")
+    parser.add_argument("--lv", "--load-values",
+                        type=str,
+                        help=_("Load values from settings file, can't be used with --kv"),
+                        action="store")
     args = parser.parse_args()
-    settings = install_lang_and_settings(args)
+    lang = getattr(args, "l", "en")
+    install_lang(lang)
+    settings = None
+    try:
+        settings = make_settings(args)
+    except Exception as e:
+        print("Failed to create settings", e)
+        raise e
+        sys.exit(1)
     has_required = verify_args(args)
     if has_required is True:
-        split_at = getattr(args, "sa") or 0
-        do_split = True if split_at else False
-        split_tup = (do_split, split_at)
-        deskew = getattr(args, "ds")
-        res = getattr(args, "r", 90.0)
         cli = STPDFCLI(args.source, args.destination,
                        split=split_tup, deskew=deskew, resolution=res, settings=settings)
         cli.run_converter()
