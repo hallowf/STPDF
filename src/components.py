@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import locale
+import gettext
 from PyQt5.QtWidgets import (QMainWindow, QWidget, QAction, QPushButton,
                              QHBoxLayout, QVBoxLayout, QGridLayout,
                              QCheckBox, QSlider, QLabel, QApplication,
@@ -60,6 +62,17 @@ class AboutWindow(QMainWindow):
     def __init__(self, parent):
         super(AboutWindow, self).__init__(parent)
         self.parent = parent
+        gettext.install("stpdf_components")
+        lang = self.parent.app_lang
+        modl = "%s_components" % lang
+        current_locale, __ = locale.getdefaultlocale()
+        cl = current_locale.split("_")
+        if lang != "en":
+            if lang != cl[0]:
+                current_locale = "%s_%s" % (lang, lang.upper())
+            lang = gettext.translation(modl,
+                                       "locale/", [current_locale])
+            lang.install()
         self.title = _("About")
         self.init_ui()
 
@@ -125,6 +138,17 @@ class SettingsWindow(QMainWindow):
     def __init__(self, parent):
         super(SettingsWindow, self).__init__(parent)
         self.parent = parent
+        gettext.install("stpdf_components")
+        lang = self.parent.app_lang
+        modl = "%s_components" % lang
+        current_locale, __ = locale.getdefaultlocale()
+        cl = current_locale.split("_")
+        if lang != "en":
+            if lang != cl[0]:
+                current_locale = "%s_%s" % (lang, lang.upper())
+            lang = gettext.translation(modl,
+                                       "locale/", [current_locale])
+            lang.install()
         self.title = _("Settings")
         # main_menu = self.menuBar()
         self.init_ui()
