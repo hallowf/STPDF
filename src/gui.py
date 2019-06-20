@@ -28,7 +28,7 @@ from threading import Thread
 from PyQt5.QtWidgets import (QMainWindow, QWidget, QAction, qApp, QPushButton,
                              QHBoxLayout, QVBoxLayout, QGridLayout, QCheckBox,
                              QSlider, QLabel, QTextEdit, QFileDialog,
-                             QApplication)
+                             QApplication, QActionGroup)
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtGui import QDesktopServices
 from PyQt5.QtCore import Qt, QUrl
@@ -76,13 +76,13 @@ class MainWindow(QMainWindow):
             "en",
             "es"
         ]
-
-        self.init_ui()
-
-    def build_menu(self):
         # Console logger
         # logger is initialized in load_settings
         self.logger = None
+        self.init_ui()
+
+    # Building the menubar and actions
+    def build_menu(self):
         # Menus ---------------------
         # Main menu bar ---------------------
         main_menu = self.menuBar()
@@ -92,11 +92,18 @@ class MainWindow(QMainWindow):
         menu_save.setStatusTip(_("Save your settings to a file"))
         menu_save.triggered.connect(self.do_save)
 
+        # TODO: Store this in values and set them accordingly
         # Processing options
-        menu_copy = QAction(_("Copy files"), self)
-        menu_copy.setStatusTip(_("Copies files to destination"))
-        menu_pdf = QAction(_("Make pdf"), self)
-        menu_pdf.setStatusTip(_("Makes PDF(s) with the images found"))
+        self.menu_copy = QAction(_("Copy files"), self, checkable=True)
+        self.menu_copy.setStatusTip(_("Copies files to destination"))
+        self.menu_copy.triggered.connect(
+            lambda: self.on_menu_action("d_copy")
+        )
+        self.menu_pdf = QAction(_("Make pdf"), self, checkable=True)
+        self.menu_pdf.setStatusTip(_("Makes PDF(s) with the images found"))
+        self.menu_pdf.triggered.connect(
+            lambda: self.on_menu_action("m_pdf")
+        )
 
         # Exit
         menu_exit = QAction(_("Exit"), self)
@@ -121,22 +128,25 @@ class MainWindow(QMainWindow):
         self.menu_settings.setShortcut("Ctrl+O")
         self.menu_settings.setStatusTip(_("Open settings window"))
         self.menu_settings.triggered.connect(
-            lambda: self.on_menu_action("settings"))
+            lambda: self.on_menu_action("settings")
+        )
 
+        # The menu is only actually built after the translation is installed
         # Add menus
-        app_menu = main_menu.addMenu(_("App"))
-        app_menu.addAction(menu_save)
-        app_menu.addSeparator()
-        app_menu.addAction(menu_copy)
-        app_menu.addAction(menu_pdf)
-        app_menu.addSeparator()
-        app_menu.addAction(menu_exit)
-        options_menu = main_menu.addMenu(_("Options"))
-        options_menu.addAction(self.menu_settings)
-        options_menu.addAction(self.menu_help)
-        options_menu.addAction(self.menu_about)
+        if self.has_loaded_once:
+            app_menu = main_menu.addMenu(_("App"))
+            app_menu.addAction(menu_save)
+            app_menu.addSeparator()
+            app_menu.addAction(self.menu_copy)
+            app_menu.addAction(self.menu_pdf)
+            app_menu.addSeparator()
+            app_menu.addAction(menu_exit)
+            options_menu = main_menu.addMenu(_("Options"))
+            options_menu.addAction(self.menu_settings)
+            options_menu.addAction(self.menu_help)
+            options_menu.addAction(self.menu_about)
 
-    # Initializes the user interface after loading settings and values
+    # Initializes the user interface after loading settings , values and building the menu
     def init_ui(self):
         # Main window
         window = QWidget(self)
@@ -216,11 +226,11 @@ class MainWindow(QMainWindow):
         # x: screen x pos, y: screen y pos, width, height
         self.setGeometry(600, 600, 700, 300)
         self.setFixedSize(600, 300)
+        self.build_menu()
         if not self.has_loaded_once:
             self.has_loaded_once = True
             self.load_settings()
             self.load_theme(self.settings["app_theme"])
-            self.build_menu()
         self.show()
 
     # directory: "source" or "dest"
@@ -420,22 +430,28 @@ class MainWindow(QMainWindow):
     def on_menu_action(self, action):
         if action == "settings":
             if self.settings_window is None:
-                try:
-                    self.settings_window = SettingsWindow(self)
-                except Exception as e:
-                    raise e
+                self.settings_window = SettingsWindow(self)
             else:
                 msg = _("Settings are already open")
                 self.logger.error(msg)
                 self.gui_logger.append(msg)
         elif action == "about":
             if self.about_window is None:
-                try:
-                    self.about_window = AboutWindow(self)
-                except Exception as e:
-                    raise
+                self.about_window = AboutWindow(self)
+            else:
+                msg = _("About window already open")
+                self.logger.error(msg)
+                self.gui_logger.append(msg)
+        elif action == "d_copy" or action == "m_pdf":
+            map_actions = {
+                "d_copy": self.menu_copy.isChecked(),
+                "m_pdf": self.menu_pdf.isCheckable()
+            }
+            self.user_values[action] = map_actions[action]
         else:
-            self.logger.error(_("Invalid action"), action)
+            msg = "%s: %s" % (_("Invalid action"), action)
+            self.logger.error(msg)
+            self.gui_logger.append(msg)
 
     # Sets up the console logger
     def set_up_logger(self):
@@ -518,7 +534,9 @@ class MainWindow(QMainWindow):
                         "dest": "",
                         "deskew": False,
                         "split": False,
-                        "split_at": 0
+                        "split_at": 0,
+                        "d_copy": True,
+                        "m_pdf": True
                     }
                     pickle.dump(self.user_values, open("values.pckl", "wb"))
                 else:
@@ -531,6 +549,8 @@ class MainWindow(QMainWindow):
                         self.deskew_check.setChecked(self.user_values["deskew"])
                         self.do_split.setChecked(self.user_values["split"])
                         self.split_slider.setValue(self.user_values["split_at"])
+                        self.menu_copy.setChecked(self.user_values["d_copy"])
+                        self.menu_pdf.setChecked(self.user_values["m_pdf"])
                     else:
                         self.logger.error("Failed to load user values: %s" % self.user_values)
                         raise KeyError
@@ -633,7 +653,7 @@ class MainWindow(QMainWindow):
                         deskew=di, lang=self.app_lang)
         self.converter = cvt
         try:
-            for line in cvt.verify_copy_size():
+            for line in cvt.preprocess_all():
                 if self.stop_thread:
                     break
                 self.gui_logger.append(str(line))
@@ -655,6 +675,7 @@ class MainWindow(QMainWindow):
         self.is_running = False
         self.stop_thread = False
 
+    # TODO: Simplify this
     # Tries to kill the thread if it is alive
     def do_stop(self):
         if self.is_running:
@@ -682,6 +703,7 @@ class MainWindow(QMainWindow):
             self.gui_logger.append(msg)
             self.logger.info(msg)
 
+    # Function that sets a QTimer to run self.do_stop
     def stop_function(self):
         if self.time_stopper is None:
             msg = _("Stop requested setting up timer to stop thread")
