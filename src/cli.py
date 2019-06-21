@@ -20,6 +20,8 @@ import argparse
 import gettext
 import pickle
 import locale
+import logging
+import traceback
 
 from PIL import Image
 from stpdf.converter import Converter
@@ -28,38 +30,65 @@ from pytesseract.pytesseract import TesseractNotFoundError
 
 
 class STPDFCLI(object):
-    def __init__(self, source, dest, split=(False, 0), *args, **kwargs):
+    def __init__(self, source, dest, *args, **kwargs):
         self.source = source
         self.dest = dest
-        self.settings = kwargs.get("settings", None)
-        split, split_at = split
-        self.split = split
-        self.split_at = split_at
+        self.logger = kwargs.get("logger")
+        self.settings = kwargs.get("settings")
+        self.args = kwargs.get("uargs")
         self.res = kwargs.get("resolution", 90.0)
         self.deskew = kwargs.get("deskew", False)
-        m = _("Setting deskew to false, tesseract wasn't found on your machine")
+        self.app_lang = self.settings["lang"]
         if not self.check_tesseract() and self.deskew:
-            print(m)
+            m = _("Setting deskew to false, tesseract wasn't found on your machine")
+            self.logger.warning(m)
             self.deskew = False
+        self.print_values()
+
+    def print_values(self):
+        s = _("Source")
+        d = _("Destination")
+        splt = _("Split")
+        splt_a = _("Split at")
+        dsk = _("Deskew")
+        r = _("Resolution")
+        dc = _("Do copy")
+        mp = _("Make PDF")
+        ll = _("Log level")
+        l = _("Language")
+        sk = _("Skip check")
+        v0 = "\n\t%s: %s\n\t%s: %s" % (s, self.source, d, self.dest)
+        v1 = "\n\t%s: %s\n\t%s: %s" % (splt, self.settings["split"],
+                                       splt_a, self.settings["split_at"])
+        v2 = "\n\t%s: %s\n\t%s: %s" % (dsk, self.settings["deskew"],
+                                       r, self.settings["res"])
+        v3 = "\n\t%s: %s\n\t%s: %s" % (dc, self.settings["d_copy"],
+                                       mp, self.settings["m_pdf"])
+        v4 = "\n\t%s: %s\n\t%s: %s" % (ll, self.settings["log_level"],
+                                       l, self.settings["lang"])
+        v5 = "\n\t%s: %s" % (sk, self.settings["skip_check"])
+        values = v0 + v1 + v2 + v3 + v4 + v5
+        msg = "%s:%s" % (_("Starting converter with values"), values)
+        self.logger.info(msg)
+        if not self.settings["skip_check"]:
+            ans = input("Continue? (Y): ")
+            if ans.upper() != "Y":
+                self.logger.info(_("Exiting now"))
+                sys.exit(1)
 
     def run_converter(self):
-        s = _("Split")
-        sa = _("Split at")
-        d = _("Deskew")
-        r = _("Resolution")
-        v1 = "\n\t%s: %s\n\t%s: %s" % (s, self.split, sa, self.split_at)
-        v2 = "\n\t%s: %s\n\t: %s" % (d, self.deskew, r, self.res)
-        msg = "%s:%s" % (_("Starting converter with values"), values)
-        print(msg)
+        splt = (self.settings["split"], self.settings["split_at"])
         cvt = Converter(self.source, self.dest,
-                        split=self.split,
+                        split=splt,
                         deskew=self.deskew,
-                        lang=self.app_lang)
+                        lang=self.app_lang,
+                        save_files=self.settings["d_copy"],
+                        make_pdf=self.settings["m_pdf"])
         try:
             for line in cvt.preprocess_all():
-                print(line)
+                self.logger.info(line)
             for line in cvt.make_pdf():
-                print(line)
+                self.logger.info(line)
         except Exception as e:
             raise e
 
@@ -74,6 +103,8 @@ class STPDFCLI(object):
             return False
 
 
+# Function to verify correct usage of args
+# before providing them to STPDFCLI
 def verify_args(args):
     kv = getattr(args, "kv", None)
     lv = getattr(args, "lv", None)
@@ -85,7 +116,7 @@ def verify_args(args):
             s = _("Source")
             d = _("Destination")
             msg = "%s\n\t%s: %s\n\t%s: %s" % (msd, s, d, args.source,
-                                            args.destination)
+                                              args.destination)
             return msg
     s = getattr(args, "s", None)
     if s is not None:
@@ -101,6 +132,7 @@ def verify_args(args):
     return True
 
 
+# Installs language based on lang: str - "en" or "pt"
 def install_lang(lang):
     available_langs = [
         "en",
@@ -114,13 +146,14 @@ def install_lang(lang):
         if lang != cl[0]:
             current_locale = "%s_%s" % (lang, lang.upper())
         lang = gettext.translation(modl,
-                                    "locale",
-                                    [current_locale])
+                                   "locale",
+                                   [current_locale])
         lang.install()
 
 
-def make_settings(args):
+def check_settings(args):
     kv = getattr(args, "kv")
+    lv = getattr(args, "lv")
     splt_a = getattr(args, "sa") or 0
     splt = True if splt_a > 0 else False
     settings = {
@@ -128,10 +161,14 @@ def make_settings(args):
         "dest": getattr(args, "destination"),
         "split": splt,
         "split_at": splt_a,
-        "deskew": getattr(args, "ds", False),
-        "res": getattr(args, "r", ),
+        "deskew": getattr(args, "ds"),
+        "res": getattr(args, "r"),
+        "d_copy": False,
+        "m_pdf": True,
+        "log_level": "INFO",
+        "lang": getattr(args, "l"),
+        "skip_check": getattr(args, "sc")
     }
-
     if kv is not None:
         if not kv.endswith(".pckl"):
             kv = "%s.pckl" % kv
@@ -148,8 +185,29 @@ def make_settings(args):
     return settings
 
 
-if __name__ == "__main__":
-    gettext.install("stpdf_cli")
+def install_logger(l_level):
+    l_levels = [
+        "INFO",
+        "WARNING",
+        "CRITICAL",
+        "ERROR",
+        "DEBUG"
+    ]
+    n_level = None
+    if l_level not in l_levels:
+        sys.stdout.write("%s: %s\n" % (_("Invalid log level"), l_level))
+        l_level = "INFO"
+    n_level = getattr(logging, l_level.upper(), 10)
+    # Console logger
+    log_format = "%(name)s - %(levelname)s: %(message)s"
+    logging.basicConfig(format=log_format, level=n_level)
+    logger = logging.getLogger("STPDF-CLI")
+    msg = "%s: %s" % (_("Console logger is set with log level"), l_level)
+    logger.info(msg)
+    return logger
+
+
+def assemble_parser():
     parser = argparse.ArgumentParser(description=_('Capture training data, press ctrl+q to stop recording'))
     parser.add_argument("source",
                         nargs="?",
@@ -167,10 +225,13 @@ if __name__ == "__main__":
                         help=_('Removes image rotation, requires tesseract'),
                         action="store_true")
     parser.add_argument("--r", "--resolution", type=float,
+                        default=80.0,
                         help=_("Resolution of final rotated image, must be a value like 90.5"))
     parser.add_argument("--ll", "--log-level", type=str,
+                        default="INFO",
                         help=_("Sets the console log level"))
     parser.add_argument("--l", "--language", type=str,
+                        default="en",
                         help=_("Switch language, language must be 2 letter code EX: en or pt"))
     parser.add_argument("--kv", "--keep-values",
                         type=str,
@@ -180,20 +241,48 @@ if __name__ == "__main__":
                         type=str,
                         help=_("Load values from settings file, can't be used with --kv"),
                         action="store")
+    parser.add_argument("--sc", "--skip-check",
+                        help=_("Automatically answers yes when values are verified"),
+                        action="store_true")
+    parser.add_argument("--dc", "--do-copy",
+                        help=_("If True images will be copied to the destination directory, default:False"),
+                        default=False,
+                        action="store_true")
+    parser.add_argument("--mp", "--make-pdf",
+                        help=_("If True make a pdf out of the processed images, default:True"),
+                        default=True,
+                        action="store_true")
     args = parser.parse_args()
-    lang = getattr(args, "l", "en")
+    return args
+
+
+if __name__ == "__main__":
+    gettext.install("stpdf_cli")
+    args = assemble_parser()
+    lang = getattr(args, "l")
     install_lang(lang)
+    loggr = install_logger(getattr(args, "ll"))
     settings = None
     try:
-        settings = make_settings(args)
+        loggr.info(_("Checking settings"))
+        settings = check_settings(args)
     except Exception as e:
-        print("Failed to create settings", e)
-        raise e
+        sys.stdout.write("\n")
+        for it in traceback.format_exception(type(e), e, e.__traceback__):
+            loggr.debug(it)
+        msg = "%s: %s" % (_("Failed to create settings "), str(e))
+        loggr.critical(msg + "\n")
         sys.exit(1)
+    msg = "%s: %s" % (_("Settings"), settings)
+    loggr.debug(msg)
     has_required = verify_args(args)
     if has_required is True:
         cli = STPDFCLI(args.source, args.destination,
-                       split=split_tup, deskew=deskew, resolution=res, settings=settings)
+                       logger=loggr, settings=settings,
+                       uargs=args)
         cli.run_converter()
+        cli.logger.info(_("Finished"))
+        sys.exit(0)
     else:
-        print(has_required)
+        sys.stderr.write(has_required + "\n")
+        sys.exit(1)
