@@ -535,7 +535,7 @@ class MainWindow(QMainWindow):
                         "deskew": False,
                         "split": False,
                         "split_at": 0,
-                        "d_copy": True,
+                        "d_copy": False,
                         "m_pdf": True
                     }
                     pickle.dump(self.user_values, open("values.pckl", "wb"))
@@ -615,17 +615,28 @@ class MainWindow(QMainWindow):
         self.logger.info(msg)
         self.gui_logger.append(msg)
         vs = self.user_values
+        s = self.files_location
+        d = self.files_destination
+        dsk = self.deskew_check.isChecked()
+        splt = self.do_split.isChecked()
+        splt_a = self.split_slider.value()
+        dc = self.menu_copy.isChecked()
+        mp = self.menu_pdf.isChecked()
         for val in vs:
-            if val == "source" and vs[val] != self.files_location:
-                vs[val] = self.files_location
-            elif val == "dest" and vs[val] != self.files_destination:
-                vs[val] = self.files_destination
-            elif val == "deskew" and vs[val] != self.deskew_check.isChecked():
-                vs[val] = self.deskew_check.isChecked()
-            elif val == "split" and vs[val] != self.do_split.isChecked():
-                vs[val] = self.do_split.isChecked()
-            elif val == "split_at" and vs[val] != self.split_slider.value():
-                vs[val] = self.split_slider.value()
+            if val == "source" and vs[val] != s:
+                vs[val] = s
+            elif val == "dest" and vs[val] != d:
+                vs[val] = d
+            elif val == "deskew" and vs[val] != dsk:
+                vs[val] = dsk
+            elif val == "split" and vs[val] != splt:
+                vs[val] = splt
+            elif val == "split_at" and vs[val] != splt_a:
+                vs[val] = splt_a
+            elif val == "d_copy" and vs[val] != dc:
+                vs[val] = dc
+            elif val == "m_pdf" and vs[val] != mp:
+                vs[val] = mp
         if self.settings["keep_vals"]:
             self.logger.debug("User values: %s" % vs)
             pickle.dump(vs, open("values.pckl", "wb"))
@@ -649,8 +660,11 @@ class MainWindow(QMainWindow):
         di = self.deskew_check.isChecked()
         ds = self.do_split.isChecked()
         sa = self.split_slider.value()
+        pd = self.menu_pdf.isChecked()
+        dc = self.menu_copy.isChecked()
         cvt = Converter(fl, fd, split=(ds, sa),
-                        deskew=di, lang=self.app_lang)
+                        deskew=di, lang=self.app_lang,
+                        make_pdf=pd, copy_files=dc)
         self.converter = cvt
         try:
             for line in cvt.preprocess_all():
