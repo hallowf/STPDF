@@ -22,6 +22,9 @@ __version__ = None
 __version2__ = None
 __releaseDate__ = None
 __releaseDate2__ = None
+__developer__ = None
+__developer2__ = None
+__devhome__ = None
 
 if getattr(sys, "frozen", False):
     # pyInstaller
@@ -35,9 +38,14 @@ if getattr(sys, "frozen", False):
         __version2__ = data["version2"]
         __releaseDate__ = data["r_date"]
         __releaseDate2__ = data["r_date2"]
+        __developer__ = data["developer"]
+        __developer2__ = data["developer2"]
+        __devhome__ = data["devhome"]
 else:
     import subprocess
     from datetime import date
+    from lxml import html
+    import requests
     args = sys.argv
     tag = True if "--tag" in sys.argv else False
     c_path = os.getcwd()
@@ -81,6 +89,26 @@ else:
             c_hash = "no.checksum.error"
         return c_hash
 
+    def get_git_user():
+        try:
+            c_hash = subprocess.check_output(["git", "config", "user.name"],
+                                             cwd=os.getcwd())
+            c_hash = c_hash.decode("utf-8").rstrip()
+        except:
+            c_hash = "no.checksum.error"
+        return c_hash
+
+    def get_git_user2(user):
+        try:
+            r = requests.get("https://github.com/%s" % user)
+            h_tree = html.fromstring(r.content)
+            name = h_tree.xpath("//span[@class='p-name vcard-fullname d-block overflow-hidden']/text()")[0]
+            if name == "" or name is None:
+                raise ValueError
+        except:
+            name = "unknown"
+        return name
+
     revision = get_git_revision_short_hash()
     l_commit = get_git_commit_short_hash()
     stage = "-Alpha" if revision.endswith("a") else ("-Beta" if revision.endswith("b") else "")
@@ -91,11 +119,17 @@ else:
     __version2__ = '%s%s+%s' % (revision, stage, l_commit)
     __releaseDate__ = t_short
     __releaseDate2__ = t_long
+    __developer__ = get_git_user()
+    __developer2__ = get_git_user2(__developer__)
+    __devhome__ = "https://github.com/%s" % __developer__
     data = {
         "version": __version__,
         "version2": __version2__,
         "r_date": __releaseDate__,
-        "r_date2": __releaseDate2__
+        "r_date2": __releaseDate2__,
+        "developer": __developer__,
+        "developer2": __developer2__,
+        "devhome": __devhome__
     }
     # print(data)
     pickle.dump(data, open(p_source, "wb"))
