@@ -20,10 +20,11 @@ from PyQt5.QtWidgets import (QMainWindow, QWidget, QPushButton,
                              QGridLayout, QCheckBox, QSlider, QLabel,
                              QApplication, QStyleOptionSlider, QComboBox,
                              QToolTip, QMessageBox)
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QIcon, QDesktopServices
 from PyQt5 import QtCore, QtGui
 from _version import (__version__, __version2__,
-                      __releaseDate__, __releaseDate2__)
+                      __releaseDate__, __releaseDate2__,
+                      __developer__, __developer2__, __devhome__)
 
 
 # https://stackoverflow.com/a/31658984
@@ -119,8 +120,13 @@ class AboutWindow(QMainWindow):
         developed = QLabel(_("Developed by:"))
         developed.setFont(QtGui.QFont("Times", 8, QtGui.QFont.Bold))
         h_grid.addWidget(developed, 4, 0)
-        dev = QPushButton("Alexandre Cortegaça")
-        dev.setEnabled(False)
+        dev = QPushButton(str(__developer__))
+        dev.setStatusTip(str(__developer2__))
+        dev.triggered.connect(
+            lambda: QDesktopServices.openUrl(
+                QUrl(str(__devhome__))
+            )
+        )
         h_grid.addWidget(dev, 4, 1)
 
         # set layouts and Geometry
