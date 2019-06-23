@@ -9,3 +9,5 @@ TEST_IMAGES
 build
 dist
 version.txt
+*.png
+*.ttf

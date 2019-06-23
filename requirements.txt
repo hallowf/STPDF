@@ -2,5 +2,12 @@ PyQt5
 Pillow
 pytesseract
 PyInstaller
-# Required for windows travis ci build
-#virtualenv==16.1
+# Required for windows travis ci build:
+# virtualenv==16.1
+
+# for development and testing purposes:
+# memory_profiler
+# matplotlib
+# scikit-image
+# scipy
+# requests

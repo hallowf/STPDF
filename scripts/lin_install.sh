@@ -3,10 +3,7 @@ cd UPX
 UPX_PATH=$PWD
 cd ../src
 echo "Building GUI"
-echo UPX_PATH $UPX_PATH
-ls $UPX_PATH
-# pyinstaller --upx-dir=$UPX_PATH gui.spec --log-level ERROR
-pyinstaller --upx-dir $UPX_PATH gui.spec
+pyinstaller --upx-dir=$UPX_PATH gui.spec --log-level ERROR
 7z a STPDF-gui.7z dist > /dev/null
 rm -r dist build
 echo "Building CLI"
