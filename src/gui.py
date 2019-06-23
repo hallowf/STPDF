@@ -32,10 +32,8 @@ from PyQt5.QtWidgets import (QMainWindow, QWidget, QAction, qApp, QPushButton,
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtGui import QDesktopServices
 from PyQt5.QtCore import Qt, QUrl
-
 # Custom components
 from components import TipSlider, SettingsWindow, AboutWindow
-
 # Backend and other requirements
 from stpdf.custom_exceptions import DirMissing, OutDirNotEmpty
 from stpdf.converter import Converter
@@ -668,11 +666,6 @@ class MainWindow(QMainWindow):
         self.converter = cvt
         try:
             for line in cvt.preprocess_all():
-                if self.stop_thread:
-                    break
-                self.gui_logger.append(str(line))
-                self.logger.info(str(line))
-            for line in cvt.make_pdf():
                 if self.stop_thread:
                     break
                 self.gui_logger.append(str(line))

@@ -87,8 +87,6 @@ class STPDFCLI(object):
         try:
             for line in cvt.preprocess_all():
                 self.logger.info(line)
-            for line in cvt.make_pdf():
-                self.logger.info(line)
         except Exception as e:
             raise e
 
@@ -170,8 +168,7 @@ def check_settings(args):
         "skip_check": getattr(args, "sc")
     }
     if kv is not None:
-        if not kv.endswith(".pckl"):
-            kv = "%s.pckl" % kv
+        kv = "%s.pckl" % kv if not kv.endswith(".pckl") else kv
         if not os.path.isfile(kv):
             pickle.dump(settings, open(kv, "wb"))
         else:
@@ -284,5 +281,5 @@ if __name__ == "__main__":
         cli.logger.info(_("Finished"))
         sys.exit(0)
     else:
-        sys.stderr.write(has_required + "\n")
+        loggr.critical(has_required + "\n")
         sys.exit(1)
