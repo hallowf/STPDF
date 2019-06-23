@@ -37,6 +37,7 @@ if getattr(sys, "frozen", False):
         __releaseDate2__ = data["r_date2"]
 else:
     import subprocess
+    from datetime import date
     args = sys.argv
     tag = True if "--tag" in sys.argv else False
     c_path = os.getcwd()
@@ -63,26 +64,40 @@ else:
             # can raise a subprocess.CalledProcessError,
             # which means the return code != 0
             ghash = subprocess.check_output(['git', 'describe', '--always'],
-                                            cwd=os.path.dirname(__file__))
+                                            cwd=os.getcwd())
 
-            ghash = ghash.decode('utf-8').rstrip()
+            ghash = ghash.decode("utf-8").rstrip()
         except:
             # git isn't installed
-            ghash = 'no.checksum.error'
-        return 'dev.%s' % ghash
+            ghash = "no.checksum.error"
+        return ghash
+
+    def get_git_commit_short_hash():
+        try:
+            c_hash = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"],
+                                             cwd=os.getcwd())
+            c_hash = c_hash.decode("utf-8").rstrip()
+        except:
+            c_hash = "no.checksum.error"
+        return c_hash
 
     revision = get_git_revision_short_hash()
-    __version__ = "V0.1a"
-    __version2__ = 'V0.1-Alpha+%s' % revision
-    __releaseDate__ = '16/06/2019'
-    __releaseDate2__ = '16 June, 2017'
+    l_commit = get_git_commit_short_hash()
+    stage = "-Alpha" if revision.endswith("a") else ("-Beta" if revision.endswith("b") else "")
+    today = date.today()
+    t_short = today.strftime("%d/%m/%Y")
+    t_long = today.strftime("%B %d, %Y")
+    __version__ = revision
+    __version2__ = '%s%s+%s' % (revision, stage, l_commit)
+    __releaseDate__ = t_short
+    __releaseDate2__ = t_long
     data = {
         "version": __version__,
         "version2": __version2__,
         "r_date": __releaseDate__,
         "r_date2": __releaseDate2__
     }
-    # print(data)
+    print(data)
     pickle.dump(data, open(p_source, "wb"))
     if tag:
         set_version_tag(__version__)
