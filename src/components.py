@@ -16,10 +16,10 @@
 
 import locale
 import gettext
-from PyQt5.QtWidgets import (QMainWindow, QWidget, QAction, QPushButton,
-                             QHBoxLayout, QVBoxLayout, QGridLayout,
-                             QCheckBox, QSlider, QLabel, QApplication,
-                             QStyleOptionSlider, QComboBox, QToolTip)
+from PyQt5.QtWidgets import (QMainWindow, QWidget, QPushButton,
+                             QGridLayout, QCheckBox, QSlider, QLabel,
+                             QApplication, QStyleOptionSlider, QComboBox,
+                             QToolTip, QMessageBox)
 from PyQt5.QtGui import QIcon
 from PyQt5 import QtCore, QtGui
 from _version import (__version__, __version2__,
@@ -85,9 +85,8 @@ class AboutWindow(QMainWindow):
     def init_ui(self):
         # Main window
         window = QWidget(self)
-        # this seems to break the app
-        # self.setCentralWidget(self)
         self.setWindowTitle(self.title)
+        self.status_bar = self.statusBar()
 
         # Layout ---------------------
         # horizontal grid
@@ -108,21 +107,24 @@ class AboutWindow(QMainWindow):
         h_grid.addWidget(version, 2, 0)
         ver = QPushButton(str(__version__))
         ver.setEnabled(False)
+        ver.setStatusTip(str(__version2__))
         h_grid.addWidget(ver, 2, 1)
+        r_date = QLabel(_("Release date:"))
+        r_date.setFont(QtGui.QFont("Times", 8, QtGui.QFont.Bold))
+        h_grid.addWidget(r_date, 3, 0)
+        rdt = QPushButton(str(__releaseDate__))
+        rdt.setEnabled(False)
+        rdt.setStatusTip(str(__releaseDate2__))
+        h_grid.addWidget(rdt, 3, 1)
         developed = QLabel(_("Developed by:"))
         developed.setFont(QtGui.QFont("Times", 8, QtGui.QFont.Bold))
-        h_grid.addWidget(developed, 3, 0)
+        h_grid.addWidget(developed, 4, 0)
         dev = QPushButton("Alexandre Cortegaça")
         dev.setEnabled(False)
-        h_grid.addWidget(dev, 3, 1)
+        h_grid.addWidget(dev, 4, 1)
 
         # set layouts and Geometry
         window.setLayout(h_grid)
-        # this moves the widget not really necessary
-        # if the geometry is set
-        # window.move(100, 100)
-        # Set the Main window and widget geometry
-        # # x: screen x pos, y: screen y pos, width, height
         window.setGeometry(20, 0, 280, 200)
         self.setGeometry(600, 600, 260, 350)
         self.setFixedSize(450, 300)
@@ -138,6 +140,7 @@ class SettingsWindow(QMainWindow):
     def __init__(self, parent):
         super(SettingsWindow, self).__init__(parent)
         self.parent = parent
+        self.warning = None
         gettext.install("stpdf_components")
         lang = self.parent.app_lang
         modl = "%s_components" % lang
@@ -150,7 +153,6 @@ class SettingsWindow(QMainWindow):
                                        "locale/", [current_locale])
             lang.install()
         self.title = _("Settings")
-        # main_menu = self.menuBar()
         self.init_ui()
 
     # Check the user settings and set everything accordingly
@@ -177,6 +179,7 @@ class SettingsWindow(QMainWindow):
                 msg = "%s: %s" % (_("Found invalid setting"), val)
                 self.logger.error(msg)
 
+    # manually calls save from the parent
     def save_settings(self):
         try:
             kv = self.keep_vals_check.isChecked()
@@ -200,6 +203,12 @@ class SettingsWindow(QMainWindow):
         # let the window close
         event.accept()
 
+    # opens a message box to ask the user to restart the app
+    def lang_warning(self, event):
+        if self.warning is None:
+            r_msg = _("Please restart the app to apply the changes")
+            info = QMessageBox.information(self, self.title, r_msg)
+
     def init_ui(self):
         # Main window
         window = QWidget(self)
@@ -213,6 +222,7 @@ class SettingsWindow(QMainWindow):
         self.choose_lang_combo.setStatusTip(_("Language of the app"))
         for lang in self.parent.available_langs:
             self.choose_lang_combo.addItem(lang)
+        self.choose_lang_combo.activated.connect(self.lang_warning)
 
         self.app_theme_combo = QComboBox()
         self.app_theme_combo.setStatusTip(_("Theme of the app"))
