@@ -5,18 +5,17 @@ jobs:
     language: python
     sudo: required
     dist: xenial
-    python: 3.6
+    python: 3.7
     addons:
       apt:
         packages:
-        - tesseract-ocr
         - p7zip-full
     env:
     - PY=python3
   - stage: Windows build
     os: windows
     language: shell
-    python: 3.6
+    python: 3.7
     env:
     - PY=py
 
@@ -61,5 +60,4 @@ deploy:
   file: src/dist/*
   draft: true
   on:
-    tags: true
     repo: hallowf/STPDF

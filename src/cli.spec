@@ -4,10 +4,10 @@ block_cipher = None
 
 
 a = Analysis(['cli.py'],
-             pathex=['D:\\Git\\ScanToPDF\\src'],
+             pathex=[],
              binaries=[],
              datas=[("version.pckl", ".")],
-             hiddenimports=["PyQt5", "PyQt5.QtCore", "PyQt5.QtGui"],
+             hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
              excludes=[],

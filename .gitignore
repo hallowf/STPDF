@@ -1,4 +1,5 @@
 venv
+env
 __pycache__
 TEST_OUTPUT
 TEST_IMAGES

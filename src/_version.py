@@ -28,6 +28,7 @@ __devhome__ = None
 
 if getattr(sys, "frozen", False):
     # pyInstaller
+    os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = os.path.join(os.getcwd(), "PyQt5", "Qt", "plugins", "platforms")
     data = None
     if os.path.isfile("version.pckl"):
         data = pickle.load(open("version.pckl", "rb"))

@@ -1,3 +1,4 @@
+# seems to be broken on travis linux builds
 PyQt5
 Pillow
 pytesseract
