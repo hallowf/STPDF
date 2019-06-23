@@ -129,23 +129,22 @@ class MainWindow(QMainWindow):
             lambda: self.on_menu_action("settings")
         )
 
-        # The menu is only actually built after the translation is installed
-        # Add menus
-        if self.has_loaded_once:
-            app_menu = main_menu.addMenu(_("App"))
-            app_menu.addAction(menu_save)
-            app_menu.addSeparator()
-            app_menu.addAction(self.menu_copy)
-            app_menu.addAction(self.menu_pdf)
-            app_menu.addSeparator()
-            app_menu.addAction(menu_exit)
-            options_menu = main_menu.addMenu(_("Options"))
-            options_menu.addAction(self.menu_settings)
-            options_menu.addAction(self.menu_help)
-            options_menu.addAction(self.menu_about)
+        # load the values since the menu is the last thing build
+        app_menu = main_menu.addMenu(_("App"))
+        app_menu.addAction(menu_save)
+        app_menu.addSeparator()
+        app_menu.addAction(self.menu_copy)
+        app_menu.addAction(self.menu_pdf)
+        app_menu.addSeparator()
+        app_menu.addAction(menu_exit)
+        options_menu = main_menu.addMenu(_("Options"))
+        options_menu.addAction(self.menu_settings)
+        options_menu.addAction(self.menu_help)
+        options_menu.addAction(self.menu_about)
 
     # Initializes the user interface after loading settings , values and building the menu
     def init_ui(self):
+        self.load_settings()
         # Main window
         window = QWidget(self)
         self.setCentralWidget(window)
@@ -189,7 +188,7 @@ class MainWindow(QMainWindow):
         # GUI logger
         self.gui_logger = QTextEdit(self)
         self.gui_logger.resize(150, 300)
-        self.gui_logger.setDisabled(True)
+        self.gui_logger.setReadOnly(True)
         # Layouts ---------------------
         # Main vertical box
         v_box = QVBoxLayout()
@@ -225,10 +224,8 @@ class MainWindow(QMainWindow):
         self.setGeometry(600, 600, 700, 300)
         self.setFixedSize(600, 300)
         self.build_menu()
-        if not self.has_loaded_once:
-            self.has_loaded_once = True
-            self.load_settings()
-            self.load_theme(self.settings["app_theme"])
+        self.load_values()
+        self.load_theme(self.settings["app_theme"])
         self.show()
 
     # directory: "source" or "dest"
@@ -481,7 +478,6 @@ class MainWindow(QMainWindow):
             }
             self.set_up_logger()
             pickle.dump(self.settings, open("settings.pckl", "wb"))
-            self.load_values()
         else:
             self.settings = pickle.load(open("settings.pckl", "rb"))
             self.set_up_logger()
@@ -503,12 +499,6 @@ class MainWindow(QMainWindow):
                     lang = gettext.translation(modl,
                                                "locale/", [current_locale])
                     lang.install()
-                keep = self.settings["keep_vals"]
-                # `if keep or not keep:` sounds a good idea,
-                # but the values must be boolean and not "something" or  1
-                if keep is True or keep is False:
-                    self.load_values()
-                # self.logger.debug(_("Settings loaded successfully"))
             except KeyError:
                 self.logger.warning(_("Invalid settings found, removing file"))
                 os.remove("settings.pckl")
@@ -572,7 +562,9 @@ class MainWindow(QMainWindow):
         di = "  %s: %s\n" % (_("Deskew"), (self.deskew_check.isChecked()))
         ds = "  %s: %s\n" % (_("Split"), (self.do_split.isChecked()))
         sa = "  %s: %s\n" % (_("Split at"), (self.split_slider.value()))
-        values = "%s:\n%s%s%s%s%s" % (_("Values are"), s, d, di, ds, sa)
+        dc = "  %s: %s\n" % (_("Do copy"), self.menu_copy.isChecked())
+        mp = "  %s: %s\n" % (_("Make pdf"), self.menu_pdf.isChecked())
+        values = "%s:\n%s%s%s%s%s%s%s" % (_("Values are"), s, d, di, ds, sa, dc, mp)
         self.gui_logger.append(values)
         self.logger.debug(values)
         # kv = "  Keep values: %s\n" % self.menu_keep.isChecked()
@@ -665,7 +657,7 @@ class MainWindow(QMainWindow):
                         make_pdf=pd, copy_files=dc)
         self.converter = cvt
         try:
-            for line in cvt.preprocess_all():
+            for line in cvt.process_all():
                 if self.stop_thread:
                     break
                 self.gui_logger.append(str(line))
@@ -677,15 +669,17 @@ class MainWindow(QMainWindow):
                 self.logger.error(msg)
                 self.gui_logger.append(msg)
             else:
-                raise e
-                print("Thread exception", e)
-        self.is_running = False
+                msg = "%s: %s" % (_("Thread exception"), str(e))
+                self.logger.error(msg)
+                self.gui_logger.append(msg)
+        self.converter = None
         self.stop_thread = False
+        return 0
 
     # TODO: Simplify this
     # Tries to kill the thread if it is alive
     def do_stop(self):
-        if self.is_running:
+        if self.is_running or self.converter is not None or self.converter is not None:
             if self.converter_thread is not None:
                 self.logger.debug(_("Found alive thread trying to join it"))
                 self.stop_thread = True
@@ -709,15 +703,20 @@ class MainWindow(QMainWindow):
             msg = _("Program is not running")
             self.gui_logger.append(msg)
             self.logger.info(msg)
+        self.time_stopper = None
 
     # Function that sets a QTimer to run self.do_stop
     def stop_function(self):
-        if self.time_stopper is None:
+        if self.time_stopper is None and (self.converter_thread is not None or self.converter is not None):
             msg = _("Stop requested setting up timer to stop thread")
             self.logger.info(msg)
             self.gui_logger.append(msg)
             self.time_stopper = QtCore.QTimer()
             QtCore.QTimer.singleShot(4000, lambda: self.do_stop())
+        elif self.converter_thread is None and self.converter is None:
+            msg = _("The app isn't running")
+            self.logger.info(msg)
+            self.gui_logger.append(msg)
         else:
             msg = _("Timer is already set, the converter will eventually stop")
             self.logger.info(msg)
@@ -759,5 +758,5 @@ if __name__ == '__main__':
     # If fusion style is not set less color values can be edited,
     # however if this is done to the app inside MainWindow, it breaks TipSlider
     app.setStyle("Fusion")
-    MainWindow(app).init_ui()
+    MainWindow(app)
     sys.exit(app.exec_())

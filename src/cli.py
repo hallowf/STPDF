@@ -27,6 +27,9 @@ from PIL import Image
 from stpdf.converter import Converter
 from pytesseract import image_to_string
 from pytesseract.pytesseract import TesseractNotFoundError
+from _version import (__version__, __version2__, __releaseDate__,
+                      __releaseDate2__, __developer__, __developer2__,
+                      __devhome__)
 
 
 class STPDFCLI(object):
@@ -85,10 +88,11 @@ class STPDFCLI(object):
                         save_files=self.settings["d_copy"],
                         make_pdf=self.settings["m_pdf"])
         try:
-            for line in cvt.preprocess_all():
+            for line in cvt.process_all():
                 self.logger.info(line)
         except Exception as e:
-            raise e
+            self.logger.critical("Critical exception:\n" + str(e) + "\n\n" + "Exiting now")
+            sys.exit(1)
 
     def check_tesseract(self):
         img = Image.new('RGB', (60, 30), color='red')
@@ -204,8 +208,9 @@ def install_logger(l_level):
     return logger
 
 
+# Assembles argparser and returns parsed args
 def assemble_parser():
-    parser = argparse.ArgumentParser(description=_('Capture training data, press ctrl+q to stop recording'))
+    parser = argparse.ArgumentParser(description=_('STPDF - easily convert scans to pdf'))
     parser.add_argument("source",
                         nargs="?",
                         type=str,
@@ -249,6 +254,14 @@ def assemble_parser():
                         help=_("If True make a pdf out of the processed images, default:True"),
                         default=True,
                         action="store_true")
+    v_text = "\n\t%s: %s,\n\t%s: %s," % (_("Version"), __version__,
+                                         _("Full version"), __version2__)
+    r_text = "\n\t%s: %s,\n\t%s: %s," % (_("Release date"), __releaseDate__,
+                                         _("Developed by"), __developer__)
+    home = "\n\t%s: %s" % (_("Project home"), __devhome__)
+    all_info = v_text + r_text + home
+    parser.add_argument('--version', action='version',
+                        version='%(prog)s {vi}'.format(vi=all_info))
     args = parser.parse_args()
     return args
 
