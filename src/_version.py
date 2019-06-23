@@ -97,7 +97,7 @@ else:
         "r_date": __releaseDate__,
         "r_date2": __releaseDate2__
     }
-    print(data)
+    # print(data)
     pickle.dump(data, open(p_source, "wb"))
     if tag:
         set_version_tag(__version__)
