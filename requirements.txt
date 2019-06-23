@@ -5,9 +5,11 @@ PyInstaller
 # Required for windows travis ci build:
 # virtualenv==16.1
 
-# for development and testing purposes:
+# for development:
+# requests
+
+# for testing purposes:
 # memory_profiler
 # matplotlib
 # scikit-image
 # scipy
-# requests
