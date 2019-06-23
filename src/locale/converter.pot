@@ -1,13 +1,13 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR ORGANIZATION
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# STPDF's translations.
+# Copyright (C) 2019 Hallow'sTechLab
+# Alexandre Cortegaça <hallow.tech.lab@gmail.com>, 2019.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2019-06-17 00:27+0100\n"
+"POT-Creation-Date: 2019-06-23 17:27+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Last-Translator: Alexandre Cortegaça <hallow.tech.lab@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=cp1252\n"
@@ -15,31 +15,79 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-#: stpdf\converter.py:64
-msgid "Found too many files to copy, this is not implemented"
+#: stpdf\converter.py:83
+msgid "Nothing to do, neither save files or make pdf is selected"
 msgstr ""
 
-#: stpdf\converter.py:72
-msgid "Starting image processing"
+#: stpdf\converter.py:86
+msgid "Found"
 msgstr ""
 
-#: stpdf\converter.py:73
+#: stpdf\converter.py:88
+msgid "files to copy and deskew is true this might take a bit"
+msgstr ""
+
+#: stpdf\converter.py:90
+msgid "Found too many files to handle, this is not implemented yet"
+msgstr ""
+
+#: stpdf\converter.py:104
+msgid "Starting image gathering"
+msgstr ""
+
+#: stpdf\converter.py:105
 msgid "Files Found"
 msgstr ""
 
-#: stpdf\converter.py:80
-msgid "processed"
+#: stpdf\converter.py:108
+msgid "Converter is stoppping"
 msgstr ""
 
-#: stpdf\converter.py:133
-msgid "Failed to obtain image handles something went wrong"
+#: stpdf\converter.py:117
+msgid "gathered"
 msgstr ""
 
-#: stpdf\converter.py:137
+#: stpdf\converter.py:132
+msgid "Error occurred while opening image"
+msgstr ""
+
+#: stpdf\converter.py:136
+msgid "Gathering done"
+msgstr ""
+
+#: stpdf\converter.py:142
+msgid "Deskewing images"
+msgstr ""
+
+#: stpdf\converter.py:153
+msgid "deskewed"
+msgstr ""
+
+#: stpdf\converter.py:176
+msgid "And exception occured while deskewing image"
+msgstr ""
+
+#: stpdf\converter.py:178
+msgid "This image wont be processed"
+msgstr ""
+
+#: stpdf\converter.py:182
+msgid "Failed to obtain images to deskew"
+msgstr ""
+
+#: stpdf\converter.py:200
+msgid "Resizing images"
+msgstr ""
+
+#: stpdf\converter.py:208
+msgid "resized"
+msgstr ""
+
+#: stpdf\converter.py:229
 msgid "Creating multiple PDFs splitting by:"
 msgstr ""
 
-#: stpdf\converter.py:152
+#: stpdf\converter.py:245
 msgid "Creating a single pdf"
 msgstr ""
 

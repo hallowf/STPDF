@@ -1,189 +1,198 @@
 # STPDF's translations.
 # Copyright (C) 2019 Hallow'sTechLab
-# Alexandre Cortegaça <hallow.tech.lab@gmail.com>, 2019.
+# Alexandre CortegaÃ§a <hallow.tech.lab@gmail.com>, 2019.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "POT-Creation-Date: 2019-06-23 17:57+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Alexandre Cortegaça <hallow.tech.lab@gmail.com>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2019-06-23 18:05+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: pt\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=cp1252\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
-
+"X-Generator: Poedit 2.2.3\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: cli.py:46
 msgid "Setting deskew to false, tesseract wasn't found on your machine"
 msgstr ""
+"A desativar correção de alinhamento, tesseract não foi encontrado na sua "
+"máquina"
 
 #: cli.py:52 cli.py:117
 msgid "Source"
-msgstr ""
+msgstr "Localização"
 
 #: cli.py:53 cli.py:118
 msgid "Destination"
-msgstr ""
+msgstr "Destino"
 
 #: cli.py:54
 msgid "Split"
-msgstr ""
+msgstr "Dividir"
 
 #: cli.py:55
 msgid "Split at"
-msgstr ""
+msgstr "Dividir por"
 
 #: cli.py:56
 msgid "Deskew"
-msgstr ""
+msgstr "Corrigir alinhamento"
 
 #: cli.py:57
 msgid "Resolution"
-msgstr ""
+msgstr "Resolução"
 
 #: cli.py:58
 msgid "Do copy"
-msgstr ""
+msgstr "Copiar"
 
 #: cli.py:59
 msgid "Make PDF"
-msgstr ""
+msgstr "Criar PDF"
 
 #: cli.py:60
 msgid "Log level"
-msgstr ""
+msgstr "Nivel de registo"
 
 #: cli.py:61
 msgid "Language"
-msgstr ""
+msgstr "Idioma"
 
 #: cli.py:62
 msgid "Skip check"
-msgstr ""
+msgstr "Saltar verificação"
 
 #: cli.py:74
 msgid "Starting converter with values"
-msgstr ""
+msgstr "A iniciar o conversor com os valores"
 
 #: cli.py:79
 msgid "Exiting now"
-msgstr ""
+msgstr "A sair agora"
 
 #: cli.py:113
 msgid "Can't use --keep-values with --load-values"
-msgstr ""
+msgstr "Não é possível utilizar --keep-values com --load-values"
 
 #: cli.py:116
 msgid "Missing source or destination"
-msgstr ""
+msgstr "Localização ou destino em falta"
 
 #: cli.py:126
 msgid "Split at value too low"
-msgstr ""
+msgstr "Valor de --split-at muito baixo"
 
 #: cli.py:128
 msgid "Split at must be a number"
-msgstr ""
+msgstr "--split-at tem de ser um numero"
 
 #: cli.py:132
 msgid "Max resolution is 100.0"
-msgstr ""
+msgstr "Resolução máxima é 100.0"
 
 #: cli.py:198
 msgid "Invalid log level"
-msgstr ""
+msgstr "Nivel de registo inválido"
 
 #: cli.py:205
 msgid "Console logger is set with log level"
-msgstr ""
+msgstr "Registo de consola definido com o nivel de logging"
 
 #: cli.py:212
 msgid "STPDF - easily convert scans to pdf"
-msgstr ""
+msgstr "STPDF - facilmente converte scans para pdf"
 
 #: cli.py:217
 msgid "Scan images location"
-msgstr ""
+msgstr "A sondar a localização das imagens"
 
 #: cli.py:222
 msgid "Destination of modified files"
-msgstr ""
+msgstr "Destino dos ficheiros modificados"
 
 #: cli.py:224
 msgid "Number of images per pdf"
-msgstr ""
+msgstr "Número de imagens por pdf"
 
 #: cli.py:226
 msgid "Removes image rotation, requires tesseract"
-msgstr ""
+msgstr "Corrige o alinhamento das images, requer tesseract"
 
 #: cli.py:230
 msgid "Resolution of final rotated image, must be a value like 90.5"
-msgstr ""
+msgstr "Resolução final da imagens corrigidas, tem de ser um valor como 90.5"
 
 #: cli.py:233
 msgid "Sets the console log level"
-msgstr ""
+msgstr "Define o nivel de registo da consola"
 
 #: cli.py:236
 msgid "Switch language, language must be 2 letter code EX: en or pt"
-msgstr ""
+msgstr "Mudar de idioma, o idioma deve ser 2 letra código EX: pt ou pt"
 
 #: cli.py:239
 msgid "Save your current input in a file, can't be used with --lv"
-msgstr ""
+msgstr "Salvar sua entrada atual em um arquivo, não pode ser usado com--LV"
 
 #: cli.py:243
 msgid "Load values from settings file, can't be used with --kv"
 msgstr ""
+"Carregar valores do arquivo de configurações, não pode ser usado com--kV"
 
 #: cli.py:246
 msgid "Automatically answers yes when values are verified"
-msgstr ""
+msgstr "Responde automaticamente Sim quando os valores são verificados"
 
 #: cli.py:249
-msgid "If True images will be copied to the destination directory, default:False"
+msgid ""
+"If True images will be copied to the destination directory, default:False"
 msgstr ""
+"Se definido as imagens serão copiadas para o destino, predefinição:"
+"Indefinido"
 
 #: cli.py:253
 msgid "If True make a pdf out of the processed images, default:True"
 msgstr ""
+"Se definido um pdf será criado das imagens processadas, predefinição:"
+"Indefinido"
 
 #: cli.py:256
 msgid "Version"
-msgstr ""
+msgstr "Versão:"
 
 #: cli.py:257
 msgid "Full version"
-msgstr ""
+msgstr "Versão completa"
 
 #: cli.py:258
 msgid "Release date"
-msgstr ""
+msgstr "Data de lançamento:"
 
 #: cli.py:259
 msgid "Developed by"
-msgstr ""
+msgstr "Densenvolvido por:"
 
 #: cli.py:260
 msgid "Project home"
-msgstr ""
+msgstr "Home do projeto"
 
 #: cli.py:276
 msgid "Checking settings"
-msgstr ""
+msgstr "A verificar configurações"
 
 #: cli.py:282
 msgid "Failed to create settings "
-msgstr ""
+msgstr "Falha ao criar configurações"
 
 #: cli.py:285
 msgid "Settings"
-msgstr ""
+msgstr "Configurações"
 
 #: cli.py:293
 msgid "Finished"
-msgstr ""
-
+msgstr "Finalizado"

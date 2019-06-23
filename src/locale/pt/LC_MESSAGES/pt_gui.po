@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2019-06-17 00:19+0100\n"
-"PO-Revision-Date: 2019-06-17 00:23+0100\n"
+"POT-Creation-Date: 2019-06-23 17:26+0100\n"
+"PO-Revision-Date: 2019-06-23 17:39+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: pt\n"
@@ -17,278 +17,310 @@ msgstr ""
 "X-Generator: Poedit 2.2.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: gui.py:86
+#: gui.py:88
 msgid "Save"
 msgstr "Guardar"
 
-#: gui.py:88
+#: gui.py:90
 msgid "Save your settings to a file"
 msgstr "Salvar suas configurações em um arquivo"
 
-#: gui.py:92
+#: gui.py:95
+msgid "Copy files"
+msgstr "Copiar ficheiros"
+
+#: gui.py:96
+msgid "Copies files to destination"
+msgstr "Copia ficheiros para o destino"
+
+#: gui.py:100 gui.py:566
+msgid "Make pdf"
+msgstr "Criar PDF"
+
+#: gui.py:101
+msgid "Makes PDF(s) with the images found"
+msgstr "Cria PDF (s) com as imagens encontradas"
+
+#: gui.py:107
 msgid "Exit"
 msgstr "Sair"
 
-#: gui.py:94
+#: gui.py:109
 msgid "Leave The App"
 msgstr "Deixar o aplicativo"
 
-#: gui.py:98
+#: gui.py:113
 msgid "Help"
 msgstr "Ajuda"
 
-#: gui.py:99
+#: gui.py:114
 msgid "Open the documentation in a browser"
 msgstr "Abrir a documentação em um navegador"
 
-#: gui.py:105
+#: gui.py:120
 msgid "About STPDF"
 msgstr "Sobre o STPDF"
 
-#: gui.py:106
+#: gui.py:121
 msgid "Open info page"
 msgstr "Abrir página de informações"
 
-#: gui.py:110
+#: gui.py:125
 msgid "Settings"
 msgstr "Configurações"
 
-#: gui.py:112
+#: gui.py:127
 msgid "Open settings window"
 msgstr "Abrir janela de configurações"
 
-#: gui.py:117
+#: gui.py:133
 msgid "App"
 msgstr "Aplicação"
 
-#: gui.py:120
+#: gui.py:140
 msgid "Options"
 msgstr "Opções"
 
-#: gui.py:136 gui.py:139
+#: gui.py:155 gui.py:158
 msgid "Search"
 msgstr "Pesquisar"
 
-#: gui.py:138
+#: gui.py:157
 msgid "Location of the files"
 msgstr "Localização dos ficheiros"
 
-#: gui.py:141
+#: gui.py:160
 msgid "Destination of files created"
 msgstr "Destino dos ficheiros criados"
 
-#: gui.py:143
+#: gui.py:162
 msgid "Split into multiple PDF files"
 msgstr "Dividido em vários ficheiros PDF"
 
-#: gui.py:147
+#: gui.py:166
 msgid "The app failed to find tesseract on your system"
 msgstr "A Aplicação falhou ao tentar encontrar tesseract no seu sistema"
 
-#: gui.py:150
+#: gui.py:169
 msgid "Removes rotation"
 msgstr "Remove a rotação"
 
-#: gui.py:154
+#: gui.py:173
 msgid "Run"
 msgstr "Iniciar"
 
-#: gui.py:155
+#: gui.py:174
 msgid "Run the program"
 msgstr "Iniciar o programa"
 
-#: gui.py:157
+#: gui.py:176
 msgid "Stop"
 msgstr "Parar"
 
-#: gui.py:158
+#: gui.py:177
 msgid "Stops the program"
 msgstr "Parar o programa"
 
-#: gui.py:160
+#: gui.py:179
 msgid "Show values"
 msgstr "Mostar valores"
 
-#: gui.py:162
+#: gui.py:181
 msgid "Show your current input values"
 msgstr "Mostrar os valores atualmente inseridos"
 
-#: gui.py:163
+#: gui.py:182
 msgid "Clean log"
 msgstr "Limpar o registo"
 
-#: gui.py:165
+#: gui.py:184
 msgid "Cleans the current log"
 msgstr "Limpa o registo atual"
 
-#: gui.py:181 gui.py:561
+#: gui.py:200 gui.py:589
 msgid "Source:"
 msgstr "Localização dos ficheiros:"
 
-#: gui.py:183 gui.py:563
+#: gui.py:202 gui.py:591
 msgid "Destination:"
 msgstr "Destino dos ficheiros:"
 
-#: gui.py:185
+#: gui.py:204
 msgid "Deskew:"
 msgstr "Remover rotação:"
 
-#: gui.py:187
+#: gui.py:206
 msgid "Split scans:"
 msgstr "Dividir scans:"
 
-#: gui.py:190
+#: gui.py:209
 msgid "Split at:"
 msgstr "Dividir por:"
 
-#: gui.py:227
+#: gui.py:246
 msgid "Invalid directory parameter"
 msgstr "Parâmetro de directoria inválido"
 
-#: gui.py:233
+#: gui.py:253
 msgid "Theme is default"
 msgstr "Tema predifinido"
 
-#: gui.py:236
+#: gui.py:256
 msgid "Changing theme to"
 msgstr "A mudar tema para"
 
-#: gui.py:243
+#: gui.py:263
 msgid "Missing themes folder"
 msgstr "Pasta de temas em falta"
 
-#: gui.py:252
+#: gui.py:272
 msgid "Invalid theme"
 msgstr "Tema inválido"
 
-#: gui.py:264
+#: gui.py:284
 msgid ""
 "Found a default theme in themes folder, but the default theme is already "
 "defined"
 msgstr ""
 "Tema predefinido encontrado na pasta de temas, mas este tema já está definido"
 
-#: gui.py:273
+#: gui.py:293
 msgid "Trying to set theme"
 msgstr "A tentar mudar o tema"
 
-#: gui.py:276
+#: gui.py:296
 msgid "Successfully verified theme"
 msgstr "Tema verificado com sucesso"
 
-#: gui.py:352
+#: gui.py:372
 msgid "Successfully set theme"
 msgstr "Tema mudado com sucesso"
 
-#: gui.py:354
+#: gui.py:374
 msgid "Failed to verify theme"
 msgstr "Falha ao verificar tema"
 
-#: gui.py:383
+#: gui.py:403
 msgid "Invalid RGB values in app theme"
 msgstr "Encontrados Valores RGB incorretos no tema da aplicação"
 
-#: gui.py:386
+#: gui.py:406
 msgid "Invalid theme RGB value"
 msgstr "Valor de tema RGB, incorreto"
 
-#: gui.py:396
+#: gui.py:416
 msgid "Your selected theme probably has invalid or missing values"
 msgstr "O tema selecionado provavelmente tem valores inválidos ou em falta"
 
-#: gui.py:412
+#: gui.py:430
 msgid "Settings are already open"
 msgstr "Configurações já estão abertas"
 
-#: gui.py:422
+#: gui.py:437
+msgid "About window already open"
+msgstr "A janela Sobre já está aberta"
+
+#: gui.py:447
 msgid "Invalid action"
 msgstr "Ação inválida"
 
-#: gui.py:431
+#: gui.py:458
 msgid "Invalid log level"
 msgstr "Nivel de registo inválido"
 
-#: gui.py:440
+#: gui.py:467
 msgid "Console logger is set with log level"
 msgstr "Registo de consola definido com o nivel de logging"
 
-#: gui.py:483
+#: gui.py:503
 msgid "Invalid settings found, removing file"
 msgstr "Definições incorretas encontradas, a remover ficheiro"
 
-#: gui.py:495
+#: gui.py:515
 msgid "Loading user values"
 msgstr "A carregar os valores do utilizador"
 
-#: gui.py:498
+#: gui.py:518
 msgid "Values file does not exist, creating one now"
 msgstr "Ficheiro de valores não existe, a criar um agora"
 
-#: gui.py:520
+#: gui.py:533
+msgid "Loaded user values"
+msgstr "Valores de utilizador carregados"
+
+#: gui.py:546
 msgid "Invalid values found, removing file"
 msgstr "Valores incorretos encontrados, a remover ficheiro"
 
-#: gui.py:534
+#: gui.py:560
 msgid "Files location"
 msgstr "Localização dos ficheiros"
 
-#: gui.py:535
+#: gui.py:561
 msgid "Files destination"
 msgstr "Destino dos ficheiros criados"
 
-#: gui.py:536
+#: gui.py:562
 msgid "Deskew"
 msgstr "Remover rotação"
 
-#: gui.py:537
+#: gui.py:563
 msgid "Split"
 msgstr "Dividir scans"
 
-#: gui.py:538
+#: gui.py:564
 msgid "Split at"
 msgstr "Dividir por"
 
-#: gui.py:539
+#: gui.py:565
+msgid "Do copy"
+msgstr "Copiar"
+
+#: gui.py:567
 msgid "Values are"
 msgstr "Valores atuais"
 
-#: gui.py:543
+#: gui.py:571
 msgid "Keep values"
 msgstr "Manter valores"
 
-#: gui.py:544
+#: gui.py:572
 msgid "App theme"
 msgstr "Tema da aplicação"
 
-#: gui.py:545
+#: gui.py:573
 msgid "App language"
 msgstr "Linguagem da aplicação"
 
-#: gui.py:546
+#: gui.py:574
 msgid "Console log Level"
 msgstr "Nivel de registo da consola"
 
-#: gui.py:547
+#: gui.py:575
 msgid "Settings are"
 msgstr "Definições atuais"
 
-#: gui.py:560
+#: gui.py:588
 msgid "Location or destination undefined"
 msgstr "Localização ou destino indefinido"
 
-#: gui.py:566
+#: gui.py:594
 msgid "Missing files location"
 msgstr "Localização dos ficheiros em falta"
 
-#: gui.py:568
+#: gui.py:596
 msgid "Location is empty, no files to copy"
 msgstr "Localização vazia, nenhum ficheiro para copiar"
 
-#: gui.py:570
+#: gui.py:598
 msgid "Minimum split is 3"
 msgstr "A divisão mínima é 3"
 
-#: gui.py:616
+#: gui.py:604
+msgid "Saving"
+msgstr "A salvar"
+
+#: gui.py:668
 msgid ""
 "Failed to find tesseract on your system, verify it is installed and on PATH "
 "environment variable"
@@ -296,11 +328,47 @@ msgstr ""
 "Falha ao encontrar tesseract no seu sistema, verifique que está instalado e "
 "na variável de ambiente PATH"
 
-#: gui.py:641
+#: gui.py:673
+msgid "Thread exception"
+msgstr "Exceção de thread"
+
+#: gui.py:685
+msgid "Found alive thread trying to join it"
+msgstr "A thread foi encontrada viva a tentar juntá-la"
+
+#: gui.py:696
+msgid "Thread succesfully terminated"
+msgstr "Thread terminada com sucesso"
+
+#: gui.py:700
+msgid "Thread hasn't stopped retrying"
+msgstr "Thread não parou a tentar de novo"
+
+#: gui.py:704
 msgid "Program is not running"
 msgstr "O programa não está em execução"
 
-#: gui.py:660
+#: gui.py:712
+msgid "Stop requested setting up timer to stop thread"
+msgstr "Terminação requisitada a definir um temporizador para parar a thread"
+
+#: gui.py:718
+msgid "The app isn't running"
+msgstr "O programa não está em execução"
+
+#: gui.py:722
+msgid "Timer is already set, the converter will eventually stop"
+msgstr "Temporizador já está definido, o conversor irá eventualmente parar"
+
+#: gui.py:730
+msgid "Can't execute program while trying to stop it"
+msgstr "Não é possivel executar o programa enquanto o tenta terminar"
+
+#: gui.py:736
+msgid "Program is running trying to stop it"
+msgstr "O programa está em execução a tentar pará-lo"
+
+#: gui.py:750
 msgid "Program is already running"
 msgstr "O programa já em execução"
 

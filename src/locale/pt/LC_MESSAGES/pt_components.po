@@ -5,36 +5,52 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: STPDF-docs\n"
-"POT-Creation-Date: 2019-06-17 00:20+0100\n"
-"PO-Revision-Date: 2019-06-20 02:36+0100\n"
+"POT-Creation-Date: 2019-06-23 17:27+0100\n"
+"PO-Revision-Date: 2019-06-23 17:48+0100\n"
+"Last-Translator: \n"
 "Language-Team: Hallow'sTechLab\n"
+"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
 "X-Generator: Poedit 2.2.3\n"
-"Last-Translator: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"Language: pt\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
-#: components.py:61
+#: components.py:77
 msgid "About"
 msgstr "Sobre"
 
-#: components.py:83 components.py:200
-msgid "Language:"
-msgstr "Idioma:"
+#: components.py:97
+msgid "About STPDF"
+msgstr "Sobre STPDF"
 
-#: components.py:107
+#: components.py:100
+msgid "Build with:"
+msgstr "Desenvolvido com:"
+
+#: components.py:106
+msgid "Version:"
+msgstr "Versão:"
+
+#: components.py:113
+msgid "Release date:"
+msgstr "Data de lançamento:"
+
+#: components.py:120
+msgid "Developed by:"
+msgstr "Densenvolvido por:"
+
+#: components.py:161
 msgid "Settings"
 msgstr "Configurações"
 
-#: components.py:135
+#: components.py:185
 msgid "Found invalid setting"
 msgstr "Configuração inválida encontrada"
 
-#: components.py:151
+#: components.py:202
 msgid ""
 "Failed to save settings, please delete your setting.pckl and values.pckl "
 "files, and restart the app"
@@ -42,46 +58,54 @@ msgstr ""
 "Falha ao salvar as configurações, exclua seus arquivos Setting. pckl e "
 "Values. pckl e reinicie o aplicativo"
 
-#: components.py:171
+#: components.py:215
+msgid "Please restart the app to apply the changes"
+msgstr "Por favor reinicie a aplicação"
+
+#: components.py:228
 msgid "Language of the app"
 msgstr "Linguagem da aplicação"
 
-#: components.py:176
+#: components.py:234
 msgid "Theme of the app"
 msgstr "Tema da aplicação"
 
-#: components.py:181
+#: components.py:239
 msgid "Console log level"
 msgstr "Nivel de registo da consola"
 
-#: components.py:186
+#: components.py:244
 msgid ""
 "Keeps your source, destination, etc.. stored in a file and loads it on "
 "startup"
 msgstr ""
-"Mantém a sua fonte, destino, etc. armazenado em um arquivo e carrega-o "
-"na inicialização"
+"Mantém a sua fonte, destino, etc. armazenado em um arquivo e carrega-o na "
+"inicialização"
 
-#: components.py:189
+#: components.py:247
 msgid "Apply settings"
 msgstr "Aplicar configurações"
 
-#: components.py:190
+#: components.py:248
 msgid "apply"
 msgstr "aplicar"
 
-#: components.py:193
+#: components.py:250
 msgid "Saves your current settings to a file"
 msgstr "Salvar suas configurações em um arquivo"
 
-#: components.py:202
+#: components.py:257
+msgid "Language:"
+msgstr "Idioma:"
+
+#: components.py:259
 msgid "Theme:"
 msgstr "Tema:"
 
-#: components.py:204
+#: components.py:261
 msgid "Log level:"
 msgstr "Nivel de registo:"
 
-#: components.py:206
+#: components.py:263
 msgid "Keep values:"
 msgstr "Manter valores:"

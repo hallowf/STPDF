@@ -5,43 +5,99 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: STPDF-docs\n"
-"POT-Creation-Date: 2019-06-17 00:27+0100\n"
-"PO-Revision-Date: 2019-06-20 02:41+0100\n"
+"POT-Creation-Date: 2019-06-23 17:27+0100\n"
+"PO-Revision-Date: 2019-06-23 17:45+0100\n"
+"Last-Translator: \n"
 "Language-Team: Hallow'sTechLab\n"
+"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
 "X-Generator: Poedit 2.2.3\n"
-"Last-Translator: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"Language: pt\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
-#: stpdf\converter.py:64
-msgid "Found too many files to copy, this is not implemented"
-msgstr "Foram encontrados demasiados ficheiros para copiar, isto ainda não está implementado"
+#: stpdf\converter.py:83
+msgid "Nothing to do, neither save files or make pdf is selected"
+msgstr ""
+"Nada a fazer, nenhuma das opções, salvar ficheiros ou criar pdf, estão "
+"selecionadas"
 
-#: stpdf\converter.py:72
-msgid "Starting image processing"
-msgstr "A iniciar o processamento de imagens"
+#: stpdf\converter.py:86
+msgid "Found"
+msgstr "Encontrados"
 
-#: stpdf\converter.py:73
+#: stpdf\converter.py:88
+msgid "files to copy and deskew is true this might take a bit"
+msgstr ""
+"ficheiros para copiar e remover a rotação isto pode demorar um pouco"
+
+#: stpdf\converter.py:90
+msgid "Found too many files to handle, this is not implemented yet"
+msgstr ""
+"Foram encontrados demasiados ficheiros para processar, isto ainda não "
+"está implementado"
+
+#: stpdf\converter.py:104
+msgid "Starting image gathering"
+msgstr "A iniciar a recolha de imagens"
+
+#: stpdf\converter.py:105
 msgid "Files Found"
 msgstr "Ficheiros encontrados"
 
-#: stpdf\converter.py:80
-msgid "processed"
-msgstr "processado"
+#: stpdf\converter.py:108
+msgid "Converter is stoppping"
+msgstr "Conversor está a parar"
 
-#: stpdf\converter.py:133
-msgid "Failed to obtain image handles something went wrong"
-msgstr "Falha ao obter controlador das imagnes algo de errado aconteceu"
+#: stpdf\converter.py:117
+msgid "gathered"
+msgstr "recolhidos"
 
-#: stpdf\converter.py:137
+#: stpdf\converter.py:132
+msgid "Error occurred while opening image"
+msgstr "Ocorreu um erro ao abrir uma imagem"
+
+#: stpdf\converter.py:136
+msgid "Gathering done"
+msgstr "Recolha completa"
+
+#: stpdf\converter.py:142
+msgid "Deskewing images"
+msgstr "A remover a rotação das imagens"
+
+#: stpdf\converter.py:153
+msgid "deskewed"
+msgstr "inclinação corrigida"
+
+#: stpdf\converter.py:176
+msgid "And exception occured while deskewing image"
+msgstr "Uma excepção ocorreu ao corigir o alinhamento de uma imagem"
+
+#: stpdf\converter.py:178
+msgid "This image wont be processed"
+msgstr "Esta imagem não será processada"
+
+#: stpdf\converter.py:182
+msgid "Failed to obtain images to deskew"
+msgstr "Falha ao obter images para corrigir alinhamento"
+
+#: stpdf\converter.py:200
+msgid "Resizing images"
+msgstr "Redimensionando as imagens"
+
+#: stpdf\converter.py:208
+msgid "resized"
+msgstr "redimensionadas"
+
+#: stpdf\converter.py:229
 msgid "Creating multiple PDFs splitting by:"
 msgstr "A cria múltiplos PDF's, dividindo por:"
 
-#: stpdf\converter.py:152
+#: stpdf\converter.py:245
 msgid "Creating a single pdf"
 msgstr "A criar um único PDF"
+
+#~ msgid "processed"
+#~ msgstr "processado"

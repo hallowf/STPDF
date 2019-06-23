@@ -1,13 +1,13 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR ORGANIZATION
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# STPDF's translations.
+# Copyright (C) 2019 Hallow'sTechLab
+# Alexandre Cortegaça <hallow.tech.lab@gmail.com>, 2019.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2019-06-17 00:19+0100\n"
+"POT-Creation-Date: 2019-06-23 17:26+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Last-Translator: Alexandre Cortegaça <hallow.tech.lab@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=cp1252\n"
@@ -15,283 +15,351 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 
 
-#: gui.py:86
+#: gui.py:88
 msgid "Save"
 msgstr ""
 
-#: gui.py:88
+#: gui.py:90
 msgid "Save your settings to a file"
 msgstr ""
 
-#: gui.py:92
+#: gui.py:95
+msgid "Copy files"
+msgstr ""
+
+#: gui.py:96
+msgid "Copies files to destination"
+msgstr ""
+
+#: gui.py:100 gui.py:566
+msgid "Make pdf"
+msgstr ""
+
+#: gui.py:101
+msgid "Makes PDF(s) with the images found"
+msgstr ""
+
+#: gui.py:107
 msgid "Exit"
 msgstr ""
 
-#: gui.py:94
+#: gui.py:109
 msgid "Leave The App"
 msgstr ""
 
-#: gui.py:98
+#: gui.py:113
 msgid "Help"
 msgstr ""
 
-#: gui.py:99
+#: gui.py:114
 msgid "Open the documentation in a browser"
 msgstr ""
 
-#: gui.py:105
+#: gui.py:120
 msgid "About STPDF"
 msgstr ""
 
-#: gui.py:106
+#: gui.py:121
 msgid "Open info page"
 msgstr ""
 
-#: gui.py:110
+#: gui.py:125
 msgid "Settings"
 msgstr ""
 
-#: gui.py:112
+#: gui.py:127
 msgid "Open settings window"
 msgstr ""
 
-#: gui.py:117
+#: gui.py:133
 msgid "App"
 msgstr ""
 
-#: gui.py:120
+#: gui.py:140
 msgid "Options"
 msgstr ""
 
-#: gui.py:136 gui.py:139
+#: gui.py:155 gui.py:158
 msgid "Search"
 msgstr ""
 
-#: gui.py:138
+#: gui.py:157
 msgid "Location of the files"
 msgstr ""
 
-#: gui.py:141
+#: gui.py:160
 msgid "Destination of files created"
 msgstr ""
 
-#: gui.py:143
+#: gui.py:162
 msgid "Split into multiple PDF files"
 msgstr ""
 
-#: gui.py:147
+#: gui.py:166
 msgid "The app failed to find tesseract on your system"
 msgstr ""
 
-#: gui.py:150
+#: gui.py:169
 msgid "Removes rotation"
 msgstr ""
 
-#: gui.py:154
+#: gui.py:173
 msgid "Run"
 msgstr ""
 
-#: gui.py:155
+#: gui.py:174
 msgid "Run the program"
 msgstr ""
 
-#: gui.py:157
+#: gui.py:176
 msgid "Stop"
 msgstr ""
 
-#: gui.py:158
+#: gui.py:177
 msgid "Stops the program"
 msgstr ""
 
-#: gui.py:160
+#: gui.py:179
 msgid "Show values"
 msgstr ""
 
-#: gui.py:162
+#: gui.py:181
 msgid "Show your current input values"
 msgstr ""
 
-#: gui.py:163
+#: gui.py:182
 msgid "Clean log"
 msgstr ""
 
-#: gui.py:165
+#: gui.py:184
 msgid "Cleans the current log"
 msgstr ""
 
-#: gui.py:181 gui.py:561
+#: gui.py:200 gui.py:589
 msgid "Source:"
 msgstr ""
 
-#: gui.py:183 gui.py:563
+#: gui.py:202 gui.py:591
 msgid "Destination:"
 msgstr ""
 
-#: gui.py:185
+#: gui.py:204
 msgid "Deskew:"
 msgstr ""
 
-#: gui.py:187
+#: gui.py:206
 msgid "Split scans:"
 msgstr ""
 
-#: gui.py:190
+#: gui.py:209
 msgid "Split at:"
 msgstr ""
 
-#: gui.py:227
+#: gui.py:246
 msgid "Invalid directory parameter"
 msgstr ""
 
-#: gui.py:233
+#: gui.py:253
 msgid "Theme is default"
 msgstr ""
 
-#: gui.py:236
+#: gui.py:256
 msgid "Changing theme to"
 msgstr ""
 
-#: gui.py:243
+#: gui.py:263
 msgid "Missing themes folder"
 msgstr ""
 
-#: gui.py:252
+#: gui.py:272
 msgid "Invalid theme"
 msgstr ""
 
-#: gui.py:264
+#: gui.py:284
 msgid "Found a default theme in themes folder, but the default theme is already defined"
 msgstr ""
 
-#: gui.py:273
+#: gui.py:293
 msgid "Trying to set theme"
 msgstr ""
 
-#: gui.py:276
+#: gui.py:296
 msgid "Successfully verified theme"
 msgstr ""
 
-#: gui.py:352
+#: gui.py:372
 msgid "Successfully set theme"
 msgstr ""
 
-#: gui.py:354
+#: gui.py:374
 msgid "Failed to verify theme"
 msgstr ""
 
-#: gui.py:383
+#: gui.py:403
 msgid "Invalid RGB values in app theme"
 msgstr ""
 
-#: gui.py:386
+#: gui.py:406
 msgid "Invalid theme RGB value"
 msgstr ""
 
-#: gui.py:396
+#: gui.py:416
 msgid "Your selected theme probably has invalid or missing values"
 msgstr ""
 
-#: gui.py:412
+#: gui.py:430
 msgid "Settings are already open"
 msgstr ""
 
-#: gui.py:422
+#: gui.py:437
+msgid "About window already open"
+msgstr ""
+
+#: gui.py:447
 msgid "Invalid action"
 msgstr ""
 
-#: gui.py:431
+#: gui.py:458
 msgid "Invalid log level"
 msgstr ""
 
-#: gui.py:440
+#: gui.py:467
 msgid "Console logger is set with log level"
 msgstr ""
 
-#: gui.py:483
+#: gui.py:503
 msgid "Invalid settings found, removing file"
 msgstr ""
 
-#: gui.py:495
+#: gui.py:515
 msgid "Loading user values"
 msgstr ""
 
-#: gui.py:498
+#: gui.py:518
 msgid "Values file does not exist, creating one now"
 msgstr ""
 
-#: gui.py:520
-msgid "Invalid values found, removing file"
-msgstr ""
-
-#: gui.py:534
-msgid "Files location"
-msgstr ""
-
-#: gui.py:535
-msgid "Files destination"
-msgstr ""
-
-#: gui.py:536
-msgid "Deskew"
-msgstr ""
-
-#: gui.py:537
-msgid "Split"
-msgstr ""
-
-#: gui.py:538
-msgid "Split at"
-msgstr ""
-
-#: gui.py:539
-msgid "Values are"
-msgstr ""
-
-#: gui.py:543
-msgid "Keep values"
-msgstr ""
-
-#: gui.py:544
-msgid "App theme"
-msgstr ""
-
-#: gui.py:545
-msgid "App language"
+#: gui.py:533
+msgid "Loaded user values"
 msgstr ""
 
 #: gui.py:546
-msgid "Console log Level"
-msgstr ""
-
-#: gui.py:547
-msgid "Settings are"
+msgid "Invalid values found, removing file"
 msgstr ""
 
 #: gui.py:560
+msgid "Files location"
+msgstr ""
+
+#: gui.py:561
+msgid "Files destination"
+msgstr ""
+
+#: gui.py:562
+msgid "Deskew"
+msgstr ""
+
+#: gui.py:563
+msgid "Split"
+msgstr ""
+
+#: gui.py:564
+msgid "Split at"
+msgstr ""
+
+#: gui.py:565
+msgid "Do copy"
+msgstr ""
+
+#: gui.py:567
+msgid "Values are"
+msgstr ""
+
+#: gui.py:571
+msgid "Keep values"
+msgstr ""
+
+#: gui.py:572
+msgid "App theme"
+msgstr ""
+
+#: gui.py:573
+msgid "App language"
+msgstr ""
+
+#: gui.py:574
+msgid "Console log Level"
+msgstr ""
+
+#: gui.py:575
+msgid "Settings are"
+msgstr ""
+
+#: gui.py:588
 msgid "Location or destination undefined"
 msgstr ""
 
-#: gui.py:566
+#: gui.py:594
 msgid "Missing files location"
 msgstr ""
 
-#: gui.py:568
+#: gui.py:596
 msgid "Location is empty, no files to copy"
 msgstr ""
 
-#: gui.py:570
+#: gui.py:598
 msgid "Minimum split is 3"
 msgstr ""
 
-#: gui.py:616
+#: gui.py:604
+msgid "Saving"
+msgstr ""
+
+#: gui.py:668
 msgid "Failed to find tesseract on your system, verify it is installed and on PATH environment variable"
 msgstr ""
 
-#: gui.py:641
+#: gui.py:673
+msgid "Thread exception"
+msgstr ""
+
+#: gui.py:685
+msgid "Found alive thread trying to join it"
+msgstr ""
+
+#: gui.py:696
+msgid "Thread succesfully terminated"
+msgstr ""
+
+#: gui.py:700
+msgid "Thread hasn't stopped retrying"
+msgstr ""
+
+#: gui.py:704
 msgid "Program is not running"
 msgstr ""
 
-#: gui.py:660
+#: gui.py:712
+msgid "Stop requested setting up timer to stop thread"
+msgstr ""
+
+#: gui.py:718
+msgid "The app isn't running"
+msgstr ""
+
+#: gui.py:722
+msgid "Timer is already set, the converter will eventually stop"
+msgstr ""
+
+#: gui.py:730
+msgid "Can't execute program while trying to stop it"
+msgstr ""
+
+#: gui.py:736
+msgid "Program is running trying to stop it"
+msgstr ""
+
+#: gui.py:750
 msgid "Program is already running"
 msgstr ""
 
