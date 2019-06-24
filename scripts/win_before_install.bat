@@ -1,5 +1,5 @@
 REM "Installing python"
-choco install python3
+choco install python --version 3.5.4
 REM "Fetching UPX"
 mkdir UPX && cd UPX
 ECHO UPX_PATH is %cd%

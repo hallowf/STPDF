@@ -27,8 +27,12 @@ __developer2__ = None
 __devhome__ = None
 
 if getattr(sys, "frozen", False):
+    # BUG: Travis windows build fails
+    # https://stackoverflow.com/questions/47468705/pyinstaller-could-not-find-or-load-the-qt-platform-plugin-windows
+    # https://stackoverflow.com/questions/54132763/how-to-fix-could-not-find-the-qt-platform-plugin-windows-in-when-implemen
+    os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = os.path.join(os.getcwd(), "PyQt5", "Qt", "plugins", "platforms", "")
+    os.environ["QT_PLUGIN_PATH"] = os.path.join(os.getcwd(), "PyQt5", "Qt", "plugins", "")
     # pyInstaller
-    os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = os.path.join(os.getcwd(), "PyQt5", "Qt", "plugins", "platforms")
     data = None
     if os.path.isfile("version.pckl"):
         data = pickle.load(open("version.pckl", "rb"))

@@ -5,7 +5,7 @@ jobs:
     language: python
     sudo: required
     dist: xenial
-    python: 3.7
+    python: 3.5
     addons:
       apt:
         packages:
@@ -15,7 +15,7 @@ jobs:
   - stage: Windows build
     os: windows
     language: shell
-    python: 3.7
+    python: 3.5
     env:
     - PY=py
 

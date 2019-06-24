@@ -1,13 +1,13 @@
 REM "Installing PyQt5"
 %PY% -m pip install PyQt5
 REM "Setting python path"
-SET PATH=%PATH%;C:\Python37\scripts
+SET PATH=%PATH%;C:\Python35\scripts
 REM "Setting upx path"
 cd UPX\
 SET UPX_PATH=%cd% && cd ..
 REM "Setting QT plugin path"
-SET "QT_QPA_PLATFORM_PLUGIN_PATH=C:\Python37\Lib\site-packages\PyQt5\Qt\plugins\platforms"
-SET "QT_PLUGIN_PATH=C:\Python37\Lib\site-packages\PyQt5\Qt\plugins"
+SET "QT_QPA_PLATFORM_PLUGIN_PATH=C:\Python37\Lib\site-packages\PyQt5\Qt\plugins\platforms\"
+SET "QT_PLUGIN_PATH=C:\Python37\Lib\site-packages\PyQt5\Qt\plugins\"
 REM "Contents of QT plugin path"
 DIR %QT_QPA_PLATFORM_PLUGIN_PATH%
 REM "Building GUI"
