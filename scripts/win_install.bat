@@ -8,8 +8,6 @@ SET UPX_PATH=%cd% && cd ..
 REM "Setting QT plugin path"
 SET "QT_QPA_PLATFORM_PLUGIN_PATH=C:\Python37\Lib\site-packages\PyQt5\Qt\plugins\platforms\"
 SET "QT_PLUGIN_PATH=C:\Python37\Lib\site-packages\PyQt5\Qt\plugins\"
-REM "Contents of QT plugin path"
-DIR %QT_QPA_PLATFORM_PLUGIN_PATH%
 REM "Building GUI"
 cd src\
 REM pyinstaller --upx-dir %UPX_PATH% gui.spec

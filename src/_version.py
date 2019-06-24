@@ -27,7 +27,6 @@ __developer2__ = None
 __devhome__ = None
 
 if getattr(sys, "frozen", False):
-    print(sys.executable)
     # BUG: Travis windows build fails
     # https://stackoverflow.com/questions/47468705/pyinstaller-could-not-find-or-load-the-qt-platform-plugin-windows
     # https://stackoverflow.com/questions/54132763/how-to-fix-could-not-find-the-qt-platform-plugin-windows-in-when-implemen
@@ -54,7 +53,6 @@ else:
     from datetime import date
     from lxml import html
     import requests
-    print(sys.executable)
     args = sys.argv
     tag = True if "--tag" in sys.argv else False
     c_path = os.getcwd()
