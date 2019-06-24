@@ -1,5 +1,6 @@
 REM "Installing python"
 choco install python --version 3.5.4
+choco install pyqt5
 REM "Fetching UPX"
 mkdir UPX && cd UPX
 ECHO UPX_PATH is %cd%

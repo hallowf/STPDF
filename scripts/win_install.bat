@@ -12,7 +12,8 @@ REM "Contents of QT plugin path"
 DIR %QT_QPA_PLATFORM_PLUGIN_PATH%
 REM "Building GUI"
 cd src\
-pyinstaller --upx-dir %UPX_PATH% gui.spec
+REM pyinstaller --upx-dir %UPX_PATH% gui.spec
+pyinstaller gui.spec
 7z a STPDF-gui.7z dist\STPDF > NUL:
 REM "GUI BUILT"
 RMDIR /Q/S dist\
