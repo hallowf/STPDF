@@ -32,7 +32,7 @@ if getattr(sys, "frozen", False):
     # https://stackoverflow.com/questions/47468705/pyinstaller-could-not-find-or-load-the-qt-platform-plugin-windows
     # https://stackoverflow.com/questions/54132763/how-to-fix-could-not-find-the-qt-platform-plugin-windows-in-when-implemen
     # https://stackoverflow.com/questions/20495620/qt-5-1-1-application-failed-to-start-because-platform-plugin-windows-is-missi
-    os.environ["QTDIR"] = os.path.join(os.getcwd(), "PyQt5", "Qt", "bin", "")
+    # os.environ["QTDIR"] = os.path.join(os.getcwd(), "PyQt5", "Qt", "bin", "")
     os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = os.path.join(os.getcwd(), "PyQt5", "Qt", "plugins", "platforms", "")
     os.environ["QT_PLUGIN_PATH"] = os.path.join(os.getcwd(), "PyQt5", "Qt", "plugins", "")
     # pyInstaller
