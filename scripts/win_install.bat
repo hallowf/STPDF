@@ -1,7 +1,7 @@
 REM "Installing PyQt5"
 %PY% -m pip install PyQt5
 REM "Setting python path"
-SET PATH=%PATH%;C:\Python34\scripts
+SET PATH=%PATH%;C:\Python35\scripts
 REM "Setting upx path"
 cd UPX\
 SET UPX_PATH=%cd% && cd ..
