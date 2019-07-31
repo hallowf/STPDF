@@ -55,7 +55,7 @@ class MainWindow(QMainWindow):
         self.icon = QtGui.QIcon('stpdf.ico')
         self.user_themes = {"default": "default"}
         self.settings = None
-        self.user_values = None
+        self.user_values = {}
         self.time_stopper = None
         self.converter = None
         self.retries = 0
@@ -604,7 +604,7 @@ class MainWindow(QMainWindow):
         msg = _("Saving")
         self.logger.info(msg)
         self.gui_logger.append(msg)
-        vs = self.user_values
+        uv = self.user_values
         s = self.files_location
         d = self.files_destination
         dsk = self.deskew_check.isChecked()
@@ -612,26 +612,31 @@ class MainWindow(QMainWindow):
         splt_a = self.split_slider.value()
         dc = self.menu_copy.isChecked()
         mp = self.menu_pdf.isChecked()
-        for val in vs:
-            if val == "source" and vs[val] != s:
-                vs[val] = s
-            elif val == "dest" and vs[val] != d:
-                vs[val] = d
-            elif val == "deskew" and vs[val] != dsk:
-                vs[val] = dsk
-            elif val == "split" and vs[val] != splt:
-                vs[val] = splt
-            elif val == "split_at" and vs[val] != splt_a:
-                vs[val] = splt_a
-            elif val == "d_copy" and vs[val] != dc:
-                vs[val] = dc
-            elif val == "m_pdf" and vs[val] != mp:
-                vs[val] = mp
-        if self.settings["keep_vals"]:
-            self.logger.debug("User values: %s" % vs)
-            pickle.dump(vs, open("values.pckl", "wb"))
-        self.logger.debug("Settings: %s" % self.settings)
-        pickle.dump(self.settings, open("settings.pckl", "wb"))
+        if uv is not None:
+            for val in uv:
+                if val == "source" and uv[val] != s:
+                    uv[val] = s
+                elif val == "dest" and uv[val] != d:
+                    uv[val] = d
+                elif val == "deskew" and uv[val] != dsk:
+                    uv[val] = dsk
+                elif val == "split" and uv[val] != splt:
+                    uv[val] = splt
+                elif val == "split_at" and uv[val] != splt_a:
+                    uv[val] = splt_a
+                elif val == "d_copy" and uv[val] != dc:
+                    uv[val] = dc
+                elif val == "m_pdf" and uv[val] != mp:
+                    uv[val] = mp
+            if self.settings["keep_vals"]:
+                self.logger.debug("User values: %s" % uv)
+                pickle.dump(uv, open("values.pckl", "wb"))
+            self.logger.debug("Settings: %s" % self.settings)
+            pickle.dump(self.settings, open("settings.pckl", "wb"))
+        else:
+            self.logger.error(_("Failed to obtain user values"))
+            dm1 = _("User values:") + "%s" % self.user_values
+            self.logger.debug(dm1)
 
     # Checks for tesseract in the system
     def check_tesseract(self):
