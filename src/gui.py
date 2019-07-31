@@ -55,7 +55,7 @@ class MainWindow(QMainWindow):
         self.icon = QtGui.QIcon('stpdf.ico')
         self.user_themes = {"default": "default"}
         self.settings = None
-        self.user_values = {}
+        self.user_values = None
         self.time_stopper = None
         self.converter = None
         self.retries = 0
@@ -510,6 +510,15 @@ class MainWindow(QMainWindow):
 
     # Loads user values from values.pckl
     def load_values(self):
+        self.user_values = {
+            "source": "",
+            "dest": "",
+            "deskew": False,
+            "split": False,
+            "split_at": 0,
+            "d_copy": False,
+            "m_pdf": True
+        }
         try:
             if self.settings["keep_vals"] or not os.path.isfile("values.pckl"):
                 self.logger.debug(_("Loading user values"))
@@ -517,15 +526,6 @@ class MainWindow(QMainWindow):
                 if not os.path.isfile("values.pckl"):
                     m = _("Values file does not exist, creating one now")
                     self.logger.debug(m)
-                    self.user_values = {
-                        "source": "",
-                        "dest": "",
-                        "deskew": False,
-                        "split": False,
-                        "split_at": 0,
-                        "d_copy": False,
-                        "m_pdf": True
-                    }
                     pickle.dump(self.user_values, open("values.pckl", "wb"))
                 else:
                     self.user_values = pickle.load(open("values.pckl", "rb"))
