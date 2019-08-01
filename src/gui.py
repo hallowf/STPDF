@@ -31,9 +31,9 @@ from PyQt5.QtWidgets import (QMainWindow, QWidget, QAction, qApp, QPushButton,
                              QApplication, QActionGroup)
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtGui import QDesktopServices
-from PyQt5.QtCore import Qt, QUrl
+from PyQt5.QtCore import Qt, QUrl, pyqtSignal, pyqtSlot
 # Custom components
-from components import TipSlider, SettingsWindow, AboutWindow
+from components import TipSlider, SettingsWindow, AboutWindow, ThreadedConverter
 # Backend and other requirements
 from stpdf.custom_exceptions import DirMissing, OutDirNotEmpty
 from stpdf.converter import Converter
@@ -46,7 +46,7 @@ from PIL import Image
 class MainWindow(QMainWindow):
 
     def __init__(self, parent):
-        super().__init__()
+        super(self.__class__, self).__init__()
         # App required parameters
         self.parent = parent
         self.stop_thread = False
@@ -175,7 +175,7 @@ class MainWindow(QMainWindow):
         self.run_button.clicked.connect(self.do_run)
         self.stop_button = QPushButton(_("Stop"))
         self.stop_button.setStatusTip(_("Stops the program"))
-        self.stop_button.clicked.connect(self.stop_function)
+        self.stop_button.clicked.connect(self.do_stop)
         self.show_vals = QPushButton(_("Show values"))
         self.show_vals.clicked.connect(self.show_values)
         self.show_vals.setStatusTip(_("Show your current input values"))
@@ -649,111 +649,48 @@ class MainWindow(QMainWindow):
 
     # A function that runs converter in a new thread
     # and appends the yielded string to the loggers
-    def threaded_run(self):
-        fl = self.files_location
-        fd = self.files_destination
-        di = self.deskew_check.isChecked()
-        ds = self.do_split.isChecked()
-        sa = self.split_slider.value()
-        pd = self.menu_pdf.isChecked()
-        dc = self.menu_copy.isChecked()
-        cvt = Converter(fl, fd, split=(ds, sa),
-                        deskew=di, lang=self.app_lang,
-                        make_pdf=pd, copy_files=dc)
-        self.converter = cvt
-        try:
-            for line in cvt.process_all():
-                if self.stop_thread:
-                    break
-                self.gui_logger.append(str(line))
-                self.logger.info(str(line))
-        except Exception as e:
-            en = e.__class__.__name__
-            if en == "TesseractNotFoundError":
-                msg = _("Failed to find tesseract on your system, verify it is installed and on PATH environment variable")
-                self.logger.error(msg)
-                self.gui_logger.append(msg)
-            else:
-                msg = "%s: %s" % (_("Thread exception"), str(e))
-                self.logger.error(msg)
-                self.gui_logger.append(msg)
-        self.converter = None
-        self.stop_thread = False
-        return 0
-
-    # TODO: Simplify this
-    # Tries to kill the thread if it is alive
-    def do_stop(self):
-        if self.is_running or self.converter is not None or self.converter is not None:
-            if self.converter_thread is not None:
-                self.logger.debug(_("Found alive thread trying to join it"))
-                self.stop_thread = True
-                if self.converter is not None:
-                    self.converter.stop_running = True
-                self.converter_thread.join(2)
-                if self.converter_thread._is_stopped:
-                    terminate_thread(self.converter_thread)
-                    self.is_running = False
-                    self.stop_thread = False
-                    self.time_stopper.stop()
-                    self.time_stopper = None
-                    msg = _("Thread succesfully terminated")
-                    self.gui_logger.append(msg)
-                    self.logger.debug(msg)
-                else:
-                    self.logger.debug(_("Thread hasn't stopped retrying"))
-            else:
-                self.is_running = False
-        else:
-            msg = _("Program is not running")
-            self.gui_logger.append(msg)
-            self.logger.info(msg)
-        self.time_stopper = None
-
-    # Function that sets a QTimer to run self.do_stop
-    def stop_function(self):
-        if self.time_stopper is None and (self.converter_thread is not None or self.converter is not None):
-            msg = _("Stop requested setting up timer to stop thread")
-            self.logger.info(msg)
-            self.gui_logger.append(msg)
-            self.time_stopper = QtCore.QTimer()
-            QtCore.QTimer.singleShot(4000, lambda: self.do_stop())
-        elif self.converter_thread is None and self.converter is None:
-            msg = _("The app isn't running")
-            self.logger.info(msg)
-            self.gui_logger.append(msg)
-        else:
-            msg = _("Timer is already set, the converter will eventually stop")
-            self.logger.info(msg)
-            self.gui_logger.append(msg)
-
-    # Runs stpdf-core by calling it in a new thread
     def do_run(self):
-        if not self.is_running:
-            if self.time_stopper is not None:
-                msg = _("Can't execute program while trying to stop it")
-                self.logger.error(msg)
-                self.gui_logger.append(msg)
+        cvt_args = {}
+        cvt_args["fl"] = self.files_location
+        cvt_args["fd"] = self.files_destination
+        cvt_args["di"] = self.deskew_check.isChecked()
+        cvt_args["ds"] = self.do_split.isChecked()
+        cvt_args["sa"] = self.split_slider.value()
+        cvt_args["pd"] = self.menu_pdf.isChecked()
+        cvt_args["dc"] = self.menu_copy.isChecked()
+        cvt_args["lang"] = self.app_lang
+        self.converter = ThreadedConverter(cvt_args)
+        self.converter.progress_signal.connect(self.log_progress)
+        self.converter.exception_signal.connect(self.handle_thread_exception)
+        self.converter.finished.connect(self.do_stop)
+        self.converter.start()
+
+    @pyqtSlot(str)
+    def handle_thread_exception(self, msg):
+        self.gui_logger.append(msg)
+        self.logger.error(msg)
+        self.do_stop()
+
+    @pyqtSlot(str)
+    def log_progress(self, p_text):
+        self.gui_logger.append(p_text)
+        self.logger.info(p_text)
+
+    def do_stop(self):
+        msg = _("Stop requested")
+        self.logger.debug(msg)
+        self.gui_logger.append(msg)
+        if self.converter is not None:
+            self.logger.debug("Converter running, trying to stop it")
+            if self.converter.isFinished():
+                self.converter.quit()
             else:
-                if self.converter_thread is not None:
-                    self.stop_function()
-                    msg = _("Program is running trying to stop it")
-                    self.logger.error(msg)
-                    self.gui_logger.append(msg)
-                else:
-                    has_req = self.verify_required()
-                    if has_req is True:
-                        self.is_running = True
-                        self.converter_thread = Thread(target=self.threaded_run, args=())
-                        self.logger.debug("Thread is: {}".format(self.converter_thread))
-                        self.converter_thread.start()
-                    else:
-                        self.logger.error(has_req)
-                        self.gui_logger.append(has_req)
+                self.converter.terminate()
         else:
-            msg = _("Program is already running")
-            self.logger.error(msg)
+            msg = "Unable to find converter thread"
             self.gui_logger.append(msg)
+            self.logger.error(msg)
+            
 
 
 if __name__ == '__main__':

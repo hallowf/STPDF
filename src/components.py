@@ -22,13 +22,55 @@ from PyQt5.QtWidgets import (QMainWindow, QWidget, QPushButton,
                              QToolTip, QMessageBox)
 from PyQt5.QtGui import QIcon, QDesktopServices
 from PyQt5 import QtCore, QtGui
+from PyQt5.QtCore import QThread, pyqtSignal
 from _version import (__version__, __version2__,
                       __releaseDate__, __releaseDate2__,
                       __developer__, __developer2__, __devhome__)
 
+from stpdf.converter import Converter
+
+
+class ThreadedConverter(QThread):
+    exception_signal = pyqtSignal(str)
+    progress_signal = pyqtSignal(str)
+    finished = pyqtSignal()
+
+
+    def __init__(self, cvt_args):
+        QThread.__init__(self)
+        self.cvt_args = cvt_args
+
+    def __del__(self):
+        self.wait()
+
+    def run(self):
+        cvt_args = self.cvt_args
+        fl = cvt_args["fl"]
+        fd = cvt_args["fd"]
+        di = cvt_args["di"]
+        ds = cvt_args["ds"]
+        sa = cvt_args["sa"]
+        pd = cvt_args["pd"]
+        dc = cvt_args["dc"]
+        la = cvt_args["lang"]
+        converter = Converter(fl, fd, split=(ds, sa),
+                                deskew=di, lang=la,
+                                make_pdf=pd, copy_files=dc)
+        try:
+            for line in converter.process_all():
+                self.progress_signal.emit(line)
+        except Exception as e:
+            en = e.__class__.__name__
+            msg = ""
+            if en == "TesseractNotFoundError":
+                msg = _("Failed to find tesseract on your system, verify it is installed and on PATH environment variable")
+            else:
+                msg = "%s: %s" % (_("Thread exception"), str(e))
+            self.exception_signal.emit(msg)
 
 # https://stackoverflow.com/a/31658984
 class TipSlider(QSlider):
+
     def __init__(self, *args, tip_offset=QtCore.QPoint(0, -45), **kwargs):
         super(QSlider, self).__init__(*args)
         self.tip_offset = tip_offset
