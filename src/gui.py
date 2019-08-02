@@ -682,10 +682,9 @@ class MainWindow(QMainWindow):
         self.gui_logger.append(msg)
         if self.converter is not None:
             self.logger.debug("Converter running, trying to stop it")
-            if self.converter.isFinished():
-                self.converter.quit()
-            else:
-                self.converter.terminate()
+            self.converter.do_stop()
+            self.converter.wait()
+            self.converter = None
         else:
             msg = "Unable to find converter thread"
             self.gui_logger.append(msg)
@@ -697,6 +696,8 @@ if __name__ == '__main__':
     # Defaults to the original text
     gettext.install("stpdf_gui")
     app = QApplication([])
+    app.setDesktopFileName("STPDF-Gui")
+    app.setApplicationName("STPDF-Gui")
     # If fusion style is not set less color values can be edited,
     # however if this is done to the app inside MainWindow, it breaks TipSlider
     app.setStyle("Fusion")

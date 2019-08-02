@@ -35,13 +35,13 @@ class ThreadedConverter(QThread):
     progress_signal = pyqtSignal(str)
     finished = pyqtSignal()
 
-
     def __init__(self, cvt_args):
         QThread.__init__(self)
         self.cvt_args = cvt_args
+        self.is_running = True
 
-    def __del__(self):
-        self.wait()
+    def do_stop(self):
+        self.is_running = False
 
     def run(self):
         cvt_args = self.cvt_args
@@ -58,6 +58,13 @@ class ThreadedConverter(QThread):
                                 make_pdf=pd, copy_files=dc)
         try:
             for line in converter.process_all():
+                # Implementing the stop functionality here
+                # causes the app to hang for a few seconds
+                if not self.is_running:
+                    brk_msg = _("Stop received, terminating the converter")
+                    print(brk_msg)
+                    self.progress_signal.emit(brk_msg)
+                    break
                 self.progress_signal.emit(line)
         except Exception as e:
             en = e.__class__.__name__
@@ -67,6 +74,10 @@ class ThreadedConverter(QThread):
             else:
                 msg = "%s: %s" % (_("Thread exception"), str(e))
             self.exception_signal.emit(msg)
+        # If a stop wasn't requested send the finished signal
+        # this is to avoid calling do_stop multiple times
+        if self.is_running:
+            self.finished.emit()
 
 # https://stackoverflow.com/a/31658984
 class TipSlider(QSlider):
