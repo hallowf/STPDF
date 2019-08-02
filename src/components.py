@@ -22,7 +22,7 @@ from PyQt5.QtWidgets import (QMainWindow, QWidget, QPushButton,
                              QToolTip, QMessageBox)
 from PyQt5.QtGui import QIcon, QDesktopServices
 from PyQt5 import QtCore, QtGui
-from PyQt5.QtCore import QThread, pyqtSignal
+from PyQt5.QtCore import QThread, pyqtSignal, QUrl
 from _version import (__version__, __version2__,
                       __releaseDate__, __releaseDate2__,
                       __developer__, __developer2__, __devhome__)
@@ -148,34 +148,34 @@ class AboutWindow(QMainWindow):
         h_grid.setSpacing(10)
         # addWidget(widget,fromRow,fromCol,rowSpan,colSpan)
         about_s = QLabel(_("About STPDF"))
-        about_s.setFont(QtGui.QFont("Times", 12, QtGui.QFont.Bold))
+        about_s.setFont(QtGui.QFont("Times", 15, QtGui.QFont.Bold))
         h_grid.addWidget(about_s, 0, 1)
         build = QLabel(_("Build with:"))
-        build.setFont(QtGui.QFont("Times", 8, QtGui.QFont.Bold))
+        build.setFont(QtGui.QFont("Times", 12, QtGui.QFont.Bold))
         h_grid.addWidget(build, 1, 0)
         bw = QPushButton("Python, PyQt5")
         bw.setEnabled(False)
         h_grid.addWidget(bw, 1, 1)
         version = QLabel(_("Version:"))
-        version.setFont(QtGui.QFont("Times", 8, QtGui.QFont.Bold))
+        version.setFont(QtGui.QFont("Times", 12, QtGui.QFont.Bold))
         h_grid.addWidget(version, 2, 0)
         ver = QPushButton(str(__version__))
         ver.setEnabled(False)
         ver.setStatusTip(str(__version2__))
         h_grid.addWidget(ver, 2, 1)
         r_date = QLabel(_("Release date:"))
-        r_date.setFont(QtGui.QFont("Times", 8, QtGui.QFont.Bold))
+        r_date.setFont(QtGui.QFont("Times", 12, QtGui.QFont.Bold))
         h_grid.addWidget(r_date, 3, 0)
         rdt = QPushButton(str(__releaseDate__))
         rdt.setEnabled(False)
         rdt.setStatusTip(str(__releaseDate2__))
         h_grid.addWidget(rdt, 3, 1)
         developed = QLabel(_("Developed by:"))
-        developed.setFont(QtGui.QFont("Times", 8, QtGui.QFont.Bold))
+        developed.setFont(QtGui.QFont("Times", 12, QtGui.QFont.Bold))
         h_grid.addWidget(developed, 4, 0)
         dev = QPushButton(str(__developer__))
         dev.setStatusTip(str(__developer2__))
-        dev.triggered.connect(
+        dev.clicked.connect(
             lambda: QDesktopServices.openUrl(
                 QUrl(str(__devhome__))
             )
@@ -184,9 +184,9 @@ class AboutWindow(QMainWindow):
 
         # set layouts and Geometry
         window.setLayout(h_grid)
-        window.setGeometry(20, 0, 280, 200)
-        self.setGeometry(600, 600, 260, 350)
-        self.setFixedSize(450, 300)
+        window.setGeometry(20, 0, 300, 200)
+        self.setGeometry(500, 600, 260, 300)
+        self.setFixedSize(400, 300)
         pallete = getattr(self.parent, "app_pallete", None)
         if pallete is not None:
             window.setPalette(pallete)

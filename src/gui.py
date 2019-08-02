@@ -120,7 +120,8 @@ class MainWindow(QMainWindow):
         self.menu_about = QAction(_("About STPDF"), self)
         self.menu_about.setStatusTip(_("Open info page"))
         self.menu_about.triggered.connect(
-            lambda: self.on_menu_action("about"))
+            lambda: self.on_menu_action("about")
+        )
         # SettingsWindow
         self.menu_settings = QAction(_("Settings"), self)
         self.menu_settings.setShortcut("Ctrl+O")
@@ -138,9 +139,9 @@ class MainWindow(QMainWindow):
         app_menu.addSeparator()
         app_menu.addAction(menu_exit)
         options_menu = main_menu.addMenu(_("Options"))
-        options_menu.addAction(self.menu_settings)
         options_menu.addAction(self.menu_help)
         options_menu.addAction(self.menu_about)
+        options_menu.addAction(self.menu_settings)
 
     # Initializes the user interface after loading settings , values and building the menu
     def init_ui(self):
