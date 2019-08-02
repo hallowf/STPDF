@@ -29,7 +29,7 @@ before_install:
 
 install:
 - "$PY -m pip install -r requirements.txt"
-- "$PY -m pip install requests lxml"
+- "$PY -m pip install -r dev-requirements.txt"
 - "$PY src/_version.py"
 - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
     ./scripts/osx_install.sh;
