@@ -35,9 +35,6 @@ from PyQt5.QtCore import Qt, QUrl, pyqtSignal, pyqtSlot
 # Custom components
 from components import TipSlider, SettingsWindow, AboutWindow, ThreadedConverter
 # Backend and other requirements
-from stpdf.custom_exceptions import DirMissing, OutDirNotEmpty
-from stpdf.converter import Converter
-from stpdf.utils import terminate_thread
 from pytesseract.pytesseract import TesseractNotFoundError
 from pytesseract import image_to_string
 from PIL import Image
@@ -666,18 +663,17 @@ class MainWindow(QMainWindow):
         self.converter.finished.connect(self.do_stop)
         self.converter.start()
 
-    @pyqtSlot(str)
     def handle_thread_exception(self, msg):
         self.gui_logger.append(msg)
         self.logger.error(msg)
         self.do_stop()
 
-    @pyqtSlot(str)
     def log_progress(self, p_text):
         self.gui_logger.append(p_text)
         self.logger.info(p_text)
 
     def do_stop(self):
+        print("stop requested")
         msg = _("Stop requested")
         self.logger.debug(msg)
         self.gui_logger.append(msg)
@@ -690,7 +686,6 @@ class MainWindow(QMainWindow):
             msg = "Unable to find converter thread"
             self.gui_logger.append(msg)
             self.logger.error(msg)
-            
 
 
 if __name__ == '__main__':

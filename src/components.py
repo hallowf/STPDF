@@ -27,7 +27,7 @@ from _version import (__version__, __version2__,
                       __releaseDate__, __releaseDate2__,
                       __developer__, __developer2__, __devhome__)
 
-from stpdf.converter import Converter
+from stpdf.core.converter import Converter
 
 
 class ThreadedConverter(QThread):
@@ -38,12 +38,12 @@ class ThreadedConverter(QThread):
     def __init__(self, cvt_args):
         QThread.__init__(self)
         self.cvt_args = cvt_args
-        self.is_running = True
 
     def do_stop(self):
         self.is_running = False
 
     def run(self):
+        self.is_running = True
         cvt_args = self.cvt_args
         fl = cvt_args["fl"]
         fd = cvt_args["fd"]
@@ -54,8 +54,8 @@ class ThreadedConverter(QThread):
         dc = cvt_args["dc"]
         la = cvt_args["lang"]
         converter = Converter(fl, fd, split=(ds, sa),
-                                deskew=di, lang=la,
-                                make_pdf=pd, copy_files=dc)
+                              deskew=di, lang=la,
+                              make_pdf=pd, copy_files=dc)
         try:
             for line in converter.process_all():
                 # Implementing the stop functionality here
@@ -66,7 +66,9 @@ class ThreadedConverter(QThread):
                     self.progress_signal.emit(brk_msg)
                     break
                 self.progress_signal.emit(line)
+                print("alive")
         except Exception as e:
+            print("THREAD_EXCEPTION: %s" % e)
             en = e.__class__.__name__
             msg = ""
             if en == "TesseractNotFoundError":
@@ -76,8 +78,8 @@ class ThreadedConverter(QThread):
             self.exception_signal.emit(msg)
         # If a stop wasn't requested send the finished signal
         # this is to avoid calling do_stop multiple times
-        if self.is_running:
-            self.finished.emit()
+        self.finished.emit()
+
 
 # https://stackoverflow.com/a/31658984
 class TipSlider(QSlider):

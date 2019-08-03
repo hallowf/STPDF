@@ -24,7 +24,7 @@ import logging
 import traceback
 
 from PIL import Image
-from stpdf.converter import Converter
+from stpdf.core.converter import Converter
 from pytesseract import image_to_string
 from pytesseract.pytesseract import TesseractNotFoundError
 from _version import (__version__, __version2__, __releaseDate__,
