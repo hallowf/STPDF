@@ -1,17 +1,9 @@
-### Done:
-* add option to not copy files, or only make pdf
-* add option to not make pdf, or only copy files
-
 ### TODO:
 
-* Converter support resizing by a percentage but neither the cli or gui is using this
+* Converter supports resizing by a percentage but neither the cli or gui is using this
 * Options to control the slider max value and tick interval in the gui
-* Missing translations: spanish and portuguese for all components except gui
-* Some images fail to get rotated, this must be invistigated further
 * Optimize the way the images are handled to reduce memory usage and improve performance in cases where there are a lot of images to process
-* Optimize the way threads are used
-  - Switch to QtThread instead of regular threading
-  - use signals for communication
+
 
 
 
@@ -121,12 +113,3 @@ The current modules that use translated string are
 
 the naming of the pot files should be "component.pot"
 and the translated .po and .mo files should be "lang_component.po"
-
-##### Gui logger 
-
-trying to establish a connection between two processes using pipes caused the gui to freeze, so at the moment the new thread acesses the gui_logger and appends messages to it, there are no locks or precautions being taken so this can cause some errors
-
-Afaik I could either:
- * Provide the core as an independent executable and call it from the gui or cli and establish a socket connection for communicating
- * Find a way to make the core module able to start a new thread and communicate with it internally yielding the results withouth blocking
- * use QtThread for gui but won't be usable by the cli

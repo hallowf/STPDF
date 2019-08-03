@@ -1,3 +1,10 @@
 # for development:
+PyInstaller
 requests
 lxml
+
+# for testing purposes:
+# memory_profiler
+# matplotlib
+# scikit-image
+# scipy

@@ -1,17 +1,18 @@
 import os
 import sys
-from random import choice
 import time
+import string
+from io import StringIO
+from random import choice
 from PIL import Image
 import timeit
-from skimage.transform import rotate
-import numpy as np
-from skimage import io
+# from skimage.transform import rotate
+# import numpy as np
+# from skimage import io
 from memory_profiler import profile
 from pytesseract import image_to_osd, Output
 
 
-@profile
 def image_list():
     images = []
     for i in range(100000):
@@ -19,7 +20,6 @@ def image_list():
     [image for image in images]
 
 
-@profile
 def image_set():
     images = set()
     for i in range(100000):
@@ -70,8 +70,54 @@ def current_method():
     images = []
 
 
+def make_pdf(handles):
+    letters = string.ascii_lowercase
+    name = "".join(choice(letters) for i in range(10)) + ".pdf"
+    print("making pdf: %s" % name)
+    first = handles[0]
+    handles.pop(0)
+    seeks = [hasattr(img, "seek") for img in handles]
+    print(False in seeks)
+    sys.exit()
+    first.save(name, "PDF", resolution=90.0, save_all=True,
+               append_images=handles)
+
+
+def test_img_with():
+    images = []
+    for root, __, files in os.walk("images", topdown=False):
+        for file in files:
+            source_path = os.path.join(root, file)
+            with Image.open(source_path) as img:
+                try:
+                    img.verify()
+                    images.append(img)
+                except Exception as e:
+                    print(e)
+                    print("skipping image")
+    print(len(images))
+    print("opening all images")
+    make_pdf(images)
+    print("done")
+
+
+def test_img_comp():
+    images = []
+    for root, __, files in os.walk("images", topdown=False):
+        for file in files:
+            source_path = os.path.join(root, file)
+            print("appending image: %s" % source_path)
+            images.append(source_path)
+    print("opening all images")
+    images = [Image.open(img) for img in images]
+    make_pdf(images)
+    print("done")
+
+
 if __name__ == "__main__":
-    PIL_rotate()
+    test_img_with()
+    # test_img_comp()
+    # PIL_rotate()
     # SCI_rotate()
     # current_method()
     # print("image_set took:, "timeit.timeit("image_set()", globals=globals(), number=10))
