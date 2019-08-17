@@ -1,8 +1,8 @@
-### TODO:
+### TODO
 
-* Converter supports resizing by a percentage but neither the cli or gui is using this
-* Options to control the slider max value and tick interval in the gui
-* Optimize the way the images are handled to reduce memory usage and improve performance in cases where there are a lot of images to process
+  * Converter supports resizing by a percentage but neither the cli or gui is using this
+  * Options to control the slider max value and tick interval in the gui
+  * Optimize the way the images are handled to reduce memory usage and improve performance in cases where there are a lot of images to process
 
 
 
@@ -13,48 +13,48 @@
 This tells it to use the highest quality interpolation algorithm that it has available,
 and to expand the image to encompass the full rotated size instead of cropping.
 The documentation does not say what color the background will be filled with.
-https://stackoverflow.com/a/17822099
+
+[from here](https://stackoverflow.com/a/17822099)
 
 ##### Themes
 
-
 **It seems that most of these values hadn't changes because the theme fusion wasn't set in the whole app**
-  * To test:
 
+  * To test:
     1. Most is tested there are still some stuff not being used below is a list of all possible objects that can have it's color changed
-      * Active <- Selected item???
-      * All <- I'm not even going to try this
-      * AlternateBase <- no idea
-      * Background <- changes background of window
-      * Base <- changes background of QTextEdit and QComboBox but not window
-      * BrightText
-      * Button <- changes color of button background
-      * ButtonText <- change the color of the button text but just QPushButton
-      * ColorGroup <- ???
-      * ColorRole <- ???
-      * Current <- ???
-      * Dark <- ???
-      * Disabled <- Probably for disabled items like actions checkboxes and buttons, not tested
-      * Foreground <- changes QLabel color
-      * Highlight <- changes the highlight for QComboBox items and menu items
-      * HighlightedText
-      * Inactive
-      * Light
-      * Link <- I don't think there will be any links in the app...
-      * LinkVisited <- same as above
-      * Mid
-      * Midlight
-      * NColorGroups
-      * NColorRoles
-      * NoRole
-      * Normal
-      * PlaceholderText
-      * Shadow
-      * Text <- This seems to change most of the text, changes text from QComboBox, menu QAction, and QTextEdit
-      * ToolTipBase <- seems to make no changes to TipSlider however it could be that i'm setting this the wrong way
-      * ToolTipText <- same as above
-      * Window <- seems to have no effect?
-      * WindowText <- same as above
+    * Active <- Selected item???
+    * All <- I'm not even going to try this
+    * AlternateBase <- no idea
+    * Background <- changes background of window
+    * Base <- changes background of QTextEdit and QComboBox but not window
+    * BrightText
+    * Button <- changes color of button background
+    * ButtonText <- change the color of the button text but just QPushButton
+    * ColorGroup <- ???
+    * ColorRole <- ???
+    * Current <- ???
+    * Dark <- ???
+    * Disabled <- Probably for disabled items like actions checkboxes and buttons, not tested
+    * Foreground <- changes QLabel color
+    * Highlight <- changes the highlight for QComboBox items and menu items
+    * HighlightedText
+    * Inactive
+    * Light
+    * Link <- I don't think there will be any links in the app...
+    * LinkVisited <- same as above
+    * Mid
+    * Midlight
+    * NColorGroups
+    * NColorRoles
+    * NoRole
+    * Normal
+    * PlaceholderText
+    * Shadow
+    * Text <- This seems to change most of the text, changes text from QComboBox, menu QAction, and QTextEdit
+    * ToolTipBase <- seems to make no changes to TipSlider however it could be that i'm setting this the wrong way
+    * ToolTipText <- same as above
+    * Window <- seems to have no effect?
+    * WindowText <- same as above
 
 https://stackoverflow.com/questions/48256772/dark-theme-for-in-qt-widgets
 https://gist.github.com/gph03n1x/7281135

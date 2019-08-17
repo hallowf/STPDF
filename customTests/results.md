@@ -79,8 +79,7 @@ Line #    Mem usage    Increment   Line Contents
     12     24.1 MiB      0.7 MiB       [image for image in images]
 ```
 
-
-## Notes:
-* it seems that rotating the image is one of the things that take up most time
-  - However Pillow(PIL) still seems the most reliable module
-* there is also no way of handling a lot of files and on some computers the program might crash due to trying to load into memory a list with all images open
+## Notes
+	* it seems that rotating the image is one of the things that take up most time
+		- However Pillow(PIL) still seems the most reliable module
+	* there is also no way of handling a lot of files and on some computers the program might crash due to trying to load into memory a list with all images open

@@ -22,14 +22,12 @@ import os
 import gettext
 import configparser
 import locale
-from multiprocessing import Process
-from threading import Thread
 # PyQt5
 from PyQt5.QtWidgets import (QMainWindow, QWidget, QAction, qApp, QPushButton,
                              QHBoxLayout, QVBoxLayout, QGridLayout, QCheckBox,
                              QSlider, QLabel, QTextEdit, QFileDialog,
-                             QApplication, QActionGroup)
-from PyQt5 import QtGui, QtCore
+                             QApplication)
+from PyQt5 import QtGui
 from PyQt5.QtGui import QDesktopServices
 from PyQt5.QtCore import Qt, QUrl, pyqtSignal, pyqtSlot
 # Custom components
@@ -43,7 +41,7 @@ from PIL import Image
 class MainWindow(QMainWindow):
 
     def __init__(self, parent):
-        super(self.__class__, self).__init__()
+        super(MainWindow, self).__init__()
         # App required parameters
         self.parent = parent
         self.stop_thread = False
@@ -229,16 +227,16 @@ class MainWindow(QMainWindow):
     # directory: "source" or "dest"
     def open_dir_dlg(self, directory):
         if directory == "source":
-            dir = QFileDialog.getExistingDirectory(self,
-                                                   "Source", ".",
-                                                   QFileDialog.ShowDirsOnly)
-            self.files_location = dir
+            selected_dir = QFileDialog.getExistingDirectory(self,
+                                                            "Source", ".",
+                                                            QFileDialog.ShowDirsOnly)
+            self.files_location = selected_dir
             self.user_values["source"] = self.files_location
         elif directory == "dest":
-            dir = QFileDialog.getExistingDirectory(self,
-                                                   "Destination", ".",
-                                                   QFileDialog.ShowDirsOnly)
-            self.files_destination = dir
+            selected_dir = QFileDialog.getExistingDirectory(self,
+                                                            "Destination", ".",
+                                                            QFileDialog.ShowDirsOnly)
+            self.files_destination = selected_dir
             self.user_values["dest"] = self.files_destination
         else:
             self.logger.error("%s %s" % (_("Invalid directory parameter"),
@@ -272,7 +270,7 @@ class MainWindow(QMainWindow):
     # Iterates trough the themes folder and maps all themes
     def load_custom_themes(self):
         if os.path.isdir("themes"):
-            for root, dirs, files in os.walk("themes"):
+            for root, __, files in os.walk("themes"):
                 for file in files:
                     if file.endswith(".ini"):
                         source_path = os.path.join(root, file)
@@ -416,7 +414,6 @@ class MainWindow(QMainWindow):
             else:
                 self.logger.critical(e)
                 yield False
-                pass
         yield True
 
     # For opening new windows on menu actions

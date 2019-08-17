@@ -97,7 +97,7 @@ class STPDFCLI(object):
     def check_tesseract(self):
         img = Image.new('RGB', (60, 30), color='red')
         try:
-            text = image_to_string(img)
+            image_to_string(img)
             img.close()
             return True
         except TesseractNotFoundError:
@@ -143,7 +143,7 @@ def install_lang(lang):
     ]
     if lang in available_langs and lang != "en":
         modl = "%s_cli" % lang
-        current_locale, encoding = locale.getdefaultlocale()
+        current_locale, __ = locale.getdefaultlocale()
         cl = current_locale.split("_")
         if lang != cl[0]:
             current_locale = "%s_%s" % (lang, lang.upper())

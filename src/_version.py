@@ -48,6 +48,7 @@ if getattr(sys, "frozen", False):
         __devhome__ = data["devhome"]
 else:
     import subprocess
+    from subprocess import CalledProcessError
     from datetime import date
     from lxml import html
     import requests
@@ -73,7 +74,7 @@ else:
                                             cwd=os.getcwd())
 
             ghash = ghash.decode("utf-8").rstrip()
-        except:
+        except CalledProcessError:
             # git isn't installed
             ghash = "no.checksum.error"
         return ghash
@@ -91,7 +92,7 @@ else:
             c_hash = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"],
                                              cwd=os.getcwd())
             c_hash = c_hash.decode("utf-8").rstrip()
-        except:
+        except CalledProcessError:
             c_hash = "no.checksum.error"
         return c_hash
 
@@ -100,7 +101,7 @@ else:
             c_hash = subprocess.check_output(["git", "config", "user.name"],
                                              cwd=os.getcwd())
             c_hash = c_hash.decode("utf-8").rstrip()
-        except:
+        except CalledProcessError:
             c_hash = "no.checksum.error"
         return c_hash
 
@@ -113,7 +114,7 @@ else:
             name = h_tree.xpath("//span[@class='p-name vcard-fullname d-block overflow-hidden']/text()")[0]
             if name == "" or name is None:
                 raise ValueError
-        except:
+        except CalledProcessError:
             name = "unknown"
         return name
 

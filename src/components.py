@@ -85,7 +85,7 @@ class ThreadedConverter(QThread):
 class TipSlider(QSlider):
 
     def __init__(self, *args, tip_offset=QtCore.QPoint(0, -45), **kwargs):
-        super(QSlider, self).__init__(*args)
+        super(TipSlider, self).__init__(*args)
         self.tip_offset = tip_offset
 
         parent = kwargs.get("parent", None)
