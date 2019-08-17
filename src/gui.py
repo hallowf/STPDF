@@ -448,7 +448,6 @@ class MainWindow(QMainWindow):
 
     # Sets up the console logger
     def set_up_logger(self):
-        # TODO: Log level is not being used by logger
         l_levels = self.log_levels
         l_level = self.settings["log_level"]
         n_level = None
@@ -560,7 +559,7 @@ class MainWindow(QMainWindow):
         di = "  %s: %s\n" % (_("Deskew"), (self.deskew_check.isChecked()))
         ds = "  %s: %s\n" % (_("Split"), (self.do_split.isChecked()))
         sa = "  %s: %s\n" % (_("Split at"), (self.split_slider.value()))
-        dc = "  %s: %s\n" % (_("Do copy"), self.menu_copy.isChecked())
+        dc = "  %s: %s\n" % (_("Copy files"), self.menu_copy.isChecked())
         mp = "  %s: %s\n" % (_("Make pdf"), self.menu_pdf.isChecked())
         values = "%s:\n%s%s%s%s%s%s%s" % (_("Values are"), s, d, di, ds, sa, dc, mp)
         self.gui_logger.append(values)
@@ -670,7 +669,6 @@ class MainWindow(QMainWindow):
 
     def log_progress(self, p_text):
         self.gui_logger.append(p_text)
-        self.logger.info(p_text)
 
     def do_stop(self):
         print("stop requested")

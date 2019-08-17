@@ -27,7 +27,7 @@ from _version import (__version__, __version2__,
                       __releaseDate__, __releaseDate2__,
                       __developer__, __developer2__, __devhome__)
 
-from stpdf.core.converter import Converter
+from stpdf.core.stpdf_core import STPDFCore
 
 
 class ThreadedConverter(QThread):
@@ -53,7 +53,7 @@ class ThreadedConverter(QThread):
         pd = cvt_args["pd"]
         dc = cvt_args["dc"]
         la = cvt_args["lang"]
-        converter = Converter(fl, fd, split=(ds, sa),
+        converter = STPDFCore(fl, fd, split=(ds, sa),
                               deskew=di, lang=la,
                               make_pdf=pd, copy_files=dc)
         try:
@@ -65,8 +65,8 @@ class ThreadedConverter(QThread):
                     print(brk_msg)
                     self.progress_signal.emit(brk_msg)
                     break
-                self.progress_signal.emit(line)
                 print("alive")
+                self.progress_signal.emit(line)
         except Exception as e:
             print("THREAD_EXCEPTION: %s" % e)
             en = e.__class__.__name__
