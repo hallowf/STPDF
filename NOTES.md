@@ -113,3 +113,10 @@ The current modules that use translated string are
 
 the naming of the pot files should be "component.pot"
 and the translated .po and .mo files should be "lang_component.po"
+
+
+### Requirements
+
+python3.7 is required
+
+Linux requires the following packages `python3.7 python3.7-dev libpython3.7 libpython3.7-dev`

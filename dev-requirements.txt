@@ -2,6 +2,7 @@
 PyInstaller
 requests
 lxml
+pep8
 
 # for testing purposes:
 # memory_profiler
