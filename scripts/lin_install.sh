@@ -1,7 +1,8 @@
+#!/usr/bin/env sh
 echo "Setting upx path"
-cd UPX
+cd UPX || return
 export UPX_PATH=$PWD
-cd ../src
+cd ../src || return
 # echo "Setting QT path"
 # # export QT_QPA_PLATFORM_PLUGIN_PATH="/home/travis/virtualenv/python3.7.1/lib/python3.7/site-packages/PyQt5/"
 # export QT_QPA_PLATFORM_PLUGIN_PATH="/home/travis/virtualenv/python3.7.1/"
@@ -16,4 +17,4 @@ pyinstaller --upx-dir $UPX_PATH cli.spec --log-level ERROR
 7z a STPDF-cli.7z dist/STPDF-cli > /dev/null
 rm -r dist build
 mkdir dist
-cp *.7z dist
+cp ./*.7z dist
