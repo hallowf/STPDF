@@ -4,17 +4,20 @@ jobs:
     os: linux
     language: python
     dist: xenial
-    python: 3.6
+    python: 3.7
     addons:
       apt:
         packages:
         - p7zip-full
+        - libpython3.7
+        - libpython3.7-dev
+        - python3.7-dev
     env:
     - PY=python3
   - stage: Windows build
     os: windows
     language: shell
-    python: 3.5
+    python: 3.7
     env:
     - PY=py
 
