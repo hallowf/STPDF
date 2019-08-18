@@ -28,7 +28,7 @@ from PyQt5.QtWidgets import (QMainWindow, QWidget, QAction, qApp, QPushButton,
                              QSlider, QLabel, QTextEdit, QFileDialog,
                              QApplication)
 from PyQt5 import QtGui
-from PyQt5.QtGui import QDesktopServices
+from PyQt5.QtGui import QDesktopServices, QIcon
 from PyQt5.QtCore import Qt, QUrl, pyqtSignal, pyqtSlot
 # Custom components
 from components import TipSlider, SettingsWindow, AboutWindow, ThreadedConverter
@@ -47,7 +47,7 @@ class MainWindow(QMainWindow):
         self.stop_thread = False
         self.converter_thread = None
         self.title = 'STPDF'
-        self.icon = QtGui.QIcon('stpdf.ico')
+        self.icon = QIcon('stpdf.ico')
         self.user_themes = {"default": "default"}
         self.settings = None
         self.user_values = None
@@ -445,19 +445,18 @@ class MainWindow(QMainWindow):
 
     # Sets up the console logger
     def set_up_logger(self):
-        l_levels = self.log_levels
         l_level = self.settings["log_level"]
-        n_level = None
-        if l_level not in l_levels:
+        n_level = getattr(logging, l_level.upper(), 20)
+        if n_level == 20 and l_level.upper() != "INFO":
             sys.stdout.write("%s: %s\n" % (_("Invalid log level"), l_level))
-            l_level = "info"
-            n_level = getattr(logging, l_level.upper(), 10)
-        else:
-            n_level = getattr(logging, l_level.upper(), 10)
         # Console logger
-        log_format = "%(name)s - %(levelname)s: %(message)s"
-        logging.basicConfig(format=log_format, level=n_level)
+        formatter = logging.Formatter("%(name)s - %(levelname)s: %(message)s")
         self.logger = logging.getLogger("STPDF")
+        self.logger.setLevel(n_level)
+        ch = logging.StreamHandler()
+        ch.setLevel(n_level)
+        ch.setFormatter(formatter)
+        self.logger.addHandler(ch)
         msg = "%s: %s" % (_("Console logger is set with log level"), l_level)
         self.logger.info(msg)
 
@@ -668,15 +667,16 @@ class MainWindow(QMainWindow):
         self.gui_logger.append(p_text)
 
     def do_stop(self):
-        print("stop requested")
         msg = _("Stop requested")
         self.logger.debug(msg)
         self.gui_logger.append(msg)
-        if self.converter is not None:
+        if self.converter.is_running:
             self.logger.debug("Converter running, trying to stop it")
             self.converter.do_stop()
-            self.converter.wait()
-            self.converter = None
+            try:
+                self.converter.wait()
+            except Exception as e:
+                pass
         else:
             msg = "Unable to find converter thread"
             self.gui_logger.append(msg)

@@ -20,9 +20,9 @@ from PyQt5.QtWidgets import (QMainWindow, QWidget, QPushButton,
                              QGridLayout, QCheckBox, QSlider, QLabel,
                              QApplication, QStyleOptionSlider, QComboBox,
                              QToolTip, QMessageBox)
-from PyQt5.QtGui import QDesktopServices
+from PyQt5.QtGui import QDesktopServices, QFont
 from PyQt5 import QtCore, QtGui
-from PyQt5.QtCore import QThread, pyqtSignal, QUrl
+from PyQt5.QtCore import QThread, pyqtSignal, QUrl, QPoint, Qt
 from _version import (__version__, __version2__,
                       __releaseDate__, __releaseDate2__,
                       __developer__, __developer2__, __devhome__)
@@ -84,7 +84,7 @@ class ThreadedConverter(QThread):
 # https://stackoverflow.com/a/31658984
 class TipSlider(QSlider):
 
-    def __init__(self, *args, tip_offset=QtCore.QPoint(0, -45), **kwargs):
+    def __init__(self, *args, tip_offset=QPoint(0, -45), **kwargs):
         super(TipSlider, self).__init__(*args)
         self.tip_offset = tip_offset
 
@@ -150,30 +150,30 @@ class AboutWindow(QMainWindow):
         h_grid.setSpacing(10)
         # addWidget(widget,fromRow,fromCol,rowSpan,colSpan)
         about_s = QLabel(_("About STPDF"))
-        about_s.setFont(QtGui.QFont("Times", 15, QtGui.QFont.Bold))
+        about_s.setFont(QFont("Times", 15, QFont.Bold))
         h_grid.addWidget(about_s, 0, 1)
         build = QLabel(_("Build with:"))
-        build.setFont(QtGui.QFont("Times", 12, QtGui.QFont.Bold))
+        build.setFont(QFont("Times", 12, QFont.Bold))
         h_grid.addWidget(build, 1, 0)
         bw = QPushButton("Python, PyQt5")
         bw.setEnabled(False)
         h_grid.addWidget(bw, 1, 1)
         version = QLabel(_("Version:"))
-        version.setFont(QtGui.QFont("Times", 12, QtGui.QFont.Bold))
+        version.setFont(QFont("Times", 12, QFont.Bold))
         h_grid.addWidget(version, 2, 0)
         ver = QPushButton(str(__version__))
         ver.setEnabled(False)
         ver.setStatusTip(str(__version2__))
         h_grid.addWidget(ver, 2, 1)
         r_date = QLabel(_("Release date:"))
-        r_date.setFont(QtGui.QFont("Times", 12, QtGui.QFont.Bold))
+        r_date.setFont(QFont("Times", 12, QFont.Bold))
         h_grid.addWidget(r_date, 3, 0)
         rdt = QPushButton(str(__releaseDate__))
         rdt.setEnabled(False)
         rdt.setStatusTip(str(__releaseDate2__))
         h_grid.addWidget(rdt, 3, 1)
         developed = QLabel(_("Developed by:"))
-        developed.setFont(QtGui.QFont("Times", 12, QtGui.QFont.Bold))
+        developed.setFont(QFont("Times", 12, QFont.Bold))
         h_grid.addWidget(developed, 4, 0)
         dev = QPushButton(str(__developer__))
         dev.setStatusTip(str(__developer2__))
@@ -223,17 +223,17 @@ class SettingsWindow(QMainWindow):
                 self.keep_vals_check.setChecked(self.parent.settings[val])
             elif val == "lang":
                 index = self.choose_lang_combo.findText(self.parent.settings[val],
-                                                        QtCore.Qt.MatchFixedString)
+                                                        Qt.MatchFixedString)
                 if index >= 0:
                     self.choose_lang_combo.setCurrentIndex(index)
             elif val == "log_level":
                 index = self.log_level_combo.findText(self.parent.settings[val],
-                                                      QtCore.Qt.MatchFixedString)
+                                                      Qt.MatchFixedString)
                 if index >= 0:
                     self.log_level_combo.setCurrentIndex(index)
             elif val == "app_theme":
                 index = self.app_theme_combo.findText(self.parent.settings[val],
-                                                      QtCore.Qt.MatchFixedString)
+                                                      Qt.MatchFixedString)
                 if index >= 0:
                     self.app_theme_combo.setCurrentIndex(index)
             else:
