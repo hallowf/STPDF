@@ -61,7 +61,7 @@ else:
     def set_version_tag(version):
         c_os = sys.platform
         c_os = "Windows" if c_os.startswith("win") else \
-            ("Linux" if c_os.startswith("lin") else \
+            ("Linux" if c_os.startswith("lin") else
                 ("FreeBSD" if c_os.startswith("freebsd") else "Mac"))
         tag = "%s-%s" % (c_os, version)
         print("Setting tag:", tag)
@@ -114,7 +114,7 @@ else:
             name = h_tree.xpath("//span[@class='p-name vcard-fullname d-block overflow-hidden']/text()")[0]
             if name == "" or name is None:
                 raise ValueError
-        except CalledProcessError:
+        except (CalledProcessError, ValueError):
             name = "unknown"
         return name
 

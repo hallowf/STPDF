@@ -20,7 +20,7 @@ from PyQt5.QtWidgets import (QMainWindow, QWidget, QPushButton,
                              QGridLayout, QCheckBox, QSlider, QLabel,
                              QApplication, QStyleOptionSlider, QComboBox,
                              QToolTip, QMessageBox)
-from PyQt5.QtGui import QIcon, QDesktopServices
+from PyQt5.QtGui import QDesktopServices
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtCore import QThread, pyqtSignal, QUrl
 from _version import (__version__, __version2__,
@@ -253,7 +253,7 @@ class SettingsWindow(QMainWindow):
             self.parent.settings["app_theme"] = app_theme
             log_level = str(self.log_level_combo.currentText())
             self.parent.do_save()
-        except KeyError as e:
+        except KeyError:
             msg = _("Failed to save settings, please delete your setting.pckl and values.pckl files, and restart the app")
             self.parent.gui_logger(msg)
             self.parent.logger.error(msg)
@@ -268,7 +268,7 @@ class SettingsWindow(QMainWindow):
     def lang_warning(self, event):
         if self.warning is None:
             r_msg = _("Please restart the app to apply the changes")
-            info = QMessageBox.information(self, self.title, r_msg)
+            QMessageBox.information(self, self.title, r_msg)
 
     def init_ui(self):
         # Main window
