@@ -87,7 +87,7 @@ class MainWindow(QMainWindow):
 
         # TODO: Store this in values and set them accordingly
         # Processing options
-        self.menu_copy = QAction(_("Copy files"), self, checkable=True)
+        self.menu_copy = QAction(_("Save images"), self, checkable=True)
         self.menu_copy.setStatusTip(_("Copies files to destination"))
         self.menu_copy.triggered.connect(
             lambda: self.on_menu_action("d_copy")
@@ -95,7 +95,7 @@ class MainWindow(QMainWindow):
         self.menu_pdf = QAction(_("Make pdf"), self, checkable=True)
         self.menu_pdf.setStatusTip(_("Makes PDF(s) with the images found"))
         self.menu_pdf.triggered.connect(
-            lambda: self.on_menu_action("m_pdf")
+            lambda: self.on_menu_action("make_pdf")
         )
 
         # Exit
@@ -432,10 +432,10 @@ class MainWindow(QMainWindow):
                 msg = _("About window already open")
                 self.logger.error(msg)
                 self.gui_logger.append(msg)
-        elif action == "d_copy" or action == "m_pdf":
+        elif action == "d_copy" or action == "make_pdf":
             map_actions = {
                 "d_copy": self.menu_copy.isChecked(),
-                "m_pdf": self.menu_pdf.isCheckable()
+                "make_pdf": self.menu_pdf.isCheckable()
             }
             self.user_values[action] = map_actions[action]
         else:
@@ -510,12 +510,11 @@ class MainWindow(QMainWindow):
             "split": False,
             "split_at": 0,
             "d_copy": False,
-            "m_pdf": True
+            "make_pdf": True
         }
         try:
             if self.settings["keep_vals"] or not os.path.isfile("values.pckl"):
                 self.logger.debug(_("Loading user values"))
-                # TODO: Check keep values menu action
                 if not os.path.isfile("values.pckl"):
                     m = _("Values file does not exist, creating one now")
                     self.logger.debug(m)
@@ -531,7 +530,7 @@ class MainWindow(QMainWindow):
                         self.do_split.setChecked(self.user_values["split"])
                         self.split_slider.setValue(self.user_values["split_at"])
                         self.menu_copy.setChecked(self.user_values["d_copy"])
-                        self.menu_pdf.setChecked(self.user_values["m_pdf"])
+                        self.menu_pdf.setChecked(self.user_values["make_pdf"])
                     else:
                         self.logger.error("Failed to load user values: %s" % self.user_values)
                         raise KeyError
@@ -555,7 +554,7 @@ class MainWindow(QMainWindow):
         di = "  %s: %s\n" % (_("Deskew"), (self.deskew_check.isChecked()))
         ds = "  %s: %s\n" % (_("Split"), (self.do_split.isChecked()))
         sa = "  %s: %s\n" % (_("Split at"), (self.split_slider.value()))
-        dc = "  %s: %s\n" % (_("Copy files"), self.menu_copy.isChecked())
+        dc = "  %s: %s\n" % (_("Save images"), self.menu_copy.isChecked())
         mp = "  %s: %s\n" % (_("Make pdf"), self.menu_pdf.isChecked())
         values = "%s:\n%s%s%s%s%s%s%s" % (_("Values are"), s, d, di, ds, sa, dc, mp)
         self.gui_logger.append(values)
@@ -619,7 +618,7 @@ class MainWindow(QMainWindow):
                     uv[val] = splt_a
                 elif val == "d_copy" and uv[val] != dc:
                     uv[val] = dc
-                elif val == "m_pdf" and uv[val] != mp:
+                elif val == "make_pdf" and uv[val] != mp:
                     uv[val] = mp
             if self.settings["keep_vals"]:
                 self.logger.debug("User values: %s" % uv)

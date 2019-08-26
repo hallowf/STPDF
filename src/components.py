@@ -57,12 +57,11 @@ class ThreadedConverter(QThread):
                               deskew=di, lang=la,
                               make_pdf=pd, copy_files=dc)
         try:
-            for line in converter.process_all():
+            for line in converter.run_converter():
                 # Implementing the stop functionality here
                 # causes the app to hang for a few seconds
                 if not self.is_running:
                     brk_msg = _("Stop received, terminating the converter")
-                    print(brk_msg)
                     self.progress_signal.emit(brk_msg)
                     break
                 print("alive")
