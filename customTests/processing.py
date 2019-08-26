@@ -67,9 +67,4 @@ def test_img_comp():
 if __name__ == "__main__":
     test_img_with()
     # test_img_comp()
-    # PIL_rotate()
-    # SCI_rotate()
     # current_method()
-    # print("image_set took:, "timeit.timeit("image_set()", globals=globals(), number=10))
-    # print("image_list took:",timeit.timeit("image_list()", globals=globals(), number=10))
-    # print("PIL_open took:", timeit.timeit("PIL_open()", globals=globals(), number=1))

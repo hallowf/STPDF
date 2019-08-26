@@ -82,4 +82,3 @@ Line #    Mem usage    Increment   Line Contents
 ## Notes
 	* it seems that rotating the image is one of the things that take up most time
 		- However Pillow(PIL) still seems the most reliable module
-	* there is also no way of handling a lot of files and on some computers the program might crash due to trying to load into memory a list with all images open

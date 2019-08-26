@@ -5,8 +5,8 @@ block_cipher = None
 
 a = Analysis(['cli.py'],
              pathex=[],
-             binaries=[],
-             datas=[("version.pckl", ".")],
+             binaries=[("version.pckl", ".")],
+             datas=[],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],

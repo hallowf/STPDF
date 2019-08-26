@@ -2,7 +2,6 @@
 
   * Converter supports resizing by a percentage but neither the cli or gui is using this
   * Options to control the slider max value and tick interval in the gui
-  * Optimize the way the images are handled to reduce memory usage and improve performance in cases where there are a lot of images to process
 
 
 
@@ -120,3 +119,7 @@ and the translated .po and .mo files should be "lang_component.po"
 python3.7 is required
 
 Linux requires the following packages `python3.7 python3.7-dev libpython3.7 libpython3.7-dev`
+
+### Building
+
+[Making Linux apps forward-compatible](https://pythonhosted.org/PyInstaller/usage.html#making-linux-apps-forward-compatible)
