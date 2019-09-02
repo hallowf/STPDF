@@ -36,6 +36,9 @@ from components import TipSlider, SettingsWindow, AboutWindow, ThreadedConverter
 from pytesseract.pytesseract import TesseractNotFoundError
 from pytesseract import image_to_string
 from PIL import Image
+from stpdf.core.stpdf_core import STPDFCore
+
+from multiprocessing import Process
 
 
 class MainWindow(QMainWindow):
@@ -651,11 +654,24 @@ class MainWindow(QMainWindow):
         cvt_args["pd"] = self.menu_pdf.isChecked()
         cvt_args["dc"] = self.menu_copy.isChecked()
         cvt_args["lang"] = self.app_lang
-        self.converter = ThreadedConverter(cvt_args)
-        self.converter.progress_signal.connect(self.log_progress)
-        self.converter.exception_signal.connect(self.handle_thread_exception)
-        self.converter.finished.connect(self.do_stop)
-        self.converter.start()
+
+        def run_in_process(cvt_args):
+            print("in process %r" % cvt_args)
+            fl = cvt_args["fl"]
+            fd = cvt_args["fd"]
+            di = cvt_args["di"]
+            ds = cvt_args["ds"]
+            sa = cvt_args["sa"]
+            pd = cvt_args["pd"]
+            dc = cvt_args["dc"]
+            la = cvt_args["lang"]
+            converter = STPDFCore(fl, fd, split=(ds, sa),
+                                deskew=di, lang=la,
+                                make_pdf=pd, copy_files=dc)
+            for line in converter.run_converter():
+                print(line)
+
+        Process(target=run_in_process, args=(cvt_args,)).start()
 
     def handle_thread_exception(self, msg):
         self.gui_logger.append(msg)

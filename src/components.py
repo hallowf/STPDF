@@ -62,10 +62,10 @@ class ThreadedConverter(QThread):
                 # causes the app to hang for a few seconds
                 if not self.is_running:
                     brk_msg = _("Stop received, terminating the converter")
-                    self.progress_signal.emit(brk_msg)
+                    #self.progress_signal.emit(brk_msg)
                     break
                 print("alive")
-                self.progress_signal.emit(line)
+                #self.progress_signal.emit(line)
         except Exception as e:
             print("THREAD_EXCEPTION: %s" % e)
             en = e.__class__.__name__
@@ -74,10 +74,10 @@ class ThreadedConverter(QThread):
                 msg = _("Failed to find tesseract on your system, verify it is installed and on PATH environment variable")
             else:
                 msg = "%s: %s" % (_("Thread exception"), str(e))
-            self.exception_signal.emit(msg)
+            #self.exception_signal.emit(msg)
         # If a stop wasn't requested send the finished signal
         # this is to avoid calling do_stop multiple times
-        self.finished.emit()
+        #self.finished.emit()
 
 
 # https://stackoverflow.com/a/31658984
