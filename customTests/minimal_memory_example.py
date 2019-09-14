@@ -5,17 +5,15 @@ from random import choice
 import os
 import psutil
 
-
 process = psutil.Process(os.getpid())
 rotations = [i * i for i in range(12)]
 names = ["pdf%i.pdf" % i for i in range(20)]
 
-
 def image_generator(image_paths, do_break=False):
     print("running generator")
+    curr_image = 0
     for img_p in image_paths:
         print("mem usage in bytes: %s " % str(process.memory_info().rss))
-        print("processing image %s" % img_p)
         with open(img_p, "rb") as fp:
             with Image.open(fp) as img:
                 try:
@@ -29,7 +27,7 @@ def image_generator(image_paths, do_break=False):
                     # Did i do this in the core module?
                     img.load()
                     yield img
-
+                    img.close()
 
 def gather_images(img_dir):
     image_paths = []
@@ -39,7 +37,6 @@ def gather_images(img_dir):
             source_path = os.path.join(root, file)
             image_paths.append(source_path)
     return image_paths
-
 
 def run_main(imgs_dir):
     image_paths = gather_images(imgs_dir)
@@ -63,7 +60,6 @@ def run_main(imgs_dir):
         else:
             first_img.save(name, "PDF", resolution=90, save_all=True,
                            append_images=image_generator(image_paths))
-
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
