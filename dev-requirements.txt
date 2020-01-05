@@ -1,7 +1,5 @@
 # for development:
 PyInstaller
-requests
-lxml
 pep8
 
 # for testing purposes:

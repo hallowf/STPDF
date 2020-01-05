@@ -13,3 +13,4 @@ dist
 version.txt
 *.png
 *.ttf
+*.json

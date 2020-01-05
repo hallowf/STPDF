@@ -16,7 +16,7 @@
 
 # main modules
 import sys
-import pickle
+import json
 import logging
 import os
 import gettext
@@ -463,9 +463,9 @@ class MainWindow(QMainWindow):
         msg = "%s: %s" % (_("Console logger is set with log level"), l_level)
         self.logger.info(msg)
 
-    # Loads user settings from settings.pckl
+    # Loads user settings from settings.json
     def load_settings(self):
-        if not os.path.isfile("settings.pckl"):
+        if not os.path.isfile("settings.json"):
             self.settings = {
                 "keep_vals": False,
                 "log_level": "info",
@@ -473,9 +473,9 @@ class MainWindow(QMainWindow):
                 "lang": "en"
             }
             self.set_up_logger()
-            pickle.dump(self.settings, open("settings.pckl", "wb"))
+            json.dump(self.settings, open("settings.json", "w"))
         else:
-            self.settings = pickle.load(open("settings.pckl", "rb"))
+            self.settings = json.load(open("settings.json", "r"))
             self.set_up_logger()
             try:
                 lang = self.settings["lang"]
@@ -497,14 +497,14 @@ class MainWindow(QMainWindow):
                     lang.install()
             except KeyError:
                 self.logger.warning(_("Invalid settings found, removing file"))
-                os.remove("settings.pckl")
+                os.remove("settings.json")
                 if self.retries >= 5:
                     self.logger.error("Failed to load settings after %s retries" % (self.retries))
                     self.retries = 0
                 else:
                     self.load_settings()
 
-    # Loads user values from values.pckl
+    # Loads user values from valuesjson
     def load_values(self):
         self.user_values = {
             "source": "",
@@ -516,14 +516,14 @@ class MainWindow(QMainWindow):
             "make_pdf": True
         }
         try:
-            if self.settings["keep_vals"] or not os.path.isfile("values.pckl"):
+            if self.settings["keep_vals"] or not os.path.isfile("values.json"):
                 self.logger.debug(_("Loading user values"))
-                if not os.path.isfile("values.pckl"):
+                if not os.path.isfile("values.json"):
                     m = _("Values file does not exist, creating one now")
                     self.logger.debug(m)
-                    pickle.dump(self.user_values, open("values.pckl", "wb"))
+                    json.dump(self.user_values, open("values.json", "w"))
                 else:
-                    self.user_values = pickle.load(open("values.pckl", "rb"))
+                    self.user_values = json.load(open("values.json", "r"))
                     if self.user_values:
                         msg = "%s: %s" % (_("Loaded user values"), self.user_values)
                         self.logger.debug(msg)
@@ -539,7 +539,7 @@ class MainWindow(QMainWindow):
                         raise KeyError
         except KeyError:
             self.logger.warning(_("Invalid values found, removing file"))
-            os.remove("values.pckl")
+            os.remove("values.json")
             if self.retries >= 5:
                 self.logger.error("Failed to load values after %s retries" % (self.retries))
                 self.retries = 0
@@ -625,9 +625,9 @@ class MainWindow(QMainWindow):
                     uv[val] = mp
             if self.settings["keep_vals"]:
                 self.logger.debug("User values: %s" % uv)
-                pickle.dump(uv, open("values.pckl", "wb"))
+                json.dump(uv, open("values.json", "w"))
             self.logger.debug("Settings: %s" % self.settings)
-            pickle.dump(self.settings, open("settings.pckl", "wb"))
+            json.dump(self.settings, open("settings.json", "w"))
         else:
             self.logger.error(_("Failed to obtain user values"))
             dm1 = _("User values:") + "%s" % self.user_values
