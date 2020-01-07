@@ -29,9 +29,9 @@ from PyQt5.QtWidgets import (QMainWindow, QWidget, QAction, qApp, QPushButton,
                              QApplication)
 from PyQt5 import QtGui
 from PyQt5.QtGui import QDesktopServices, QIcon
-from PyQt5.QtCore import Qt, QUrl, pyqtSignal, pyqtSlot
+from PyQt5.QtCore import (Qt, QUrl)
 # Custom components
-from components import TipSlider, SettingsWindow, AboutWindow, ThreadedConverter
+from components import TipSlider, SettingsWindow, AboutWindow
 # Backend and other requirements
 from pytesseract.pytesseract import TesseractNotFoundError
 from pytesseract import image_to_string
@@ -565,9 +565,9 @@ class MainWindow(QMainWindow):
         # kv = "  Keep values: %s\n" % self.menu_keep.isChecked()
         kv = "  %s: %s\n" % (_("Keep values"), self.settings["keep_vals"])
         t = "  %s: %s\n" % (_("App theme"), self.settings["app_theme"])
-        l = "  %s: %s\n" % (_("App language"), self.settings["lang"])
+        la = "  %s: %s\n" % (_("App language"), self.settings["lang"])
         ll = "  %s: %s\n" % (_("Console log Level"), self.settings["log_level"])
-        settings = "%s:\n%s%s%s%s" % (_("Settings are"), kv, t, l, ll)
+        settings = "%s:\n%s%s%s%s" % (_("Settings are"), kv, t, la, ll)
         self.gui_logger.append(settings)
         self.logger.debug(settings)
 
