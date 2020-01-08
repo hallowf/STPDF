@@ -3,7 +3,7 @@ jobs:
   - stage: Linux build
     os: linux
     language: python
-    dist: xenial
+    dist: bionic
     python: 3.7
     addons:
       apt:
