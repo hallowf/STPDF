@@ -7,11 +7,7 @@ jobs:
     python: 3.7
     addons:
       apt:
-        packages:
-        - p7zip-full
-        - libpython3.7
-        - libpython3.7-dev
-        - python3.7-dev
+        update: true
     env:
     - PY=python3
   - stage: Windows build
